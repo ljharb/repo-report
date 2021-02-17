@@ -13,5 +13,9 @@
     "dotenv": "^8.2.0",
     "log-symbols": "^4.0.0",
     "yargs": "^16.2.0"
+  },
+  "devDependencies": {
+    "@ljharb/eslint-config": "^17.5.1",
+    "eslint": "^7.20.0"
   }
 }
