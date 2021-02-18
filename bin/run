@@ -21,4 +21,5 @@ Yargs.usage('Usage: $0 <command> [options]')
 		list(argv);
 	})
 	.help('h')
-	.alias('h', 'help').argv;
+	.alias('h', 'help')
+	.parse();

@@ -1,102 +1,72 @@
+/* eslint-disable no-magic-numbers */
+/* eslint-disable no-await-in-loop */
+
+'use strict';
+
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
 const Table = require('cli-table');
 
-const list = async (flags) => {
-	if (!process.env.GITHUB_PAT) {
-		console.log(`${logSymbols.error} env variable GITHUB_PAT not found`);
-	}
+// Field names and their extraction method to be used on the query result
+const fields = [
+	'Repository', 'Owner', 'Access', 'DefBranch', 'isPublic',
+];
+const mappedFields = [
+	(item) => item.name,
+	(item) => item.owner.login,
+	(item) => item.viewerPermission,
+	(item) => (item.defaultBranchRef ? item.defaultBranchRef.name : '---'),
+	(item) => (item.isPrivate ? logSymbols.error : logSymbols.success),
+];
 
-	// Field names and their extraction method to be used on the query result
-	const fields = ['Repository', 'Owner', 'Access', 'DefBranch', 'isPublic'];
-	const mappedFields = [
-		(item) => item.name,
-		(item) => item.owner.login,
-		(item) => item.viewerPermission,
-		(item) => (item.defaultBranchRef ? item.defaultBranchRef.name : '---'),
-		(item) => (item.isPrivate ? logSymbols.error : logSymbols.success),
-	];
+const listFields = () => fields.map((item) => console.log(`- ${item}`));
 
-	// List available fields
-	if (flags.f) {
-		fields.map((item) => console.log(`- ${item}`));
-		return;
-	}
+const getGroupIndex = (group) => fields
+	.map((item) => item.toLowerCase())
+	.indexOf(group.toLowerCase());
 
-	// Group output
-	let groupBy;
-	if (flags.g) {
-		groupBy = fields
-			.map((item) => item.toLowerCase())
-			.indexOf(flags.g.toLowerCase());
-		if (groupBy === -1) {
-			console.log(`${logSymbols.error} Invalid Field`);
-			return;
+const generateQuery = (endCursor) => `
+query {
+  viewer {
+	repositories(
+	  first: 100
+	  affiliations: [OWNER, ORGANIZATION_MEMBER, COLLABORATOR]
+	  ${endCursor ? `after: "${endCursor}"` : ''}
+	) {
+	  totalCount
+	  pageInfo {
+		endCursor
+		hasNextPage
+	  }
+	  nodes {
+		name
+		owner {
+		  login
 		}
+		isPrivate
+		defaultBranchRef {
+			name
+		}
+		viewerPermission
+	  }
 	}
+  }
+  rateLimit {
+	cost
+	remaining
+  }
+}
+`;
 
-	// Repeated requests to get all repositories
-	let endCursor,
-		hasNextPage,
-		points,
-		repositories = [];
+const printAPIPoints = (points) => {
+	console.log(`API Points:
+\tused\t\t-\t${points.cost}
+\tremaining\t-\t${points.remaining}`);
+};
 
-	do {
-		const {
-			viewer: {
-				repositories: { nodes, pageInfo },
-			},
-			rateLimit,
-		} = await graphql(
-			`
-        query {
-          viewer {
-            repositories(
-              first: 100
-              affiliations: [OWNER, ORGANIZATION_MEMBER, COLLABORATOR]
-              ${endCursor ? `after: "${endCursor}"` : ''}
-            ) {
-              totalCount
-              pageInfo {
-                endCursor
-                hasNextPage
-              }
-              nodes {
-                name
-                owner {
-                  login
-                }
-                isPrivate
-                defaultBranchRef {
-                    name
-                }
-                viewerPermission
-              }
-            }
-          }
-          rateLimit {
-            cost
-            remaining
-          }
-        }
-      `,
-			{
-				headers: {
-					authorization: `token ${process.env.GITHUB_PAT}`,
-				},
-			},
-		);
-
-		endCursor = pageInfo.endCursor;
-		hasNextPage = pageInfo.hasNextPage;
-		points = rateLimit;
-		repositories = repositories.concat(nodes);
-	} while (hasNextPage);
-
+const generateTable = (repositories, groupBy) => {
 	let table;
-
-	// Grouped output
-	if (flags.g) {
+	if (groupBy) {
 		table = new Table({
 			head: [fields[groupBy], 'Repository'],
 		});
@@ -126,13 +96,73 @@ const list = async (flags) => {
 				item.isPrivate ? logSymbols.error : logSymbols.success,
 			]);
 		});
+
+	}
+	return table;
+};
+
+const list = async (flags) => {
+	// Handle Token not found error
+	if (!process.env.GITHUB_PAT) {
+		console.log(`${logSymbols.error} env variable GITHUB_PAT not found`);
+		return null;
+	}
+
+	// List available fields
+	if (flags.f) {
+		return listFields();
+	}
+
+	// Get index of field to be grouped by
+	let groupBy;
+	if (flags.g) {
+		groupBy = getGroupIndex(flags.g);
+		if (groupBy === -1) {
+			console.log(`${logSymbols.error} Invalid Field`);
+			return null;
+		}
+	}
+
+	// Repeated requests to get all repositories
+	let endCursor,
+		hasNextPage,
+		points,
+		repositories = [];
+
+	do {
+		const {
+			viewer: {
+				repositories: { nodes, pageInfo },
+			},
+			rateLimit,
+		} = await graphql(
+			generateQuery(endCursor),
+			{
+				headers: {
+					authorization: `token ${process.env.GITHUB_PAT}`,
+				},
+			},
+		);
+
+		endCursor = pageInfo.endCursor;
+		hasNextPage = pageInfo.hasNextPage;
+		points = rateLimit;
+		repositories = repositories.concat(nodes);
+	} while (hasNextPage);
+
+	let table;
+
+	// Generate output table
+	if (flags.g) {
+		table = generateTable(repositories, groupBy);
+	} else {
+		table = generateTable(repositories);
 	}
 
 	console.log(table.toString());
 
-	console.log(`API Points:
-    used\t-\t${points.cost}
-    remaining\t-\t${points.remaining}`);
+	printAPIPoints(points);
+	return null;
 };
 
 module.exports = list;
