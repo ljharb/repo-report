@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+/* eslint-disable no-magic-numbers */
+
+'use strict';
+
+require('dotenv').config();
+const Yargs = require('yargs');
+const list = require('../src/commands/list');
+
+Yargs.usage('Usage: $0 <command> [options]')
+	.command('list', 'lists all repositories', function (yargs) {
+		const argv = yargs
+			.usage('Usage: $0 list [options]')
+			.alias('g', 'group-by')
+			.nargs('g', 1)
+			.describe('g', 'Field to be grouped by')
+			.alias('f', 'fields')
+			.boolean('f')
+			.describe('f', 'Show available fields')
+			.help('h')
+			.alias('h', 'help').argv;
+		list(argv);
+	})
+	.help('h')
+	.alias('h', 'help')
+	.parse();

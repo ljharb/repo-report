@@ -1,0 +1,3 @@
+{
+	"extends": ["@ljharb", "@ljharb/eslint-config/node/latest"]
+}
