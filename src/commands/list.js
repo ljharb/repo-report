@@ -80,7 +80,8 @@ const generateTable = (repositories, groupBy) => {
 		});
 
 		Object.entries(groupedObj).forEach((item) => {
-			table.push([item[0], item[1].join('\n')]);
+			const [key, value] = item;
+			table.push([key, value.join('\n')]);
 		});
 	} else {
 		table = new Table({
