@@ -2,7 +2,10 @@
 	"name": "repo-report",
 	"version": "0.0.0",
 	"description": "CLI to list all repos a user has access to, and report on their configuration in aggregate.",
-	"main": "src/index.js",
+	"main": "bin/run",
+	"bin": {
+		"repo-report": "./bin/run"
+	},
 	"repository": "https://github.com/ljharb/repo-report",
 	"author": "ljharb",
 	"license": "MIT",
