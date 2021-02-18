@@ -6,9 +6,9 @@ require('dotenv').config();
 const Yargs = require('yargs');
 const list = require('./commands/list');
 
-const argv = Yargs.usage('Usage: $0 <command> [options]')
+Yargs.usage('Usage: $0 <command> [options]')
 	.command('list', 'lists all repositories', function (yargs) {
-		argv = yargs
+		const argv = yargs
 			.usage('Usage: $0 list [options]')
 			.alias('g', 'group-by')
 			.nargs('g', 1)
