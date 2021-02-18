@@ -3,10 +3,10 @@
 'use strict';
 
 require('dotenv').config();
-var Yargs = require('yargs');
-var list = require('./commands/list');
+const Yargs = require('yargs');
+const list = require('./commands/list');
 
-var argv = Yargs.usage('Usage: $0 <command> [options]')
+const argv = Yargs.usage('Usage: $0 <command> [options]')
 	.command('list', 'lists all repositories', function (yargs) {
 		argv = yargs
 			.usage('Usage: $0 list [options]')

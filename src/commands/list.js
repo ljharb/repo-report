@@ -84,7 +84,7 @@ const list = async (flags) => {
 				headers: {
 					authorization: `token ${process.env.GITHUB_PAT}`,
 				},
-			}
+			},
 		);
 
 		endCursor = pageInfo.endCursor;
