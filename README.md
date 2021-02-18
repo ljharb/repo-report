@@ -4,6 +4,7 @@ CLI to list all repos a user has access to, and report on their configuration in
 # Installation
 
 - `npm install` to install all dependencies
+- create .env file and initialize GITHUB_PAT with your Github token
 
 # Usage
  
