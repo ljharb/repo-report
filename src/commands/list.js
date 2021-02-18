@@ -1,160 +1,170 @@
-const { Command, flags } = require("@oclif/command");
-const { graphql } = require("@octokit/graphql");
-const logSymbols = require("log-symbols");
-require("dotenv").config();
+/* eslint-disable no-magic-numbers */
+/* eslint-disable no-await-in-loop */
 
-const Table = require("cli-table");
+'use strict';
 
-class List extends Command {
-  async run() {
-    if (!process.env.GITHUB_PAT) {
-      this.log(`${logSymbols.error} env variable GITHUB_PAT not found`);
-    }
-    // Field names and their extraction method to be used on the query result
-    const fields = ["Repository", "Owner", "Access", "DefBranch", "isPublic"];
-    const mappedFields = [
-      (item) => item.name,
-      (item) => item.owner.login,
-      (item) => item.viewerPermission,
-      (item) => (item.defaultBranchRef ? item.defaultBranchRef.name : "---"),
-      (item) => (item.isPrivate ? logSymbols.error : logSymbols.success),
-    ];
+const { graphql } = require('@octokit/graphql');
+const logSymbols = require('log-symbols');
+const Table = require('cli-table');
 
-    const { flags } = this.parse(List);
+// Field names and their extraction method to be used on the query result
+const fields = [
+	'Repository', 'Owner', 'Access', 'DefBranch', 'isPublic',
+];
+const mappedFields = [
+	(item) => item.name,
+	(item) => item.owner.login,
+	(item) => item.viewerPermission,
+	(item) => (item.defaultBranchRef ? item.defaultBranchRef.name : '---'),
+	(item) => (item.isPrivate ? logSymbols.error : logSymbols.success),
+];
 
-    // List available fields
-    if (flags.fields) {
-      fields.map((item) => this.log(`- ${item}`));
-      return;
-    }
+const listFields = () => fields.map((item) => console.log(`- ${item}`));
 
-    // Group output
-    let groupBy;
-    if (flags.group) {
-      groupBy = fields
-        .map((item) => item.toLowerCase())
-        .indexOf(flags.group.toLowerCase());
-      if (groupBy === -1) {
-        this.log(`${logSymbols.error} Invalid Field`);
-        return;
-      }
-    }
+const getGroupIndex = (group) => fields
+	.map((item) => item.toLowerCase())
+	.indexOf(group.toLowerCase());
 
-    // Repeated requests to get all repositories
-    let endCursor,
-      hasNextPage,
-      points,
-      repositories = [];
-
-    do {
-      const {
-        viewer: {
-          repositories: { nodes, pageInfo },
-        },
-        rateLimit,
-      } = await graphql(
-        `
-        query {
-          viewer {
-            repositories(
-              first: 100
-              affiliations: [OWNER, ORGANIZATION_MEMBER, COLLABORATOR]
-              ${endCursor ? `after: "${endCursor}"` : ""}
-            ) {
-              totalCount
-              pageInfo {
-                endCursor
-                hasNextPage
-              }
-              nodes {
-                name
-                owner {
-                  login
-                }
-                isPrivate
-                defaultBranchRef {
-                    name
-                }
-                viewerPermission
-              }
-            }
-          }
-          rateLimit {
-            cost
-            remaining
-          }
-        }
-      `,
-        {
-          headers: {
-            authorization: `token ${process.env.GITHUB_PAT}`,
-          },
-        }
-      );
-
-      endCursor = pageInfo.endCursor;
-      hasNextPage = pageInfo.hasNextPage;
-      points = rateLimit;
-      repositories = repositories.concat(nodes);
-    } while (hasNextPage);
-
-    let table;
-
-    // Grouped output
-    if (flags.group) {
-      table = new Table({
-        head: [fields[groupBy], "Repository"],
-      });
-
-      let groupedObj = {};
-      repositories.forEach((item) => {
-        const key = mappedFields[groupBy](item);
-        if (key in groupedObj) {
-          groupedObj[key].push(item.name);
-        } else groupedObj[key] = [item.name];
-      });
-
-      Object.entries(groupedObj).forEach((item) => {
-        table.push([item[0], item[1].join("\n")]);
-      });
-    } else {
-      table = new Table({
-        head: fields,
-      });
-
-      repositories.forEach((item) => {
-        table.push([
-          item.name,
-          item.owner.login,
-          item.viewerPermission,
-          item.defaultBranchRef ? item.defaultBranchRef.name : "---",
-          item.isPrivate ? logSymbols.error : logSymbols.success,
-        ]);
-      });
-    }
-
-    this.log(table.toString());
-
-    this.log(`API Points:
-    used\t-\t${points.cost}
-    remaining\t-\t${points.remaining}`);
+const generateQuery = (endCursor) => `
+query {
+  viewer {
+	repositories(
+	  first: 100
+	  affiliations: [OWNER, ORGANIZATION_MEMBER, COLLABORATOR]
+	  ${endCursor ? `after: "${endCursor}"` : ''}
+	) {
+	  totalCount
+	  pageInfo {
+		endCursor
+		hasNextPage
+	  }
+	  nodes {
+		name
+		owner {
+		  login
+		}
+		isPrivate
+		defaultBranchRef {
+			name
+		}
+		viewerPermission
+	  }
+	}
+  }
+  rateLimit {
+	cost
+	remaining
   }
 }
-
-List.description = `This command lists all of the repositories that the current user has.
-NOTE: An environment variable GITHUB_PAT with the personal access token is required.
-Also make sure that the token has read:org and all repo permissions.
 `;
 
-List.flags = {
-  group: flags.string({
-    char: "g",
-    description: "field to be grouped by",
-  }),
-  fields: flags.boolean({
-    char: "f",
-    description: "show available fields",
-  }),
+const printAPIPoints = (points) => {
+	console.log(`API Points:
+\tused\t\t-\t${points.cost}
+\tremaining\t-\t${points.remaining}`);
 };
 
-module.exports = List;
+const generateTable = (repositories, groupBy) => {
+	let table;
+	if (groupBy) {
+		table = new Table({
+			head: [fields[groupBy], 'Repository'],
+		});
+
+		const groupedObj = {};
+		repositories.forEach((item) => {
+			const key = mappedFields[groupBy](item);
+			if (key in groupedObj) {
+				groupedObj[key].push(item.name);
+			} else { groupedObj[key] = [item.name]; }
+		});
+
+		Object.entries(groupedObj).forEach((item) => {
+			const [key, value] = item;
+			table.push([key, value.join('\n')]);
+		});
+	} else {
+		table = new Table({
+			head: fields,
+		});
+
+		repositories.forEach((item) => {
+			table.push([
+				item.name,
+				item.owner.login,
+				item.viewerPermission,
+				item.defaultBranchRef ? item.defaultBranchRef.name : '---',
+				item.isPrivate ? logSymbols.error : logSymbols.success,
+			]);
+		});
+
+	}
+	return table;
+};
+
+const list = async (flags) => {
+	// Handle Token not found error
+	if (!process.env.GITHUB_PAT) {
+		console.log(`${logSymbols.error} env variable GITHUB_PAT not found`);
+		return null;
+	}
+
+	// List available fields
+	if (flags.f) {
+		return listFields();
+	}
+
+	// Get index of field to be grouped by
+	let groupBy;
+	if (flags.g) {
+		groupBy = getGroupIndex(flags.g);
+		if (groupBy === -1) {
+			console.log(`${logSymbols.error} Invalid Field`);
+			return null;
+		}
+	}
+
+	// Repeated requests to get all repositories
+	let endCursor,
+		hasNextPage,
+		points = { cost: 0 },
+		repositories = [];
+
+	do {
+		const {
+			viewer: {
+				repositories: { nodes, pageInfo },
+			},
+			rateLimit,
+		} = await graphql(
+			generateQuery(endCursor),
+			{
+				headers: {
+					authorization: `token ${process.env.GITHUB_PAT}`,
+				},
+			},
+		);
+
+		endCursor = pageInfo.endCursor;
+		hasNextPage = pageInfo.hasNextPage;
+		points.cost += rateLimit.cost;
+		points.remaining = rateLimit.remaining;
+		repositories = repositories.concat(nodes);
+	} while (hasNextPage);
+
+	let table;
+
+	// Generate output table
+	if (flags.g) {
+		table = generateTable(repositories, groupBy);
+	} else {
+		table = generateTable(repositories);
+	}
+
+	console.log(table.toString());
+
+	printAPIPoints(points);
+	return null;
+};
+
+module.exports = list;

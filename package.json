@@ -1,55 +1,24 @@
 {
-  "name": "repo-report",
-  "description": "CLI to list all repos a user has access to, and report on their configuration in aggregate.",
-  "version": "0.0.0",
-  "author": "@MLH-Fellowship",
-  "bin": {
-    "repo-report": "./bin/run"
-  },
-  "bugs": "https://github.com/MLH-Fellowship/repo-report/issues",
-  "dependencies": {
-    "@oclif/command": "^1",
-    "@oclif/config": "^1",
-    "@oclif/plugin-help": "^3",
-    "@octokit/graphql": "^4.6.0",
-    "cli-table": "^0.3.4",
-    "dotenv": "^8.2.0",
-    "log-symbols": "^4.0.0"
-  },
-  "devDependencies": {
-    "@oclif/dev-cli": "^1",
-    "eslint": "^5.13",
-    "eslint-config-oclif": "^3.1",
-    "globby": "^10"
-  },
-  "engines": {
-    "node": ">=8.0.0"
-  },
-  "files": [
-    "/bin",
-    "/npm-shrinkwrap.json",
-    "/oclif.manifest.json",
-    "/src"
-  ],
-  "homepage": "https://github.com/MLH-Fellowship/repo-report",
-  "keywords": [
-    "oclif"
-  ],
-  "license": "MIT",
-  "main": "src/index.js",
-  "oclif": {
-    "commands": "./src/commands",
-    "bin": "repo-report",
-    "plugins": [
-      "@oclif/plugin-help"
-    ]
-  },
-  "repository": "MLH-Fellowship/repo-report",
-  "scripts": {
-    "postpack": "rm -f oclif.manifest.json",
-    "posttest": "eslint .",
-    "prepack": "oclif-dev manifest && oclif-dev readme",
-    "test": "echo NO TESTS",
-    "version": "oclif-dev readme && git add README.md"
-  }
+	"name": "repo-report",
+	"version": "0.0.0",
+	"description": "CLI to list all repos a user has access to, and report on their configuration in aggregate.",
+	"main": "bin/run",
+	"bin": {
+		"repo-report": "./bin/run"
+	},
+	"repository": "https://github.com/ljharb/repo-report",
+	"author": "ljharb",
+	"license": "MIT",
+	"private": false,
+	"dependencies": {
+		"@octokit/graphql": "^4.6.0",
+		"cli-table": "^0.3.4",
+		"dotenv": "^8.2.0",
+		"log-symbols": "^4.0.0",
+		"yargs": "^16.2.0"
+	},
+	"devDependencies": {
+		"@ljharb/eslint-config": "^17.5.1",
+		"eslint": "^7.20.0"
+	}
 }
