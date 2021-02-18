@@ -1,6 +1,13 @@
 # repo-report
 CLI to list all repos a user has access to, and report on their configuration in aggregate.
 
+# Installation
+
+- `npm install` to install all dependencies
+
+# Usage
+ 
+ - `node ./src/index.js list` to have a list of repos with different fields: access, default branch, etc.
 
 
 # In a NutShell
