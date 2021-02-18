@@ -126,7 +126,7 @@ const list = async (flags) => {
 	// Repeated requests to get all repositories
 	let endCursor,
 		hasNextPage,
-		points,
+		points = { cost: 0 },
 		repositories = [];
 
 	do {
@@ -146,7 +146,8 @@ const list = async (flags) => {
 
 		endCursor = pageInfo.endCursor;
 		hasNextPage = pageInfo.hasNextPage;
-		points = rateLimit;
+		points.cost += rateLimit.cost;
+		points.remaining = rateLimit.remaining;
 		repositories = repositories.concat(nodes);
 	} while (hasNextPage);
 
