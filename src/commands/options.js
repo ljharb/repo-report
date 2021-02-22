@@ -6,22 +6,21 @@
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
 const Table = require('cli-table');
-const { options } = require('yargs');
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	'Repository', 'Wiki', 'Projects', 'securityPolicy','mergeCommit', 'squashMerge', 'rebaseMerge', 'deleteOnMerge',
+	'Repository', 'Wiki', 'Projects', 'securityPolicy', 'mergeCommit', 'squashMerge', 'rebaseMerge', 'deleteOnMerge',
 ];
 
 const mappedFields = [
 	(item) => item.nameWithOwner,
 	(item) => (item.hasWikiEnabled ? logSymbols.success : logSymbols.error),
-    (item) => (item.hasProjectsEnabled ? logSymbols.success : logSymbols.error),
-    (item) => (item.isSecurityPolicyEnabled ? logSymbols.success : logSymbols.error),
-    (item) => (item.mergeCommitAllowed ? logSymbols.success : logSymbols.error),
-    (item) => (item.squashMergeAllowed ? logSymbols.success : logSymbols.error),
-    (item) => (item.rebaseMergeAllowed ? logSymbols.success : logSymbols.error),
-    (item) => (item.deleteBranchOnMerge ? logSymbols.success : logSymbols.error),
+	(item) => (item.hasProjectsEnabled ? logSymbols.success : logSymbols.error),
+	(item) => (item.isSecurityPolicyEnabled ? logSymbols.success : logSymbols.error),
+	(item) => (item.mergeCommitAllowed ? logSymbols.success : logSymbols.error),
+	(item) => (item.squashMergeAllowed ? logSymbols.success : logSymbols.error),
+	(item) => (item.rebaseMergeAllowed ? logSymbols.success : logSymbols.error),
+	(item) => (item.deleteBranchOnMerge ? logSymbols.success : logSymbols.error),
 ];
 
 const listFields = () => fields.map((item) => console.log(`- ${item}`));
@@ -49,11 +48,11 @@ query {
         hasProjectsEnabled
         isSecurityPolicyEnabled
         mergeCommitAllowed
-        squashMergeAllowed 
-		rebaseMergeAllowed 
+        squashMergeAllowed
+		rebaseMergeAllowed
         deleteBranchOnMerge
 	  }
-     
+
 	}
   }
   rateLimit {
