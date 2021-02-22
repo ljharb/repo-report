@@ -95,7 +95,7 @@ const generateTable = (repositories, groupBy, sort) => {
 		});
 
 		if (sort) {
-			repositories.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : b.name.toLowerCase() > a.name.toLowerCase() ? -1 : 0));
+			repositories.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 		}
 
 		repositories.forEach((item) => {

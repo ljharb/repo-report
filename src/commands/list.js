@@ -89,8 +89,7 @@ const generateTable = (repositories, groupBy, sort) => {
 		});
 
 		if (sort) {
-			repositories.sort((a, b) =>
-			(a.name.toLowerCase() > b.name.toLowerCase() ? 1 : b.name.toLowerCase() > a.name.toLowerCase() ? -1 : 0));
+			repositories.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 		}
 
 		repositories.forEach((item) => {
@@ -158,12 +157,9 @@ const list = async (flags) => {
 	// Generate output table
 	if (flags.g) {
 		table = generateTable(repositories, groupBy);
-	} 
-	else if (flags.s) {
+	} else if (flags.s) {
 		table = generateTable(repositories, false, true);
-	}
-	
-	else {
+	} else {
 		table = generateTable(repositories);
 	}
 
