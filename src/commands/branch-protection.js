@@ -30,7 +30,7 @@ const fields = [
 ];
 
 const mappedFields = [
-	(item) => item.name,
+	(item) => item.nameWithOwner,
 	(item) => item.defBranch,
 	(item) => (item.allowsForcePushes ? logSymbols.error : logSymbols.success),
 	(item) => (item.allowsDeletions ? logSymbols.error : logSymbols.success),
@@ -58,7 +58,7 @@ query{
         hasNextPage
       }
       nodes {
-        name
+        nameWithOwner
         defaultBranchRef {
           name
           branchProtectionRule {
@@ -99,9 +99,9 @@ const generateTable = (repositories, groupBy) => {
 			const key = mappedFields[groupBy](itemFields);
 
 			if (key in groupedObj) {
-				groupedObj[key].push(itemFields.name);
+				groupedObj[key].push(itemFields.nameWithOwner);
 			} else {
-				groupedObj[key] = [itemFields.name];
+				groupedObj[key] = [itemFields.nameWithOwner];
 			}
 		});
 
@@ -116,7 +116,7 @@ const generateTable = (repositories, groupBy) => {
 		repositories.forEach((item) => {
 			const itemFields = getItemFields(item);
 			table.push([
-				itemFields.name,
+				itemFields.nameWithOwner,
 				itemFields.defBranch,
 				itemFields.allowsForcePushes ? logSymbols.success : logSymbols.error,
 				itemFields.allowsDeletions ? logSymbols.success : logSymbols.error,
