@@ -5,23 +5,23 @@
 
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
-const Table = require('cli-table');
+const Table = require('cli-table');	
 const { options } = require('yargs');
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	'Repository', 'Wiki', 'Projects', 'securityPolicy','mergeCommit', 'squashMerge', 'rebaseMerge', 'deleteOnMerge',
+	'Repository', 'Wiki', 'Projects', 'securityPolicy', 'mergeCommit', 'squashMerge', 'rebaseMerge', 'deleteOnMerge',
 ];
 
 const mappedFields = [
 	(item) => item.nameWithOwner,
 	(item) => (item.hasWikiEnabled ? logSymbols.success : logSymbols.error),
-    (item) => (item.hasProjectsEnabled ? logSymbols.success : logSymbols.error),
-    (item) => (item.isSecurityPolicyEnabled ? logSymbols.success : logSymbols.error),
-    (item) => (item.mergeCommitAllowed ? logSymbols.success : logSymbols.error),
-    (item) => (item.squashMergeAllowed ? logSymbols.success : logSymbols.error),
-    (item) => (item.rebaseMergeAllowed ? logSymbols.success : logSymbols.error),
-    (item) => (item.deleteBranchOnMerge ? logSymbols.success : logSymbols.error),
+	(item) => (item.hasProjectsEnabled ? logSymbols.success : logSymbols.error),
+	(item) => (item.isSecurityPolicyEnabled ? logSymbols.success : logSymbols.error),
+	(item) => (item.mergeCommitAllowed ? logSymbols.success : logSymbols.error),
+	(item) => (item.squashMergeAllowed ? logSymbols.success : logSymbols.error),
+	(item) => (item.rebaseMergeAllowed ? logSymbols.success : logSymbols.error),
+	(item) => (item.deleteBranchOnMerge ? logSymbols.success : logSymbols.error),
 ];
 
 const listFields = () => fields.map((item) => console.log(`- ${item}`));
@@ -44,6 +44,7 @@ query {
 		hasNextPage
 	  }
 	  nodes {
+		name
 		nameWithOwner
         hasWikiEnabled
         hasProjectsEnabled
@@ -85,7 +86,8 @@ const generateTable = (repositories, groupBy, sort) => {
 		});
 
 		Object.entries(groupedObj).forEach((item) => {
-			table.push([item[0], item[1].join('\n')]);
+			const [key, value] = item;
+			table.push([key, value.join('\n')]);
 		});
 	} else {
 		table = new Table({
@@ -93,8 +95,7 @@ const generateTable = (repositories, groupBy, sort) => {
 		});
 
 		if (sort) {
-			repositories.sort((a, b) => 
-			(a.nameWithOwner > b.nameWithOwner ? 1 : b.nameWithOwner > a.nameWithOwner ? -1 : 0));
+			repositories.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : b.name.toLowerCase() > a.name.toLowerCase() ? -1 : 0));
 		}
 
 		repositories.forEach((item) => {
@@ -130,7 +131,7 @@ const optionsList = async (flags) => {
 	// Repeated requests to get all repositories
 	let endCursor,
 		hasNextPage,
-		points,
+		points = { cost: 0 },
 		repositories = [];
 
 	do {
@@ -150,7 +151,8 @@ const optionsList = async (flags) => {
 
 		endCursor = pageInfo.endCursor;
 		hasNextPage = pageInfo.hasNextPage;
-		points = rateLimit;
+		points.cost += rateLimit.cost;
+		points.remaining = rateLimit.remaining;
 		repositories = repositories.concat(nodes);
 	} while (hasNextPage);
 
@@ -159,11 +161,9 @@ const optionsList = async (flags) => {
 	// Generate output table
 	if (flags.g) {
 		table = generateTable(repositories, groupBy);
-	} 
-	else if (flags.s) {
+	} else if (flags.s) {
 		table = generateTable(repositories, false, true);
-	}
-	else {
+	} else {
 		table = generateTable(repositories);
 	}
 

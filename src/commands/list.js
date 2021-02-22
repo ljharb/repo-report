@@ -89,17 +89,12 @@ const generateTable = (repositories, groupBy, sort) => {
 		});
 
 		if (sort) {
-			repositories.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
+			repositories.sort((a, b) =>
+			(a.name.toLowerCase() > b.name.toLowerCase() ? 1 : b.name.toLowerCase() > a.name.toLowerCase() ? -1 : 0));
 		}
 
 		repositories.forEach((item) => {
-			table.push([
-				item.name,
-				item.owner.login,
-				item.viewerPermission,
-				item.defaultBranchRef ? item.defaultBranchRef.name : '---',
-				item.isPrivate ? logSymbols.error : logSymbols.success,
-			]);
+			table.push(mappedFields.map((func) => func(item)));
 		});
 
 	}
