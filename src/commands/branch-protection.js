@@ -19,13 +19,9 @@ const fields = [
 	'allowsForcePushes',
 	'allowsDeletions',
 	'dismissesStaleReviews',
-	'restrictsReviewDismissals',
 	'requiredApprovingReviewCount',
 	'requiresApprovingReviews',
 	'requiresCodeOwnerReviews',
-	'requiresStatusChecks',
-	'requiresStrictStatusChecks',
-	'restrictsPushes',
 	'pattern',
 ];
 
@@ -35,13 +31,9 @@ const mappedFields = [
 	(item) => (item.allowsForcePushes ? logSymbols.error : logSymbols.success),
 	(item) => (item.allowsDeletions ? logSymbols.error : logSymbols.success),
 	(item) => (item.dismissesStaleReviews ? logSymbols.error : logSymbols.success),
-	(item) => (item.restrictsReviewDismissals ? logSymbols.error : logSymbols.success),
 	(item) => item.requiredApprovingReviewCount || '---',
 	(item) => (item.requiresApprovingReviews ? logSymbols.error : logSymbols.success),
 	(item) => (item.requiresCodeOwnerReviews ? logSymbols.error : logSymbols.success),
-	(item) => (item.requiresStatusChecks ? logSymbols.error : logSymbols.success),
-	(item) => (item.requiresStrictStatusChecks ? logSymbols.error : logSymbols.success),
-	(item) => (item.restrictsPushes ? logSymbols.error : logSymbols.success),
 	(item) => item.pattern || '---',
 ];
 
@@ -65,12 +57,9 @@ query{
             allowsForcePushes
             allowsDeletions
             dismissesStaleReviews
-            restrictsReviewDismissals
             requiredApprovingReviewCount
             requiresApprovingReviews
             requiresCodeOwnerReviews
-            requiresStatusChecks
-            requiresStrictStatusChecks
             restrictsPushes
           }
         }
@@ -121,13 +110,9 @@ const generateTable = (repositories, groupBy) => {
 				itemFields.allowsForcePushes ? logSymbols.success : logSymbols.error,
 				itemFields.allowsDeletions ? logSymbols.success : logSymbols.error,
 				itemFields.dismissesStaleReviews ? logSymbols.success : logSymbols.error,
-				itemFields.restrictsReviewDismissals ? logSymbols.success : logSymbols.error,
 				itemFields.requiredApprovingReviewCount || '---',
 				itemFields.requiresApprovingReviews ? logSymbols.success : logSymbols.error,
 				itemFields.requiresCodeOwnerReviews ? logSymbols.success : logSymbols.error,
-				itemFields.requiresStatusChecks ? logSymbols.success : logSymbols.error,
-				itemFields.requiresStrictStatusChecks ? logSymbols.success : logSymbols.error,
-				itemFields.restrictsPushes ? logSymbols.success : logSymbols.error,
 				itemFields.pattern || '---',
 			]);
 		});

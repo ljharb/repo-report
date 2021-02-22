@@ -18,13 +18,9 @@ const getItemFields = (item) => {
 		allowsForcePushes,
 		allowsDeletions,
 		dismissesStaleReviews,
-		restrictsReviewDismissals,
 		requiredApprovingReviewCount,
 		requiresApprovingReviews,
 		requiresCodeOwnerReviews,
-		requiresStatusChecks,
-		requiresStrictStatusChecks,
-		restrictsPushes,
 		pattern,
 	} = branchProtectionRule || {};
 
@@ -38,10 +34,6 @@ const getItemFields = (item) => {
 		requiredApprovingReviewCount,
 		requiresApprovingReviews,
 		requiresCodeOwnerReviews,
-		requiresStatusChecks,
-		requiresStrictStatusChecks,
-		restrictsPushes,
-		restrictsReviewDismissals,
 	};
 };
 
