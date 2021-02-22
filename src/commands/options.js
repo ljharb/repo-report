@@ -69,7 +69,7 @@ const printAPIPoints = (points) => {
 \tremaining\t-\t${points.remaining}`);
 };
 
-const generateTable = (repositories, groupBy) => {
+const generateTable = (repositories, groupBy, sort) => {
 	let table;
 	if (groupBy) {
 		table = new Table({
@@ -91,6 +91,11 @@ const generateTable = (repositories, groupBy) => {
 		table = new Table({
 			head: fields,
 		});
+
+		if (sort) {
+			repositories.sort((a, b) => 
+			(a.nameWithOwner > b.nameWithOwner ? 1 : b.nameWithOwner > a.nameWithOwner ? -1 : 0));
+		}
 
 		repositories.forEach((item) => {
 			table.push(mappedFields.map((func) => func(item)));
@@ -154,7 +159,11 @@ const optionsList = async (flags) => {
 	// Generate output table
 	if (flags.g) {
 		table = generateTable(repositories, groupBy);
-	} else {
+	} 
+	else if (flags.s) {
+		table = generateTable(repositories, false, true);
+	}
+	else {
 		table = generateTable(repositories);
 	}
 

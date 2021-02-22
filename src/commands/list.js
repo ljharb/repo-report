@@ -64,13 +64,12 @@ const printAPIPoints = (points) => {
 \tremaining\t-\t${points.remaining}`);
 };
 
-const generateTable = (repositories, groupBy) => {
+const generateTable = (repositories, groupBy, sort) => {
 	let table;
 	if (groupBy) {
 		table = new Table({
 			head: [fields[groupBy], 'Repository'],
 		});
-
 		const groupedObj = {};
 		repositories.forEach((item) => {
 			const key = mappedFields[groupBy](item);
@@ -84,9 +83,14 @@ const generateTable = (repositories, groupBy) => {
 			table.push([key, value.join('\n')]);
 		});
 	} else {
+	
 		table = new Table({
 			head: fields,
 		});
+
+		if (sort) {
+			repositories.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
+		}
 
 		repositories.forEach((item) => {
 			table.push([
@@ -124,6 +128,8 @@ const list = async (flags) => {
 		}
 	}
 
+
+
 	// Repeated requests to get all repositories
 	let endCursor,
 		hasNextPage,
@@ -157,7 +163,12 @@ const list = async (flags) => {
 	// Generate output table
 	if (flags.g) {
 		table = generateTable(repositories, groupBy);
-	} else {
+	} 
+	else if (flags.s) {
+		table = generateTable(repositories, false, true);
+	}
+	
+	else {
 		table = generateTable(repositories);
 	}
 

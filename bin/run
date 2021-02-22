@@ -18,6 +18,8 @@ Yargs.usage('Usage: $0 <command> [options]')
 			.alias('f', 'fields')
 			.boolean('f')
 			.describe('f', 'Show available fields')
+			.alias('s', 'sort')
+			.describe('s', 'Sort repos alphabetically')
 			.help('h')
 			.alias('h', 'help').argv;
 		list(argv);
@@ -31,6 +33,8 @@ Yargs.usage('Usage: $0 <command> [options]')
 			.alias('f', 'fields')
 			.boolean('f')
 			.describe('f', 'Show available fields')
+			.alias('s', 'sort')
+			.describe('s', 'Sort repos alphabetically')
 			.help('h')
 			.alias('h', 'help').argv;
 		options(argv);
