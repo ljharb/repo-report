@@ -6,6 +6,9 @@
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
 const Table = require('cli-table');
+const {
+	listFields, getGroupIndex, printAPIPoints,
+} = require('../utils');
 
 // Field names and their extraction method to be used on the query result
 const fields = [
@@ -18,12 +21,6 @@ const mappedFields = [
 	(item) => (item.defaultBranchRef ? item.defaultBranchRef.name : '---'),
 	(item) => (item.isPrivate ? logSymbols.error : logSymbols.success),
 ];
-
-const listFields = () => fields.map((item) => console.log(`- ${item}`));
-
-const getGroupIndex = (group) => fields
-	.map((item) => item.toLowerCase())
-	.indexOf(group.toLowerCase());
 
 const generateQuery = (endCursor) => `
 query {
@@ -57,12 +54,6 @@ query {
   }
 }
 `;
-
-const printAPIPoints = (points) => {
-	console.log(`API Points:
-\tused\t\t-\t${points.cost}
-\tremaining\t-\t${points.remaining}`);
-};
 
 const generateTable = (repositories, groupBy) => {
 	let table;
@@ -111,13 +102,13 @@ const list = async (flags) => {
 
 	// List available fields
 	if (flags.f) {
-		return listFields();
+		return listFields(fields);
 	}
 
 	// Get index of field to be grouped by
 	let groupBy;
 	if (flags.g) {
-		groupBy = getGroupIndex(flags.g);
+		groupBy = getGroupIndex(flags.g, fields);
 		if (groupBy === -1) {
 			console.log(`${logSymbols.error} Invalid Field`);
 			return null;
