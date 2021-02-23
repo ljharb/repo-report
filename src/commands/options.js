@@ -113,10 +113,11 @@ const optionsList = async (flags) => {
 	}
 
 	// Repeated requests to get all repositories
-	let endCursor,
-		hasNextPage,
-		points,
-		repositories = [];
+
+	let endCursor;
+	let	hasNextPage;
+	let	points = { cost: 0 };
+	let	repositories = [];
 
 	do {
 		const {

@@ -116,10 +116,11 @@ const list = async (flags) => {
 	}
 
 	// Repeated requests to get all repositories
-	let endCursor,
-		hasNextPage,
-		points = { cost: 0 },
-		repositories = [];
+
+	let endCursor;
+	let	hasNextPage;
+	let	points = { cost: 0 };
+	let	repositories = [];
 
 	do {
 		const {
