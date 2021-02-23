@@ -84,11 +84,7 @@ const generateTable = (repositories, groupBy) => {
 			const itemFields = getItemFields(item);
 			const key = mappedFields[groupBy](itemFields);
 
-			if (key in groupedObj) {
-				groupedObj[key].push(itemFields.nameWithOwner);
-			} else {
-				groupedObj[key] = [itemFields.nameWithOwner];
-			}
+      groupedObj[key] = [].concat(groupedObj[key] || [], itemFields.nameWithOwner);
 		});
 
 		Object.entries(groupedObj).forEach(([key, value]) => {
