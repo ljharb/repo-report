@@ -91,8 +91,7 @@ const generateTable = (repositories, groupBy) => {
 			}
 		});
 
-		Object.entries(groupedObj).forEach((item) => {
-			const [key, value] = item;
+		Object.entries(groupedObj).forEach(([key, value]) => {
 			table.push([key, value.join('\n')]);
 		});
 	} else {

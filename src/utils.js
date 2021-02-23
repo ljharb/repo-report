@@ -2,7 +2,7 @@
 
 const listFields = (fields) => fields.map((item) => console.log(`- ${item}`));
 
-const getGroupIndex = (group, fields) => fields.map((item) => item.toLowerCase()).indexOf(group.toLowerCase());
+const getGroupIndex = (group, fields) => fields.findIndex((item) => item.toLowerCase() === group.toLowerCase());
 
 const printAPIPoints = (points) => {
 	console.log(`API Points:

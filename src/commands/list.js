@@ -7,7 +7,9 @@ const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
 const Table = require('cli-table');
 const {
-	listFields, getGroupIndex, printAPIPoints,
+	listFields,
+	getGroupIndex,
+	printAPIPoints,
 } = require('../utils');
 
 // Field names and their extraction method to be used on the query result
