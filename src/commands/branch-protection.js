@@ -15,19 +15,17 @@ const {
 
 const fields = [
 	'Repository',
-	'DefBranch',
 	'allowsForcePushes',
 	'allowsDeletions',
 	'dismissesStaleReviews',
-	'requiredApprovingReviewCount',
-	'requiresApprovingReviews',
-	'requiresCodeOwnerReviews',
+	'reqApprovingReviewCount',
+	'reqApprovingReviews',
+	'reqCodeOwnerReviews',
 	'pattern',
 ];
 
 const mappedFields = [
 	(item) => item.nameWithOwner,
-	(item) => item.defBranch,
 	(item) => (item.allowsForcePushes ? logSymbols.error : logSymbols.success),
 	(item) => (item.allowsDeletions ? logSymbols.error : logSymbols.success),
 	(item) => (item.dismissesStaleReviews ? logSymbols.error : logSymbols.success),
@@ -52,7 +50,6 @@ query{
       nodes {
         nameWithOwner
         defaultBranchRef {
-          name
           branchProtectionRule {
             allowsForcePushes
             allowsDeletions
@@ -104,17 +101,7 @@ const generateTable = (repositories, groupBy) => {
 		});
 		repositories.forEach((item) => {
 			const itemFields = getItemFields(item);
-			table.push([
-				itemFields.nameWithOwner,
-				itemFields.defBranch,
-				itemFields.allowsForcePushes ? logSymbols.success : logSymbols.error,
-				itemFields.allowsDeletions ? logSymbols.success : logSymbols.error,
-				itemFields.dismissesStaleReviews ? logSymbols.success : logSymbols.error,
-				itemFields.requiredApprovingReviewCount || '---',
-				itemFields.requiresApprovingReviews ? logSymbols.success : logSymbols.error,
-				itemFields.requiresCodeOwnerReviews ? logSymbols.success : logSymbols.error,
-				itemFields.pattern || '---',
-			]);
+			table.push(mappedFields.map((func) => func(itemFields)));
 		});
 	}
 	return table;

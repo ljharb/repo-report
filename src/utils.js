@@ -12,7 +12,6 @@ const printAPIPoints = (points) => {
 
 const getItemFields = (item) => {
 	const nameWithOwner = item.nameWithOwner;
-	const defBranch = item.defaultBranchRef ? item.defaultBranchRef.name : '---';
 	const { branchProtectionRule } = item.defaultBranchRef || {};
 	const {
 		allowsForcePushes,
@@ -27,7 +26,7 @@ const getItemFields = (item) => {
 	return {
 		allowsDeletions,
 		allowsForcePushes,
-		defBranch,
+		// defBranch,
 		dismissesStaleReviews,
 		nameWithOwner,
 		pattern,
