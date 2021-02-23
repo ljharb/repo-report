@@ -6,29 +6,27 @@
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
 const Table = require('cli-table');
-const { options } = require('yargs');
+const {
+	listFields,
+	getGroupIndex,
+	printAPIPoints,
+} = require('../utils');
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	'Repository', 'Wiki', 'Projects', 'securityPolicy','mergeCommit', 'squashMerge', 'rebaseMerge', 'deleteOnMerge',
+	'Repository', 'Wiki', 'Projects', 'securityPolicy', 'mergeCommit', 'squashMerge', 'rebaseMerge', 'deleteOnMerge',
 ];
 
 const mappedFields = [
 	(item) => item.nameWithOwner,
 	(item) => (item.hasWikiEnabled ? logSymbols.success : logSymbols.error),
-    (item) => (item.hasProjectsEnabled ? logSymbols.success : logSymbols.error),
-    (item) => (item.isSecurityPolicyEnabled ? logSymbols.success : logSymbols.error),
-    (item) => (item.mergeCommitAllowed ? logSymbols.success : logSymbols.error),
-    (item) => (item.squashMergeAllowed ? logSymbols.success : logSymbols.error),
-    (item) => (item.rebaseMergeAllowed ? logSymbols.success : logSymbols.error),
-    (item) => (item.deleteBranchOnMerge ? logSymbols.success : logSymbols.error),
+	(item) => (item.hasProjectsEnabled ? logSymbols.success : logSymbols.error),
+	(item) => (item.isSecurityPolicyEnabled ? logSymbols.success : logSymbols.error),
+	(item) => (item.mergeCommitAllowed ? logSymbols.success : logSymbols.error),
+	(item) => (item.squashMergeAllowed ? logSymbols.success : logSymbols.error),
+	(item) => (item.rebaseMergeAllowed ? logSymbols.success : logSymbols.error),
+	(item) => (item.deleteBranchOnMerge ? logSymbols.success : logSymbols.error),
 ];
-
-const listFields = () => fields.map((item) => console.log(`- ${item}`));
-
-const getGroupIndex = (group) => fields
-	.map((item) => item.toLowerCase())
-	.indexOf(group.toLowerCase());
 
 const generateQuery = (endCursor) => `
 query {
@@ -49,11 +47,11 @@ query {
         hasProjectsEnabled
         isSecurityPolicyEnabled
         mergeCommitAllowed
-        squashMergeAllowed 
-		rebaseMergeAllowed 
+        squashMergeAllowed
+        rebaseMergeAllowed
         deleteBranchOnMerge
 	  }
-     
+
 	}
   }
   rateLimit {
@@ -62,12 +60,6 @@ query {
   }
 }
 `;
-
-const printAPIPoints = (points) => {
-	console.log(`API Points:
-\tused\t\t-\t${points.cost}
-\tremaining\t-\t${points.remaining}`);
-};
 
 const generateTable = (repositories, groupBy) => {
 	let table;
@@ -109,13 +101,13 @@ const optionsList = async (flags) => {
 
 	// List available fields
 	if (flags.f) {
-		return listFields();
+		return listFields(fields);
 	}
 
 	// Get index of field to be grouped by
 	let groupBy;
 	if (flags.g) {
-		groupBy = getGroupIndex(flags.g);
+		groupBy = getGroupIndex(flags.g, fields);
 		if (groupBy === -1) {
 			console.log(`${logSymbols.error} Invalid Field`);
 			return null;
@@ -123,10 +115,11 @@ const optionsList = async (flags) => {
 	}
 
 	// Repeated requests to get all repositories
-	let endCursor,
-		hasNextPage,
-		points,
-		repositories = [];
+
+	let endCursor;
+	let	hasNextPage;
+	let	points = { cost: 0 };
+	let	repositories = [];
 
 	do {
 		const {
