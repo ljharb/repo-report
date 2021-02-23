@@ -5,8 +5,7 @@
 
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
-const Table = require('cli-table');	
-const { options } = require('yargs');
+const Table = require('cli-table');
 
 // Field names and their extraction method to be used on the query result
 const fields = [
@@ -161,10 +160,8 @@ const optionsList = async (flags) => {
 	// Generate output table
 	if (flags.g) {
 		table = generateTable(repositories, groupBy);
-	} else if (flags.s) {
-		table = generateTable(repositories, false, true);
 	} else {
-		table = generateTable(repositories);
+		table = generateTable(repositories, null, flags.s);
 	}
 
 	console.log(table.toString());

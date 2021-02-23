@@ -83,7 +83,7 @@ const generateTable = (repositories, groupBy, sort) => {
 			table.push([key, value.join('\n')]);
 		});
 	} else {
-	
+
 		table = new Table({
 			head: fields,
 		});
@@ -122,8 +122,6 @@ const list = async (flags) => {
 		}
 	}
 
-
-
 	// Repeated requests to get all repositories
 	let endCursor,
 		hasNextPage,
@@ -144,7 +142,6 @@ const list = async (flags) => {
 				},
 			},
 		);
-
 		endCursor = pageInfo.endCursor;
 		hasNextPage = pageInfo.hasNextPage;
 		points.cost += rateLimit.cost;
@@ -157,10 +154,8 @@ const list = async (flags) => {
 	// Generate output table
 	if (flags.g) {
 		table = generateTable(repositories, groupBy);
-	} else if (flags.s) {
-		table = generateTable(repositories, false, true);
 	} else {
-		table = generateTable(repositories);
+		table = generateTable(repositories, null, flags.s);
 	}
 
 	console.log(table.toString());
