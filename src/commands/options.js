@@ -6,6 +6,11 @@
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
 const Table = require('cli-table');
+const {
+	listFields,
+	getGroupIndex,
+	printAPIPoints,
+} = require('../utils');
 
 // Field names and their extraction method to be used on the query result
 const fields = [
@@ -22,12 +27,6 @@ const mappedFields = [
 	(item) => (item.rebaseMergeAllowed ? logSymbols.success : logSymbols.error),
 	(item) => (item.deleteBranchOnMerge ? logSymbols.success : logSymbols.error),
 ];
-
-const listFields = () => fields.map((item) => console.log(`- ${item}`));
-
-const getGroupIndex = (group) => fields
-	.map((item) => item.toLowerCase())
-	.indexOf(group.toLowerCase());
 
 const generateQuery = (endCursor) => `
 query {
@@ -49,11 +48,11 @@ query {
         hasProjectsEnabled
         isSecurityPolicyEnabled
         mergeCommitAllowed
-        squashMergeAllowed 
-		rebaseMergeAllowed 
+        squashMergeAllowed
+        rebaseMergeAllowed
         deleteBranchOnMerge
 	  }
-     
+
 	}
   }
   rateLimit {
@@ -62,12 +61,6 @@ query {
   }
 }
 `;
-
-const printAPIPoints = (points) => {
-	console.log(`API Points:
-\tused\t\t-\t${points.cost}
-\tremaining\t-\t${points.remaining}`);
-};
 
 const generateTable = (repositories, groupBy, sort) => {
 	let table;
@@ -114,13 +107,13 @@ const optionsList = async (flags) => {
 
 	// List available fields
 	if (flags.f) {
-		return listFields();
+		return listFields(fields);
 	}
 
 	// Get index of field to be grouped by
 	let groupBy;
 	if (flags.g) {
-		groupBy = getGroupIndex(flags.g);
+		groupBy = getGroupIndex(flags.g, fields);
 		if (groupBy === -1) {
 			console.log(`${logSymbols.error} Invalid Field`);
 			return null;

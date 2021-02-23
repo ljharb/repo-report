@@ -6,7 +6,8 @@
 require('dotenv').config();
 const Yargs = require('yargs');
 const list = require('../src/commands/list');
-const options = require('../src/commands/options')
+const options = require('../src/commands/options');
+const branchProtections = require('../src/commands/branch-protection');
 
 Yargs.usage('Usage: $0 <command> [options]')
 	.command('list', 'lists all repositories', function (yargs) {
@@ -39,6 +40,23 @@ Yargs.usage('Usage: $0 <command> [options]')
 			.alias('h', 'help').argv;
 		options(argv);
 	})
+	.command(
+		'branchProtection',
+		'list branch protections for default branch for all repositories',
+		function (yargs) {
+			const argv = yargs
+				.usage('Usage: $0 branchProtection [options]')
+				.alias('g', 'group-by')
+				.nargs('g', 1)
+				.describe('g', 'Field to be grouped by')
+				.alias('f', 'fields')
+				.boolean('f')
+				.describe('f', 'Show available fields')
+				.help('h')
+				.alias('h', 'help').argv;
+			branchProtections(argv);
+		},
+	)
 	.help('h')
 	.alias('h', 'help')
 	.parse();
