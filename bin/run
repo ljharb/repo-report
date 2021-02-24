@@ -5,14 +5,23 @@
 
 require('dotenv').config();
 const Yargs = require('yargs');
+const logSymbols = require('log-symbols');
 const list = require('../src/commands/list');
 const options = require('../src/commands/options');
 const branchProtections = require('../src/commands/branch-protection');
 
 Yargs.usage('Usage: $0 <command> [options]')
+	.default('token', process.env.GITHUB_PAT, 'this defaults to the user token')
+	.check((arg) => {
+		if (arg.token) {
+			return true;
+		}
+		throw new Error(`${logSymbols.error} env variable GITHUB_PAT not found`);
+	}, true)
 	.command('list', 'lists all repositories', function (yargs) {
 		const argv = yargs
 			.usage('Usage: $0 list [options]')
+
 			.alias('g', 'group-by')
 			.nargs('g', 1)
 			.describe('g', 'Field to be grouped by')
