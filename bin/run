@@ -12,13 +12,13 @@ const options = require('../src/commands/options');
 const branchProtections = require('../src/commands/branch-protection');
 
 Yargs.usage('Usage: $0 <command> [options]')
-	.default('token', process.env.GITHUB_PAT, 'this defaults to the user token')
+	.default('token', process.env.GITHUB_PAT)
 	.hide('token')
 	.check((arg) => {
 		if (arg.token) {
 			return true;
 		}
-		throw `${logSymbols.error} env variable GITHUB_PAT not found`;
+		throw `${logSymbols.error} env variable GITHUB_PAT not found. Refer to #Installation in README.md on how to set env variable`;
 	}, true)
 	.command('list', 'lists all repositories', function (yargs) {
 		const argv = yargs
