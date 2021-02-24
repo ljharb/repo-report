@@ -13,6 +13,7 @@ const branchProtections = require('../src/commands/branch-protection');
 
 Yargs.usage('Usage: $0 <command> [options]')
 	.default('token', process.env.GITHUB_PAT, 'this defaults to the user token')
+	.hide('token')
 	.check((arg) => {
 		if (arg.token) {
 			return true;
@@ -31,6 +32,7 @@ Yargs.usage('Usage: $0 <command> [options]')
 			.describe('f', 'Show available fields')
 			.help('h')
 			.alias('h', 'help').argv;
+		console.log(argv);
 		list(argv);
 	})
 	.command('options', 'lists option settings', function (yargs) {
