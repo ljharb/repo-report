@@ -84,7 +84,7 @@ const generateTable = (repositories, groupBy) => {
 			const itemFields = getItemFields(item);
 			const key = mappedFields[groupBy](itemFields);
 
-      groupedObj[key] = [].concat(groupedObj[key] || [], itemFields.nameWithOwner);
+			groupedObj[key] = [].concat(groupedObj[key] || [], itemFields.nameWithOwner);
 		});
 
 		Object.entries(groupedObj).forEach(([key, value]) => {
@@ -103,10 +103,6 @@ const generateTable = (repositories, groupBy) => {
 };
 
 const branchProtection = async (flags) => {
-	if (!process.env.GITHUB_PAT) {
-		console.log(`${logSymbols.error} env variable GITHUB_PAT not found`);
-		return null;
-	}
 	if (flags.f) {
 		return listFields(fields);
 	}
