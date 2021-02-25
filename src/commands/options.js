@@ -42,6 +42,7 @@ query {
 		hasNextPage
 	  }
 	  nodes {
+		name
 		nameWithOwner
         hasWikiEnabled
         hasProjectsEnabled
@@ -61,7 +62,7 @@ query {
 }
 `;
 
-const generateTable = (repositories, groupBy) => {
+const generateTable = (repositories, groupBy, sort) => {
 	let table;
 	if (groupBy) {
 		table = new Table({
@@ -77,12 +78,17 @@ const generateTable = (repositories, groupBy) => {
 		});
 
 		Object.entries(groupedObj).forEach((item) => {
-			table.push([item[0], item[1].join('\n')]);
+			const [key, value] = item;
+			table.push([key, value.join('\n')]);
 		});
 	} else {
 		table = new Table({
 			head: fields,
 		});
+
+		if (sort) {
+			repositories.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+		}
 
 		repositories.forEach((item) => {
 			table.push(mappedFields.map((func) => func(item)));
@@ -115,11 +121,10 @@ const optionsList = async (flags) => {
 	}
 
 	// Repeated requests to get all repositories
-
-	let endCursor;
-	let	hasNextPage;
-	let	points = { cost: 0 };
-	let	repositories = [];
+	let endCursor,
+		hasNextPage,
+		points = { cost: 0 },
+		repositories = [];
 
 	do {
 		const {
@@ -138,7 +143,8 @@ const optionsList = async (flags) => {
 
 		endCursor = pageInfo.endCursor;
 		hasNextPage = pageInfo.hasNextPage;
-		points = rateLimit;
+		points.cost += rateLimit.cost;
+		points.remaining = rateLimit.remaining;
 		repositories = repositories.concat(nodes);
 	} while (hasNextPage);
 
@@ -148,7 +154,7 @@ const optionsList = async (flags) => {
 	if (flags.g) {
 		table = generateTable(repositories, groupBy);
 	} else {
-		table = generateTable(repositories);
+		table = generateTable(repositories, null, flags.s);
 	}
 
 	console.log(table.toString());

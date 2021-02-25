@@ -57,13 +57,12 @@ query {
 }
 `;
 
-const generateTable = (repositories, groupBy) => {
+const generateTable = (repositories, groupBy, sort) => {
 	let table;
 	if (groupBy) {
 		table = new Table({
 			head: [fields[groupBy], 'Repository'],
 		});
-
 		const groupedObj = {};
 		repositories.forEach((item) => {
 			const key = mappedFields[groupBy](item);
@@ -77,18 +76,17 @@ const generateTable = (repositories, groupBy) => {
 			table.push([key, value.join('\n')]);
 		});
 	} else {
+
 		table = new Table({
 			head: fields,
 		});
 
+		if (sort) {
+			repositories.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+		}
+
 		repositories.forEach((item) => {
-			table.push([
-				item.name,
-				item.owner.login,
-				item.viewerPermission,
-				item.defaultBranchRef ? item.defaultBranchRef.name : '---',
-				item.isPrivate ? logSymbols.error : logSymbols.success,
-			]);
+			table.push(mappedFields.map((func) => func(item)));
 		});
 
 	}
@@ -138,7 +136,6 @@ const list = async (flags) => {
 				},
 			},
 		);
-
 		endCursor = pageInfo.endCursor;
 		hasNextPage = pageInfo.hasNextPage;
 		points.cost += rateLimit.cost;
@@ -152,7 +149,7 @@ const list = async (flags) => {
 	if (flags.g) {
 		table = generateTable(repositories, groupBy);
 	} else {
-		table = generateTable(repositories);
+		table = generateTable(repositories, null, flags.s);
 	}
 
 	console.log(table.toString());
