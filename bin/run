@@ -32,7 +32,6 @@ Yargs.usage('Usage: $0 <command> [options]')
 			.describe('f', 'Show available fields')
 			.help('h')
 			.alias('h', 'help').argv;
-		console.log(argv);
 		list(argv);
 	})
 	.command('options', 'lists option settings', function (yargs) {
