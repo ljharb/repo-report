@@ -12,7 +12,7 @@ const options = require('../src/commands/options');
 const branchProtections = require('../src/commands/branch-protection');
 
 Yargs.usage('Usage: $0 <command> [options]')
-	.default('token', process.env.GITHUB_PAT)
+	.default('token', process.env.GITHUB_PAT.replace(/[a-z\d]/gi, '*'))
 	.hide('token')
 	.check((arg) => {
 		if (arg.token) {
