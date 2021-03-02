@@ -14,11 +14,10 @@ const {
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	'Repository', 'Owner', 'Access', 'DefBranch', 'isPublic',
+	'Repository', 'Access', 'DefBranch', 'isPublic',
 ];
 const mappedFields = [
-	(item) => item.name,
-	(item) => item.owner.login,
+	(item) => item.nameWithOwner,
 	(item) => item.viewerPermission,
 	(item) => (item.defaultBranchRef ? item.defaultBranchRef.name : '---'),
 	(item) => (item.isPrivate ? logSymbols.error : logSymbols.success),
@@ -39,9 +38,7 @@ query {
 	  }
 	  nodes {
 		name
-		owner {
-		  login
-		}
+		nameWithOwner
 		isPrivate
 		defaultBranchRef {
 			name
@@ -67,8 +64,8 @@ const generateTable = (repositories, groupBy, sort) => {
 		repositories.forEach((item) => {
 			const key = mappedFields[groupBy](item);
 			if (key in groupedObj) {
-				groupedObj[key].push(item.name);
-			} else { groupedObj[key] = [item.name]; }
+				groupedObj[key].push(item.nameWithOwner);
+			} else { groupedObj[key] = [item.nameWithOwner]; }
 		});
 
 		Object.entries(groupedObj).forEach((item) => {

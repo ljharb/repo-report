@@ -8,7 +8,7 @@ CLI to list all repos a user has access to, and report on their configuration in
 
 # Usage
  
- - `node ./src/index.js list` to have a list of repos with different fields: access, default branch, etc.
+ - `node bin/run list` to have a list of repos with different fields: access, default branch, etc.
 
 
 # In a NutShell
