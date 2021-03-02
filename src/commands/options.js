@@ -5,10 +5,10 @@
 
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
-const Table = require('cli-table');
 const {
 	listFields,
 	getGroupIndex,
+	generateTable,
 	printAPIPoints,
 } = require('../utils');
 
@@ -62,41 +62,6 @@ query {
 }
 `;
 
-const generateTable = (repositories, groupBy, sort) => {
-	let table;
-	if (groupBy) {
-		table = new Table({
-			head: [fields[groupBy], 'Repository'],
-		});
-
-		const groupedObj = {};
-		repositories.forEach((item) => {
-			const key = mappedFields[groupBy](item);
-			if (key in groupedObj) {
-				groupedObj[key].push(item.nameWithOwner);
-			} else { groupedObj[key] = [item.nameWithOwner]; }
-		});
-
-		Object.entries(groupedObj).forEach((item) => {
-			const [key, value] = item;
-			table.push([key, value.join('\n')]);
-		});
-	} else {
-		table = new Table({
-			head: fields,
-		});
-
-		if (sort) {
-			repositories.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
-		}
-
-		repositories.forEach((item) => {
-			table.push(mappedFields.map((func) => func(item)));
-		});
-
-	}
-	return table;
-};
 
 const optionsList = async (flags) => {
 	// Handle Token not found error
@@ -152,9 +117,9 @@ const optionsList = async (flags) => {
 
 	// Generate output table
 	if (flags.g) {
-		table = generateTable(repositories, groupBy);
+		table = generateTable(fields, mappedFields, repositories, groupBy);
 	} else {
-		table = generateTable(repositories, null, flags.s);
+		table = generateTable(fields, mappedFields, repositories, null, flags.s);
 	}
 
 	console.log(table.toString());
