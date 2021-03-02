@@ -15,7 +15,10 @@ const {
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	'Repository', 'Access', 'DefBranch', 'isPublic',
+	'Repository',
+	'Access',
+	'DefBranch',
+	'isPublic',
 ];
 const mappedFields = [
 	(item) => item.nameWithOwner,

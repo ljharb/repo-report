@@ -47,11 +47,12 @@ const generateTable = (fields, mappedFields, repositories, groupBy, sort) => {
 			const key = mappedFields[groupBy](item);
 			if (key in groupedObj) {
 				groupedObj[key].push(item.nameWithOwner);
-			} else { groupedObj[key] = [item.nameWithOwner]; }
+			} else {
+			  groupedObj[key] = [item.nameWithOwner];
+			}
 		});
 
-		Object.entries(groupedObj).forEach((item) => {
-			const [key, value] = item;
+		Object.entries(groupedObj).forEach(([key, value]) => {
 			table.push([key, value.join('\n')]);
 		});
 	} else {
