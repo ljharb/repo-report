@@ -8,6 +8,7 @@ const Yargs = require('yargs');
 const list = require('../src/commands/list');
 const options = require('../src/commands/options');
 const branchProtections = require('../src/commands/branch-protection');
+const prStatus = require('../src/commands/pr-status');
 
 Yargs.usage('Usage: $0 <command> [options]')
 	.command('list', 'lists all repositories', function (yargs) {
@@ -55,6 +56,24 @@ Yargs.usage('Usage: $0 <command> [options]')
 				.help('h')
 				.alias('h', 'help').argv;
 			branchProtections(argv);
+		},
+	)
+	.command(
+		'pr-status',
+		'fetch status checks for a particular repository and a given pull request number',
+		function (yargs) {
+			const argv = yargs
+				.usage('Usage: $0 pr-status --repo <owner/repo> --id <pr-id> [options]')
+				.option('repo', {
+					describe: 'the owner\'s name and the repository\'s name separated by /',
+				})
+				.option('id', {
+					describe: 'the pull request\'s unique identifier',
+				})
+				.demandOption(['repo', 'id'])
+				.help('h')
+				.alias('h', 'help').argv;
+			prStatus(argv);
 		},
 	)
 	.help('h')
