@@ -82,10 +82,10 @@ const getRepositories = async (generateQuery) => {
 	return { points, repositories };
 };
 
-const generateTable = (fields, repositories, { groupBy, sort } = {}) => {
+const generateTable = (fields, rows, { groupBy, sort } = {}) => {
 	let table;
 	if (sort) {
-		repositories.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+		rows.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 	}
 	if (groupBy) {
 		const otherFields = fields.filter((field) => field.name !== groupBy.name);
@@ -93,7 +93,7 @@ const generateTable = (fields, repositories, { groupBy, sort } = {}) => {
 			head: [groupBy.name, ...otherFields.map((field) => field.name)],
 		});
 		const groupedObj = {};
-		repositories.forEach((item) => {
+		rows.forEach((item) => {
 			const key = groupBy.extract(item);
 			const value = otherFields.map((field) => field.extract(item));
 			if (key in groupedObj) {
@@ -109,7 +109,7 @@ const generateTable = (fields, repositories, { groupBy, sort } = {}) => {
 		table = new Table({
 			head: fields.map((field) => field.name),
 		});
-		repositories.forEach((item) => {
+		rows.forEach((item) => {
 			table.push(fields.map((field) => field.extract(item)));
 		});
 	}

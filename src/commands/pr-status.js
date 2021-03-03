@@ -1,10 +1,12 @@
+/* eslint-disable sort-keys */
+
 'use strict';
 
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
-const Table = require('cli-table');
 const {
 	printAPIPoints,
+	generateTable,
 } = require('../utils');
 
 const generateQuery = ({
@@ -71,20 +73,10 @@ const getBuildInfo = (pullRequest) => {
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	'Mergeable?', 'Approved?', 'Build',
+	{ name: 'Mergeable?', extract: isMergeable },
+	{ name: 'Approved?', extract:	isApproved },
+	{ name: 'Build', extract:	getBuildInfo },
 ];
-const mappedFields = [
-	isMergeable, isApproved, getBuildInfo,
-];
-
-const generateTable = (data) => {
-	let table;
-	table = new Table({
-		head: fields,
-	});
-	table.push(mappedFields.map((func) => func(data)));
-	return table;
-};
 
 const prStatus = async (flags) => {
 	try {
@@ -100,7 +92,7 @@ const prStatus = async (flags) => {
 				},
 			},
 		);
-		const table = generateTable(pullRequest);
+		const table = generateTable(fields, [pullRequest]);
 		console.log(table.toString());
 		printAPIPoints(rateLimit);
 	} catch (err) {
