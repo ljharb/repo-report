@@ -87,21 +87,26 @@ const generateTable = (data) => {
 };
 
 const prStatus = async (flags) => {
-	const [owner, ...repo] = flags.repo.split('/');
-	const prId = flags.id;
-	const { repository: { pullRequest }, rateLimit } = await graphql(
-		generateQuery({
-			owner, prId, repo: repo.join('/'),
-		}),
-		{
-			headers: {
-				authorization: `token ${process.env.GITHUB_PAT}`,
+	try {
+		const [owner, ...repo] = flags.repo.split('/');
+		const prId = flags.id;
+		const { repository: { pullRequest }, rateLimit } = await graphql(
+			generateQuery({
+				owner, prId, repo: repo.join('/'),
+			}),
+			{
+				headers: {
+					authorization: `token ${process.env.GITHUB_PAT}`,
+				},
 			},
-		},
-	);
-	const table = generateTable(pullRequest);
-	console.log(table.toString());
-	printAPIPoints(rateLimit);
+		);
+		const table = generateTable(pullRequest);
+		console.log(table.toString());
+		printAPIPoints(rateLimit);
+	} catch (err) {
+		console.log(err.errors.map((x) => x.message).join('\n'));
+		printAPIPoints(err.data.rateLimit);
+	}
 };
 
 module.exports = prStatus;
