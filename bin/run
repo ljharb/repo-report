@@ -83,6 +83,12 @@ Yargs.usage('Usage: $0 <command> [options]')
 		function (yargs) {
 			const argv = yargs
 				.usage('Usage: $0 detail [options]')
+				.alias('g', 'group-by')
+				.nargs('g', 1)
+				.describe('g', 'Field to be grouped by')
+				.alias('f', 'fields')
+				.boolean('f')
+				.describe('f', 'Show available fields')
 				.alias('s', 'sort')
 				.describe('s', 'Sort repos alphabetically')
 				.help('h')

@@ -3,11 +3,13 @@
 'use strict';
 
 const logSymbols = require('log-symbols');
-const Table = require('cli-table');
 const {
 	listFields,
 	printAPIPoints,
 	getRepositories,
+	generateTable,
+	getGroupByField,
+	getSymbol,
 } = require('../utils');
 
 // Field names and their extraction method to be used on the query result
@@ -15,14 +17,14 @@ const fields = [
 	{ name: 'Repository', extract: (item) => item.nameWithOwner },
 	{ name: 'Access', extract: (item) => item.viewerPermission },
 	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef ? item.defaultBranchRef.name : '---') },
-	{ name: 'isPublic', extract: (item) => (item.isPrivate ? logSymbols.error : logSymbols.success) },
-	{ name: 'Wiki', extract: (item) => (item.hasWikiEnabled ? logSymbols.success : logSymbols.error) },
-	{ name: 'Projects', extract: (item) => (item.hasProjectsEnabled ? logSymbols.success : logSymbols.error) },
-	{ name: 'securityPolicy', extract: (item) => (item.isSecurityPolicyEnabled ? logSymbols.success : logSymbols.error) },
-	{ name: 'mergeCommit', extract: (item) => (item.mergeCommitAllowed ? logSymbols.success : logSymbols.error) },
-	{ name: 'squashMerge', extract: (item) => (item.squashMergeAllowed ? logSymbols.success : logSymbols.error) },
-	{ name: 'rebaseMerge', extract: (item) => (item.rebaseMergeAllowed ? logSymbols.success : logSymbols.error) },
-	{ name: 'deleteOnMerge', extract: (item) => (item.deleteBranchOnMerge ? logSymbols.success : logSymbols.error) },
+	{ name: 'isPrivate', extract: (item) => getSymbol(item.isPrivate) },
+	{ name: 'Wiki', extract: (item) => getSymbol(item.hasWikiEnabled) },
+	{ name: 'Projects', extract: (item) => getSymbol(item.hasProjectsEnabled) },
+	{ name: 'securityPolicy', extract: (item) => getSymbol(item.isSecurityPolicyEnabled) },
+	{ name: 'mergeCommit', extract: (item) => getSymbol(item.mergeCommitAllowed) },
+	{ name: 'squashMerge', extract: (item) => getSymbol(item.squashMergeAllowed) },
+	{ name: 'rebaseMerge', extract: (item) => getSymbol(item.rebaseMergeAllowed) },
+	{ name: 'deleteOnMerge', extract: (item) => getSymbol(item.deleteBranchOnMerge) },
 ];
 
 const generateQuery = (endCursor) => `
@@ -75,23 +77,6 @@ query {
 }
 `;
 
-const generateTable = (repositories, sort) => {
-	let table;
-
-	table = new Table({
-		head: fields.map((field) => field.name),
-	});
-
-	if (sort) {
-		repositories.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
-	}
-
-	repositories.forEach((item) => {
-		table.push(fields.map((field) => field.extract(item)));
-	});
-	return table;
-};
-
 const detail = async (flags) => {
 	// Handle Token not found error
 	if (!process.env.GITHUB_PAT) {
@@ -104,13 +89,22 @@ const detail = async (flags) => {
 		return listFields(fields);
 	}
 
+	// Get index of field to be grouped by
+	let groupBy;
+	if (flags.g) {
+		groupBy = getGroupByField(flags.g, fields);
+		if (groupBy === null) {
+			return null;
+		}
+	}
+
 	// Get all repositories
 	const { points, repositories } = await getRepositories(generateQuery);
 
 	let table;
 
 	// Generate output table
-	table = generateTable(repositories, flags.s);
+	table = generateTable(fields, repositories, { sort: flags.s, groupBy });
 
 	console.log(table.toString());
 
