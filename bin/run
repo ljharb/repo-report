@@ -9,6 +9,7 @@ const list = require('../src/commands/list');
 const options = require('../src/commands/options');
 const branchProtections = require('../src/commands/branch-protection');
 const prStatus = require('../src/commands/pr-status');
+const detail = require('../src/commands/detail');
 
 Yargs.usage('Usage: $0 <command> [options]')
 	.command('list', 'lists all repositories', function (yargs) {
@@ -74,6 +75,19 @@ Yargs.usage('Usage: $0 <command> [options]')
 				.help('h')
 				.alias('h', 'help').argv;
 			prStatus(argv);
+		},
+	)
+	.command(
+		'detail',
+		'fetch all available details about all of your repositories',
+		function (yargs) {
+			const argv = yargs
+				.usage('Usage: $0 detail [options]')
+				.alias('s', 'sort')
+				.describe('s', 'Sort repos alphabetically')
+				.help('h')
+				.alias('h', 'help').argv;
+			detail(argv);
 		},
 	)
 	.help('h')
