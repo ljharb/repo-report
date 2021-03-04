@@ -48,8 +48,8 @@ const fields = [
 	{ name: 'hasStarred?', extract: (item) => getSymbol(item.viewerHasStarred) },
 	{ name: 'Subscription', extract: (item) => item.viewerSubscription },
 	{ name: 'createdAt', extract: (item) => item.createdAt.split('T')[0] },
-	{ name: 'createdAt', extract: (item) => item.createdAt.split('T')[0] },
-	{ name: 'createdAt', extract: (item) => item.createdAt.split('T')[0] },
+	{ name: 'updatedAt', extract: (item) => item.updatedAt.split('T')[0] },
+	{ name: 'pushedAt', extract: (item) => item.pushedAt.split('T')[0] },
 ];
 
 const generateQuery = (endCursor) => `
