@@ -103,10 +103,6 @@ const generateTable = (repositories, groupBy) => {
 };
 
 const branchProtection = async (flags) => {
-	if (!process.env.GITHUB_PAT) {
-		console.log(`${logSymbols.error} env variable GITHUB_PAT not found`);
-		return null;
-	}
 	if (flags.f) {
 		return listFields(fields);
 	}

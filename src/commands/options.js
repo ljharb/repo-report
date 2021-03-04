@@ -99,11 +99,6 @@ const generateTable = (repositories, groupBy, sort) => {
 };
 
 const optionsList = async (flags) => {
-	// Handle Token not found error
-	if (!process.env.GITHUB_PAT) {
-		console.log(`${logSymbols.error} env variable GITHUB_PAT not found`);
-		return null;
-	}
 
 	// List available fields
 	if (flags.f) {
