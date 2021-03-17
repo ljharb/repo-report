@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 /* eslint-disable max-lines-per-function */
 /* eslint-disable sort-keys */
 
@@ -31,7 +30,7 @@ const fields = [
 	{ name: 'DeleteOnMerge', extract: (item) => getSymbol(item.deleteBranchOnMerge) },
 	{ name: 'HasStarred?', extract: (item) => getSymbol(item.viewerHasStarred) },
 	{ name: 'Subscription', extract: (item) => item.viewerSubscription },
-	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef ? item.defaultBranchRef.name : '---') },
+	{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' },
 	{ name: 'AllowsForcePushes', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsForcePushes) },
 	{ name: 'AllowsDeletions', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsDeletions) },
 	{ name: 'DismissesStaleReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.dismissesStaleReviews) },
