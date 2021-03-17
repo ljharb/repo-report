@@ -26,7 +26,7 @@ const fields = [
 	{ name: 'Archived?', extract: (item) => getSymbol(item.isArchived) },
 	{ name: 'BlankIssuesEnabled?', extract: (item) => getSymbol(item.isBlankIssuesEnabled) },
 	{ name: 'SecurityPolicyEnabled?', extract: (item) => getSymbol(item.isSecurityPolicyEnabled) },
-	{ name: 'License', extract: (item) => (item.licenseinfo ? item.licenseinfo.name : '---') },
+	{ name: 'License', extract: (item) => item.licenseInfo?.name || '---' },
 	{ name: 'Merge Strategies', extract: getMergeStrategies },
 	{ name: 'DeleteOnMerge', extract: (item) => getSymbol(item.deleteBranchOnMerge) },
 	{ name: 'HasStarred?', extract: (item) => getSymbol(item.viewerHasStarred) },
