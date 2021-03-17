@@ -18,7 +18,7 @@ const getMergeStrategies = (item) => `${item.mergeCommitAllowed ? 'MERGE' : ''} 
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒' : ''}${item.nameWithOwner}` },
+	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
 	{ name: 'Access', extract: (item) => item.viewerPermission },
 	{ name: 'IssuesEnabled?', extract: (item) => getSymbol(item.hasIssuesEnabled) },
 	{ name: 'ProjectsEnabled?', extract: (item) => getSymbol(item.hasProjectsEnabled) },
