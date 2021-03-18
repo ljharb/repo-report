@@ -14,14 +14,14 @@ const {
 } = require('../utils');
 
 const fields = [
-	{ name: 'Repository', extract: (item) => item.nameWithOwner },
-	{ name: 'allowsForcePushes', extract: (item) => getSymbol(item.allowsForcePushes) },
-	{ name: 'allowsDeletions', extract: (item) => getSymbol(item.allowsDeletions) },
-	{ name: 'dismissesStaleReviews', extract: (item) => getSymbol(item.dismissesStaleReviews) },
-	{ name: 'reqApprovingReviewCount', extract: (item) => checkNull(item.requiredApprovingReviewCount) },
-	{ name: 'reqApprovingReviews', extract: (item) => getSymbol(item.requiresApprovingReviews) },
-	{ name: 'reqCodeOwnerReviews', extract: (item) => getSymbol(item.requiresCodeOwnerReviews) },
-	{ name: 'pattern', extract: (item) => checkNull(item.pattern) },
+	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
+	{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' },
+	{ name: 'AllowsForcePushes', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsForcePushes) },
+	{ name: 'AllowsDeletions', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsDeletions) },
+	{ name: 'DismissesStaleReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.dismissesStaleReviews) },
+	{ name: 'ReqApprovingReviewCount', extract: (item) => checkNull(item.defaultBranchRef?.branchProtectionRule?.requiredApprovingReviewCount) },
+	{ name: 'ReqApprovingReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresApprovingReviews) },
+	{ name: 'ReqCodeOwnerReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresCodeOwnerReviews) },
 ];
 
 const generateQuery = (endCursor) => `
@@ -38,6 +38,7 @@ query{
       }
       nodes {
         nameWithOwner
+		isPrivate
         defaultBranchRef {
           branchProtectionRule {
             allowsForcePushes
