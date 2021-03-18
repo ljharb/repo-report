@@ -90,12 +90,15 @@ const generateTable = (fields, rows, { groupBy, sort } = {}) => {
 	if (groupBy) {
 		const otherFields = fields.filter((field) => field.name !== groupBy.name);
 		table = new Table({
-			head: [groupBy.name, ...otherFields.map((field) => field.name)],
+			head: [
+				...groupBy.dontPrint ? [] : [groupBy.name],
+				...otherFields.filter((field) => !field.dontPrint).map((field) => field.name),
+			],
 		});
 		const groupedObj = {};
 		rows.forEach((item) => {
 			const key = groupBy.extract(item);
-			const value = otherFields.map((field) => field.extract(item));
+			const value = otherFields.filter((field) => !field.dontPrint).map((field) => field.extract(item));
 			if (key in groupedObj) {
 				groupedObj[key] = groupedObj[key].map((v, i) => `${v}\n${value[i]}`);
 			} else { groupedObj[key] = value; }
@@ -103,14 +106,17 @@ const generateTable = (fields, rows, { groupBy, sort } = {}) => {
 
 		Object.entries(groupedObj).forEach((item) => {
 			const [key, value] = item;
-			table.push([key, ...value]);
+			table.push([
+				...groupBy.dontPrint ? [] : [key],
+				...value,
+			]);
 		});
 	} else {
 		table = new Table({
-			head: fields.map((field) => field.name),
+			head: fields.filter((field) => !field.dontPrint).map((field) => field.name),
 		});
 		rows.forEach((item) => {
-			table.push(fields.map((field) => field.extract(item)));
+			table.push(fields.filter((field) => !field.dontPrint).map((field) => field.extract(item)));
 		});
 	}
 	return table;

@@ -9,16 +9,16 @@ const {
 	printAPIPoints,
 	getRepositories,
 	generateTable,
-	getSymbol,
 } = require('../utils');
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	{ name: 'Repository', extract: (item) => item.nameWithOwner },
-	{ name: 'Owner', extract: (item) => item.owner.login },
+	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
 	{ name: 'Access', extract: (item) => item.viewerPermission },
 	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef ? item.defaultBranchRef.name : '---') },
-	{ name: 'isPrivate', extract: (item) => getSymbol(item.isPrivate) },
+	{
+		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
+	},
 ];
 
 const generateQuery = (endCursor) => `
@@ -37,9 +37,6 @@ query {
 	  nodes {
 		name
 		nameWithOwner
-		owner {
-		  login
-		}
 		isPrivate
 		defaultBranchRef {
 			name

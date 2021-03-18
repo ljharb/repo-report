@@ -14,7 +14,7 @@ const {
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	{ name: 'Repository', extract: (item) => item.nameWithOwner },
+	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
 	{ name: 'Wiki', extract: (item) => getSymbol(item.hasWikiEnabled) },
 	{ name: 'Projects', extract: (item) => getSymbol(item.hasProjectsEnabled) },
 	{ name: 'securityPolicy', extract: (item) => getSymbol(item.isSecurityPolicyEnabled) },
@@ -22,7 +22,9 @@ const fields = [
 	{ name: 'squashMerge', extract: (item) => getSymbol(item.squashMergeAllowed) },
 	{ name: 'rebaseMerge', extract: (item) => getSymbol(item.rebaseMergeAllowed) },
 	{ name: 'deleteOnMerge', extract: (item) => getSymbol(item.deleteBranchOnMerge) },
-
+	{
+		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
+	},
 ];
 
 const generateQuery = (endCursor) => `
@@ -41,6 +43,7 @@ query {
 	  nodes {
 		name
 		nameWithOwner
+		isPrivate
         hasWikiEnabled
         hasProjectsEnabled
         isSecurityPolicyEnabled

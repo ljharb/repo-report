@@ -37,6 +37,9 @@ const fields = [
 	{ name: 'ReqApprovingReviewCount', extract: (item) => checkNull(item.defaultBranchRef?.branchProtectionRule?.requiredApprovingReviewCount) },
 	{ name: 'ReqApprovingReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresApprovingReviews) },
 	{ name: 'ReqCodeOwnerReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresCodeOwnerReviews) },
+	{
+		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
+	},
 ];
 
 const generateQuery = (endCursor) => `
