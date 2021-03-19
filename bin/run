@@ -11,6 +11,7 @@ const list = require('../src/commands/list');
 const options = require('../src/commands/options');
 const branchProtections = require('../src/commands/branch-protection');
 const prStatus = require('../src/commands/pr-status');
+const detail = require('../src/commands/detail');
 
 Yargs.usage('Usage: $0 <command> [options]')
 	.default('token', process.env.GITHUB_PAT)
@@ -85,6 +86,25 @@ Yargs.usage('Usage: $0 <command> [options]')
 				.help('h')
 				.alias('h', 'help').argv;
 			prStatus(argv);
+		},
+	)
+	.command(
+		'detail',
+		'fetch all available details about all of your repositories',
+		function (yargs) {
+			const argv = yargs
+				.usage('Usage: $0 detail [options]')
+				.alias('g', 'group-by')
+				.nargs('g', 1)
+				.describe('g', 'Field to be grouped by')
+				.alias('f', 'fields')
+				.boolean('f')
+				.describe('f', 'Show available fields')
+				.alias('s', 'sort')
+				.describe('s', 'Sort repos alphabetically')
+				.help('h')
+				.alias('h', 'help').argv;
+			detail(argv);
 		},
 	)
 	.help('h')

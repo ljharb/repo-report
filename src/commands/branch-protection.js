@@ -1,38 +1,30 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-magic-numbers */
+/* eslint-disable sort-keys */
 
 'use strict';
 
-const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
-const Table = require('cli-table');
 const {
 	listFields,
-	getGroupIndex,
+	getGroupByField,
 	printAPIPoints,
-	getItemFields,
+	getRepositories,
+	generateTable,
+	getSymbol,
+	checkNull,
 } = require('../utils');
 
 const fields = [
-	'Repository',
-	'allowsForcePushes',
-	'allowsDeletions',
-	'dismissesStaleReviews',
-	'reqApprovingReviewCount',
-	'reqApprovingReviews',
-	'reqCodeOwnerReviews',
-	'pattern',
-];
-
-const mappedFields = [
-	(item) => item.nameWithOwner,
-	(item) => (item.allowsForcePushes ? logSymbols.error : logSymbols.success),
-	(item) => (item.allowsDeletions ? logSymbols.error : logSymbols.success),
-	(item) => (item.dismissesStaleReviews ? logSymbols.error : logSymbols.success),
-	(item) => item.requiredApprovingReviewCount || '---',
-	(item) => (item.requiresApprovingReviews ? logSymbols.error : logSymbols.success),
-	(item) => (item.requiresCodeOwnerReviews ? logSymbols.error : logSymbols.success),
-	(item) => item.pattern || '---',
+	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
+	{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' },
+	{ name: 'AllowsForcePushes', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsForcePushes) },
+	{ name: 'AllowsDeletions', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsDeletions) },
+	{ name: 'DismissesStaleReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.dismissesStaleReviews) },
+	{ name: 'ReqApprovingReviewCount', extract: (item) => checkNull(item.defaultBranchRef?.branchProtectionRule?.requiredApprovingReviewCount) },
+	{ name: 'ReqApprovingReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresApprovingReviews) },
+	{ name: 'ReqCodeOwnerReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresCodeOwnerReviews) },
+	{
+		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
+	},
 ];
 
 const generateQuery = (endCursor) => `
@@ -49,6 +41,7 @@ query{
       }
       nodes {
         nameWithOwner
+		isPrivate
         defaultBranchRef {
           branchProtectionRule {
             allowsForcePushes
@@ -72,82 +65,27 @@ query{
 
 `;
 
-const generateTable = (repositories, groupBy) => {
-	let table;
-	if (groupBy) {
-		table = new Table({
-			head: [fields[groupBy], 'Repository'],
-		});
-
-		const groupedObj = {};
-		repositories.forEach((item) => {
-			const itemFields = getItemFields(item);
-			const key = mappedFields[groupBy](itemFields);
-
-			groupedObj[key] = [].concat(groupedObj[key] || [], itemFields.nameWithOwner);
-		});
-
-		Object.entries(groupedObj).forEach(([key, value]) => {
-			table.push([key, value.join('\n')]);
-		});
-	} else {
-		table = new Table({
-			head: fields,
-		});
-		repositories.forEach((item) => {
-			const itemFields = getItemFields(item);
-			table.push(mappedFields.map((func) => func(itemFields)));
-		});
-	}
-	return table;
-};
-
 const branchProtection = async (flags) => {
 	if (flags.f) {
 		return listFields(fields);
 	}
 
+	// Get index of field to be grouped by
 	let groupBy;
 	if (flags.g) {
-		groupBy = getGroupIndex(flags.g, fields);
-		if (groupBy === -1) {
-			console.log(`${logSymbols.error} Invalid Field`);
+		groupBy = getGroupByField(flags.g, fields);
+		if (groupBy === null) {
 			return null;
 		}
 	}
 
-	let endCursor;
-	let	hasNextPage;
-	let	points = { cost: 0 };
-	let	repositories = [];
-
-	do {
-		const {
-			viewer: {
-				repositories: { nodes, pageInfo },
-			},
-			rateLimit,
-		} = await graphql(generateQuery(endCursor), {
-			headers: {
-				authorization: `token ${process.env.GITHUB_PAT}`,
-			},
-		});
-
-		endCursor = pageInfo.endCursor;
-		hasNextPage = pageInfo.hasNextPage;
-		points.cost += rateLimit.cost;
-		points.remaining = rateLimit.remaining;
-		repositories = repositories.concat(nodes);
-	} while (hasNextPage);
+	// Get all repositories
+	const { points, repositories } = await getRepositories(generateQuery);
 
 	let table;
 
 	// Generate output table
-	if (flags.g) {
-		table = generateTable(repositories, groupBy);
-	} else {
-		table = generateTable(repositories);
-	}
+	table = generateTable(fields, repositories, { groupBy });
 
 	console.log(table.toString());
 

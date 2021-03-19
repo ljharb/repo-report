@@ -1,27 +1,24 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable no-await-in-loop */
+/* eslint-disable sort-keys */
 
 'use strict';
 
-const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
-const Table = require('cli-table');
 const {
 	listFields,
-	getGroupIndex,
+	getGroupByField,
 	printAPIPoints,
+	getRepositories,
+	generateTable,
 } = require('../utils');
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	'Repository', 'Owner', 'Access', 'DefBranch', 'isPublic',
-];
-const mappedFields = [
-	(item) => item.name,
-	(item) => item.owner.login,
-	(item) => item.viewerPermission,
-	(item) => (item.defaultBranchRef ? item.defaultBranchRef.name : '---'),
-	(item) => (item.isPrivate ? logSymbols.error : logSymbols.success),
+	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
+	{ name: 'Access', extract: (item) => item.viewerPermission },
+	{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' },
+	{
+		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
+	},
 ];
 
 const generateQuery = (endCursor) => `
@@ -39,9 +36,7 @@ query {
 	  }
 	  nodes {
 		name
-		owner {
-		  login
-		}
+		nameWithOwner
 		isPrivate
 		defaultBranchRef {
 			name
@@ -57,42 +52,6 @@ query {
 }
 `;
 
-const generateTable = (repositories, groupBy, sort) => {
-	let table;
-	if (groupBy) {
-		table = new Table({
-			head: [fields[groupBy], 'Repository'],
-		});
-		const groupedObj = {};
-		repositories.forEach((item) => {
-			const key = mappedFields[groupBy](item);
-			if (key in groupedObj) {
-				groupedObj[key].push(item.name);
-			} else { groupedObj[key] = [item.name]; }
-		});
-
-		Object.entries(groupedObj).forEach((item) => {
-			const [key, value] = item;
-			table.push([key, value.join('\n')]);
-		});
-	} else {
-
-		table = new Table({
-			head: fields,
-		});
-
-		if (sort) {
-			repositories.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
-		}
-
-		repositories.forEach((item) => {
-			table.push(mappedFields.map((func) => func(item)));
-		});
-
-	}
-	return table;
-};
-
 const list = async (flags) => {
 	// List available fields
 	if (flags.f) {
@@ -102,49 +61,19 @@ const list = async (flags) => {
 	// Get index of field to be grouped by
 	let groupBy;
 	if (flags.g) {
-		groupBy = getGroupIndex(flags.g, fields);
-		if (groupBy === -1) {
-			console.log(`${logSymbols.error} Invalid Field`);
+		groupBy = getGroupByField(flags.g, fields);
+		if (groupBy === null) {
 			return null;
 		}
 	}
 
-	// Repeated requests to get all repositories
-
-	let endCursor;
-	let	hasNextPage;
-	let	points = { cost: 0 };
-	let	repositories = [];
-
-	do {
-		const {
-			viewer: {
-				repositories: { nodes, pageInfo },
-			},
-			rateLimit,
-		} = await graphql(
-			generateQuery(endCursor),
-			{
-				headers: {
-					authorization: `token ${process.env.GITHUB_PAT}`,
-				},
-			},
-		);
-		endCursor = pageInfo.endCursor;
-		hasNextPage = pageInfo.hasNextPage;
-		points.cost += rateLimit.cost;
-		points.remaining = rateLimit.remaining;
-		repositories = repositories.concat(nodes);
-	} while (hasNextPage);
+	// Get all repositories
+	const { points, repositories } = await getRepositories(generateQuery);
 
 	let table;
 
 	// Generate output table
-	if (flags.g) {
-		table = generateTable(repositories, groupBy);
-	} else {
-		table = generateTable(repositories, null, flags.s);
-	}
+	table = generateTable(fields, repositories, { groupBy, sort: flags.s });
 
 	console.log(table.toString());
 

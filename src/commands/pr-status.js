@@ -1,10 +1,12 @@
+/* eslint-disable sort-keys */
+
 'use strict';
 
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
-const Table = require('cli-table');
 const {
 	printAPIPoints,
+	generateTable,
 } = require('../utils');
 
 const generateQuery = ({
@@ -71,37 +73,32 @@ const getBuildInfo = (pullRequest) => {
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	'Mergeable?', 'Approved?', 'Build',
+	{ name: 'Mergeable?', extract: isMergeable },
+	{ name: 'Approved?', extract:	isApproved },
+	{ name: 'Build', extract:	getBuildInfo },
 ];
-const mappedFields = [
-	isMergeable, isApproved, getBuildInfo,
-];
-
-const generateTable = (data) => {
-	let table;
-	table = new Table({
-		head: fields,
-	});
-	table.push(mappedFields.map((func) => func(data)));
-	return table;
-};
 
 const prStatus = async (flags) => {
-	const [owner, ...repo] = flags.repo.split('/');
-	const prId = flags.id;
-	const { repository: { pullRequest }, rateLimit } = await graphql(
-		generateQuery({
-			owner, prId, repo: repo.join('/'),
-		}),
-		{
-			headers: {
-				authorization: `token ${process.env.GITHUB_PAT}`,
+	try {
+		const [owner, ...repo] = flags.repo.split('/');
+		const prId = flags.id;
+		const { repository: { pullRequest }, rateLimit } = await graphql(
+			generateQuery({
+				owner, prId, repo: repo.join('/'),
+			}),
+			{
+				headers: {
+					authorization: `token ${process.env.GITHUB_PAT}`,
+				},
 			},
-		},
-	);
-	const table = generateTable(pullRequest);
-	console.log(table.toString());
-	printAPIPoints(rateLimit);
+		);
+		const table = generateTable(fields, [pullRequest]);
+		console.log(table.toString());
+		printAPIPoints(rateLimit);
+	} catch (err) {
+		console.log(err.errors.map((x) => x.message).join('\n'));
+		printAPIPoints(err.data.rateLimit);
+	}
 };
 
 module.exports = prStatus;
