@@ -1,8 +1,8 @@
 {
     "metrics": {
-        "mainBranch"    : "master",
+        "defaultBranch": "master",
         "hasWriteAccess": true,
-        "isBranchProetctionEnables" : true,
+        "isBranchProtectionEnabled" : true,
         "isSecurityPolicyEnabled" : true,
         "hasWikiEnabled" : true,
         "rebaseMergeAllowed": true
