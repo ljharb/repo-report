@@ -8,7 +8,7 @@
         "rebaseMergeAllowed": true
     },
     "repositories": {
-        "focus": "npm*",
+        "f": "npm*",
         "ignore": "es5-shim*" 
     },
     "defaultView" : "tabular"
