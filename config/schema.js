@@ -2,9 +2,13 @@
 
 const fs = require('fs');
 const config = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
-
 const Validator = require('jsonschema').Validator;
+
 const schemaValidator = new Validator();
+
+Validator.prototype.customFormats.defaultView = function (input) {
+	return ['tabular', 'csv'].includes(input);
+};
 
 const metricSchema = {
 	id: '/metrics',
@@ -30,7 +34,9 @@ const repoSchema = {
 const configSchema = {
 	id: '/config',
 	properties: {
-		defaultView: { type: 'string' },
+		defaultView: {
+			format: 'defaultView', required: true, type: 'string',
+		},
 		metrics: { $ref: '/metrics' },
 	},
 	type: 'object',
@@ -38,5 +44,5 @@ const configSchema = {
 
 schemaValidator.addSchema(metricSchema, '/metrics');
 schemaValidator.addSchema(repoSchema, '/repo');
-const result = schemaValidator.validate(config, configSchema);
+const { instance, errors } = schemaValidator.validate(config, configSchema);
 
