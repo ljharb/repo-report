@@ -14,8 +14,7 @@
 		"@octokit/graphql": "^4.6.0",
 		"cli-table": "^0.3.4",
 		"dotenv": "^8.2.0",
-		"joi": "17.4.0",
-		"jsonschema": "1.4.0",
+		"jsonschema": "^1.4.0",
 		"log-symbols": "^4.0.0",
 		"yargs": "^16.2.0"
 	},
