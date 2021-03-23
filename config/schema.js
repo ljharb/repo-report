@@ -46,9 +46,10 @@ schemaValidator.addSchema(metricSchema, '/metrics');
 schemaValidator.addSchema(repoSchema, '/repo');
 const { instance, errors } = schemaValidator.validate(config, configSchema);
 
+console.log(errors);
 if (errors && errors.length) {
-	const errorList = errors.map((error) => error.message);
-	throw new Error(`Config validation error: ${errorList.join(',')}`);
+	const errorList = errors.map((error) => `${error.instance} ${error.message}`);
+	throw new Error(`Config validation error(s):\n${errorList.join('\n')}`);
 }
 
 module.exports = {
