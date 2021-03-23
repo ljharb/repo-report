@@ -6,10 +6,6 @@ const Validator = require('jsonschema').Validator;
 
 const schemaValidator = new Validator();
 
-Validator.prototype.customFormats.defaultView = function (input) {
-	return ['tabular', 'csv'].includes(input);
-};
-
 const metricSchema = {
 	id: '/metrics',
 	properties: {
@@ -35,6 +31,7 @@ const configSchema = {
 	id: '/config',
 	properties: {
 		defaultView: {
+			'enum': ['tabular', 'csv'],
 			format: 'defaultView', required: true, type: 'string',
 		},
 		metrics: { $ref: '/metrics' },
@@ -46,7 +43,6 @@ schemaValidator.addSchema(metricSchema, '/metrics');
 schemaValidator.addSchema(repoSchema, '/repo');
 const { instance, errors } = schemaValidator.validate(config, configSchema);
 
-console.log(errors);
 if (errors && errors.length) {
 	const errorList = errors.map((error) => `${error.instance} ${error.message}`);
 	throw new Error(`Config validation error(s):\n${errorList.join('\n')}`);
