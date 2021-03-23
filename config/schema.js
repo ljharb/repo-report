@@ -1,32 +1,42 @@
 'use strict';
 
-const joi = require('joi');
 const fs = require('fs');
-const conf = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
+const config = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
 
-const configSchema = joi.object({
-	defaultView: joi.string().valid('tabular', 'csv').required(),
-	metrics: joi.object().keys({
-		defaultBranch: joi.string().valid('master', 'main').required(),
-		hasWikiEnabled: joi.boolean(),
-		hasWriteAccess: joi.boolean(),
-		isBranchProtectionEnabled: joi.boolean(),
-		isSecurityPolicyEnabled: joi.boolean(),
-		rebaseMergeAllowed: joi.boolean(),
-	}),
-	repositories: joi.object().keys({
-		f: joi.string().valid('npm*').required(),
-		ignore: joi.string().valid('es5-shim*').required(),
-	}),
-});
+const Validator = require('jsonschema').Validator;
+const schemaValidator = new Validator();
 
-const { value, error } = configSchema.validate(conf);
-
-if (error) {
-	throw new Error(`Config validation error: ${error.message}`);
-}
-
-module.exports = {
-	value,
+const metricSchema = {
+	id: '/metrics',
+	properties: {
+		BranchProtectionEnabled: { type: 'boolean' },
+		defaultBranch: { required: true, type: 'string' },
+		hasWikiEnabled: { type: 'boolean' },
+		hasWriteAccess: { type: 'boolean' },
+		isSecurityPolicyEnabled: { type: 'boolean' },
+		rebaseMergeAllowed: { type: 'boolean' },
+	},
+	type: 'object',
 };
+
+const repoSchema = {
+	id: '/repo',
+	properties: {
+		f: { type: 'string' },
+		ignore: { type: 'string' },
+	},
+};
+
+const configSchema = {
+	id: '/config',
+	properties: {
+		defaultView: { type: 'string' },
+		metrics: { $ref: '/metrics' },
+	},
+	type: 'object',
+};
+
+schemaValidator.addSchema(metricSchema, '/metrics');
+schemaValidator.addSchema(repoSchema, '/repo');
+const result = schemaValidator.validate(config, configSchema);
 
