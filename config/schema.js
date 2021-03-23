@@ -48,7 +48,7 @@ const { instance, errors } = schemaValidator.validate(config, configSchema);
 
 if (errors && errors.length) {
 	const errorList = errors.map((error) => error.message);
-	throw new Error(`Config validation error: ${errorList}`);
+	throw new Error(`Config validation error: ${errorList.join(',')}`);
 }
 
 module.exports = {
