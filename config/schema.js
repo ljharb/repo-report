@@ -48,6 +48,5 @@ if (errors && errors.length) {
 	throw new Error(`Config validation error(s):\n${errorList.join('\n')}`);
 }
 
-module.exports = {
-	instance,
-};
+module.exports = instance;
+
