@@ -1,0 +1,15 @@
+{
+    "metrics": {
+        "defaultBranch": "master",
+        "hasWriteAccess": true,
+        "isBranchProtectionEnabled" : true,
+        "isSecurityPolicyEnabled" : true,
+        "hasWikiEnabled" : true,
+        "rebaseMergeAllowed": true
+    },
+    "repositories": {
+        "f": "npm*",
+        "ignore": "es5-shim*" 
+    },
+    "defaultView" : "tabular"
+}
