@@ -7,7 +7,15 @@ const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
 const Table = require('cli-table');
 
+const config = require('../config/config.json');
+
 const listFields = (fields) => fields.map((field) => console.log(`- ${field.name}`));
+
+const getSymbol = (value) => value || false;
+
+const getDiffSymbol = (value) => (value ? logSymbols.success : logSymbols.error);
+
+const checkNull = (value) => value || '---';
 
 const getGroupByField = (group, fields) => {
 	let groupByIndex = fields.findIndex((field) => field.name.toLowerCase() === group.toLowerCase());
@@ -82,7 +90,10 @@ const getRepositories = async (generateQuery) => {
 	return { points, repositories };
 };
 
-const generateTable = (fields, rows, { groupBy, sort } = {}) => {
+// eslint-disable-next-line max-lines-per-function
+const generateTable = (fields, rows, {
+	groupBy, sort, noCollapse, noDiff, noHide,
+} = {}) => {
 	let table;
 	if (sort) {
 		rows.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
@@ -112,19 +123,55 @@ const generateTable = (fields, rows, { groupBy, sort } = {}) => {
 			]);
 		});
 	} else {
-		table = new Table({
-			head: fields.filter((field) => !field.dontPrint).map((field) => field.name),
-		});
+		let prevRowVals = [];
+		let collapseCols = {};
+		let tableRows = [];
+
+		const checkCollapse = (idx, nextValue) => {
+			if (prevRowVals.length === idx) {
+				prevRowVals.push(nextValue);
+				collapseCols[idx] = true;
+			} else if (prevRowVals[idx] !== nextValue) {
+				collapseCols[idx] = false;
+			}
+		};
+
 		rows.forEach((item) => {
-			table.push(fields.filter((field) => !field.dontPrint).map((field) => field.extract(item)));
+			tableRows.push(fields.filter((field) => !field.dontPrint).map((field, idx) => {
+				const key = field.name;
+				const value = field.extract(item);
+
+				if (!noDiff && config.metrics[key] !== undefined) {
+					let diffValue;
+					if (field.compare) {
+						diffValue = getDiffSymbol(field.compare(item, config.metrics[key]));
+					} else {
+						diffValue = getDiffSymbol(config.metrics[key] === value);
+					}
+					checkCollapse(idx, diffValue);
+					return diffValue;
+				} else if (!noDiff && !noHide) {
+					if (idx !== 0) {
+						checkCollapse(idx, value);
+						collapseCols[idx] = true;
+						return null;
+					}
+				}
+				checkCollapse(idx, value);
+				return value;
+			}));
 		});
+
+		table = new Table({
+			head: fields.filter((field, idx) => !field.dontPrint && (noCollapse || !collapseCols[idx]))
+				.map((field) => field.name),
+		});
+		tableRows.map((row) => row.filter((item, idx) => noCollapse || !collapseCols[idx]))
+			.forEach((item) => table.push(item));
+
 	}
 	return table;
 };
-
-const getSymbol = (value) => (value ? logSymbols.success : logSymbols.error);
-
-const checkNull = (value) => value || '---';
 
 module.exports = {
 	checkNull,

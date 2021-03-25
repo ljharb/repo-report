@@ -15,21 +15,47 @@ const {
 
 const getMergeStrategies = (item) => `${item.mergeCommitAllowed ? 'MERGE' : ''} ${item.squashMergeAllowed ? 'SQUASH' : ''} ${item.rebaseMergeAllowed ? 'REBASE' : ''}`.trim().split(' ').join(',');
 
+const cmpMergeStrategies = (item, config) => {
+	let out = true;
+	if (config.MERGE !== undefined && config.MERGE !== item.mergeCommitAllowed) {
+		out = false;
+	}
+	if (config.SQUASH !== undefined && config.SQUASH !== item.squashMergeAllowed) {
+		out = false;
+	}
+	if (config.REBASE !== undefined && config.REBASE !== item.rebaseMergeAllowed) {
+		out = false;
+	}
+	return out;
+};
+
+const cmpAccess = (item, config) => config.includes(item.viewerPermission);
+const cmpLicense = (item, config) => config.includes(item.licenseInfo?.name || null);
+const cmpSubscription = (item, config) => config.includes(item.viewerSubscription);
+
 // Field names and their extraction method to be used on the query result
 const fields = [
 	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
-	{ name: 'Access', extract: (item) => item.viewerPermission },
+	{
+		name: 'Access', extract: (item) => item.viewerPermission, compare: cmpAccess,
+	},
 	{ name: 'IssuesEnabled?', extract: (item) => getSymbol(item.hasIssuesEnabled) },
 	{ name: 'ProjectsEnabled?', extract: (item) => getSymbol(item.hasProjectsEnabled) },
 	{ name: 'WikiEnabled?', extract: (item) => getSymbol(item.hasWikiEnabled) },
 	{ name: 'Archived?', extract: (item) => getSymbol(item.isArchived) },
 	{ name: 'BlankIssuesEnabled?', extract: (item) => getSymbol(item.isBlankIssuesEnabled) },
 	{ name: 'SecurityPolicyEnabled?', extract: (item) => getSymbol(item.isSecurityPolicyEnabled) },
-	{ name: 'License', extract: (item) => item.licenseInfo?.name || '---' },
-	{ name: 'Merge Strategies', extract: getMergeStrategies },
+	{
+		name: 'License', extract: (item) => item.licenseInfo?.name || '---', compare: cmpLicense,
+	},
+	{
+		name: 'Merge Strategies', extract: getMergeStrategies, compare: cmpMergeStrategies,
+	},
 	{ name: 'DeleteOnMerge', extract: (item) => getSymbol(item.deleteBranchOnMerge) },
 	{ name: 'HasStarred?', extract: (item) => getSymbol(item.viewerHasStarred) },
-	{ name: 'Subscription', extract: (item) => item.viewerSubscription },
+	{
+		name: 'Subscription', extract: (item) => item.viewerSubscription, compare: cmpSubscription,
+	},
 	{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' },
 	{ name: 'AllowsForcePushes', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsForcePushes) },
 	{ name: 'AllowsDeletions', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsDeletions) },
@@ -124,7 +150,9 @@ const detail = async (flags) => {
 	let table;
 
 	// Generate output table
-	table = generateTable(fields, repositories, { sort: flags.s, groupBy });
+	table = generateTable(fields, repositories, {
+		sort: flags.s, groupBy, noDiff: flags.noDiff, noCollapse: flags.noCollapse, noHide: flags.noHide,
+	});
 
 	console.log(table.toString());
 
