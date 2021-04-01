@@ -7,7 +7,7 @@ const {
 	listFields,
 	printAPIPoints,
 	getRepositories,
-	generateTable,
+	generateDetailTable,
 	getGroupByField,
 	getSymbol,
 	checkNull,
@@ -150,8 +150,8 @@ const detail = async (flags) => {
 	let table;
 
 	// Generate output table
-	table = generateTable(fields, repositories, {
-		sort: flags.s, groupBy, noDiff: flags.noDiff, noCollapse: flags.noCollapse, noHide: flags.noHide,
+	table = generateDetailTable(fields, repositories, {
+		sort: flags.s, actual: flags.actual, all: flags.all, goodness: flags.goodness,
 	});
 
 	console.log(table.toString());

@@ -94,21 +94,15 @@ Yargs.usage('Usage: $0 <command> [options]')
 		function (yargs) {
 			const argv = yargs
 				.usage('Usage: $0 detail [options]')
-				.option('noDiff', {
-					describe: 'Show metrics\' true values',
+				.option('actual', {
+					describe: 'Show metrics’ true values',
 				})
-				.option('noCollapse', {
-					describe: 'Don\'t collapse metrics that match config values',
+				.option('all', {
+					describe: 'Show all metrics',
 				})
-				.option('noHide', {
-					describe: 'Don\'t hide metrics that have no config values',
+				.option('goodness', {
+					describe: 'Prefix actual values with goodness values',
 				})
-				.alias('g', 'group-by')
-				.nargs('g', 1)
-				.describe('g', 'Field to be grouped by')
-				.alias('f', 'fields')
-				.boolean('f')
-				.describe('f', 'Show available fields')
 				.alias('s', 'sort')
 				.describe('s', 'Sort repos alphabetically')
 				.help('h')

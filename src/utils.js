@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-magic-numbers */
 
@@ -13,7 +14,19 @@ const listFields = (fields) => fields.map((field) => console.log(`- ${field.name
 
 const getSymbol = (value) => value || false;
 
-const getDiffSymbol = (value) => (value ? logSymbols.success : logSymbols.error);
+// eslint-disable-next-line max-params
+const getDiffSymbol = (item, configValue, value, compare) => {
+	if (configValue === undefined) {
+		return undefined;
+	}
+	let out;
+	if (compare) {
+		out = compare(item, configValue);
+	} else {
+		out = configValue === value;
+	}
+	return out ? logSymbols.success : logSymbols.error;
+};
 
 const checkNull = (value) => value || '---';
 
@@ -90,10 +103,7 @@ const getRepositories = async (generateQuery) => {
 	return { points, repositories };
 };
 
-// eslint-disable-next-line max-lines-per-function
-const generateTable = (fields, rows, {
-	groupBy, sort, noCollapse, noDiff, noHide,
-} = {}) => {
+const generateTable = (fields, rows, { groupBy, sort } = {}) => {
 	let table;
 	if (sort) {
 		rows.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
@@ -123,51 +133,117 @@ const generateTable = (fields, rows, {
 			]);
 		});
 	} else {
-		let prevRowVals = [];
-		let collapseCols = {};
-		let tableRows = [];
-
-		const checkCollapse = (idx, nextValue) => {
-			if (prevRowVals.length === idx) {
-				prevRowVals.push(nextValue);
-				collapseCols[idx] = true;
-			} else if (prevRowVals[idx] !== nextValue) {
-				collapseCols[idx] = false;
-			}
-		};
-
+		table = new Table({
+			head: fields.filter((field) => !field.dontPrint).map((field) => field.name),
+		});
 		rows.forEach((item) => {
-			tableRows.push(fields.filter((field) => !field.dontPrint).map((field, idx) => {
+			table.push(fields.filter((field) => !field.dontPrint).map((field) => field.extract(item)));
+		});
+	}
+	return table;
+};
+
+const generateDetailTable = (fields, rows, {
+	sort,
+	actual,
+	all,
+	goodness,
+} = {}) => {
+	let table;
+	if (sort) {
+		rows.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+	}
+
+	const getMetricOut = (value, diffValue) => {
+		if (actual && goodness && diffValue) {
+			return `${diffValue} ${value}`;
+		} else if (actual) {
+			return value;
+		} else {
+			return diffValue || value;
+		}
+	};
+
+	if (all) {
+		table = new Table({
+			head: fields.filter((field) => !field.dontPrint).map((field) => field.name),
+		});
+		rows.forEach((item) => {
+			table.push(fields.filter((field) => !field.dontPrint).map((field) => {
 				const key = field.name;
 				const value = field.extract(item);
+				const diffValue = getDiffSymbol(item, config.metrics[key], value, field.compare);
 
-				if (!noDiff && config.metrics[key] !== undefined) {
-					let diffValue;
-					if (field.compare) {
-						diffValue = getDiffSymbol(field.compare(item, config.metrics[key]));
+				return getMetricOut(value, diffValue);
+			}));
+		});
+	} else {
+		let buckets = {
+			0: fields.filter((field) => !field.dontPrint),
+		};
+		let fieldBucketMap = {};
+		fields.filter((field) => !field.dontPrint).forEach((field) => {
+			fieldBucketMap[field.name] = 0;
+		});
+		let nextBucket = 1;
+
+		rows.forEach((item) => {
+			for (const bucket of Object.keys(buckets)) {
+				let bucketNew = [];
+				for (let i = 0; i < buckets[bucket].length; i++) {
+					const field = buckets[bucket][i];
+					const key = field.name;
+					const value = field.extract(item);
+					const diffValue = getDiffSymbol(item, config.metrics[key], value, field.compare);
+
+					let valueToCheck = getMetricOut(value, diffValue);
+					bucketNew.push([field, valueToCheck]);
+				}
+				delete buckets[bucket];
+				let newBucketMap = {};
+				for (const [field, key] of bucketNew) {
+					if (newBucketMap[key]) {
+						buckets[newBucketMap[key]].push(field);
+						fieldBucketMap[field.name] = newBucketMap[key];
 					} else {
-						diffValue = getDiffSymbol(config.metrics[key] === value);
-					}
-					checkCollapse(idx, diffValue);
-					return diffValue;
-				} else if (!noDiff && !noHide) {
-					if (idx !== 0) {
-						checkCollapse(idx, value);
-						collapseCols[idx] = true;
-						return null;
+						newBucketMap[key] = nextBucket;
+						buckets[nextBucket] = [field];
+						fieldBucketMap[field.name] = nextBucket;
+						nextBucket += 1;
 					}
 				}
-				checkCollapse(idx, value);
-				return value;
+			}
+		});
+
+		let tableRows = [];
+		rows.forEach((item) => {
+			tableRows.push(fields.filter((field) => !field.dontPrint).map((field) => {
+				const key = field.name;
+				const value = field.extract(item);
+				const diffValue = getDiffSymbol(item, config.metrics[key], value, field.compare);
+
+				return getMetricOut(value, diffValue);
 			}));
 		});
 
+		let head = [];
+		let dontPrintIDs = {};
+		for (let i = 0; i < fields.length; i++) {
+			const bucket = fieldBucketMap[fields[i].name];
+			if (buckets[bucket]) {
+				head.push(buckets[bucket].map((field) => field.name).join('\n'));
+				delete buckets[bucket];
+			} else {
+				dontPrintIDs[i] = true;
+			}
+		}
+
 		table = new Table({
-			head: fields.filter((field, idx) => !field.dontPrint && (noCollapse || !collapseCols[idx]))
-				.map((field) => field.name),
+			head,
 		});
-		tableRows.map((row) => row.filter((item, idx) => noCollapse || !collapseCols[idx]))
-			.forEach((item) => table.push(item));
+		tableRows.forEach((row) => {
+			table.push(row.filter((_, idx) => !dontPrintIDs[idx]));
+		});
 
 	}
 	return table;
@@ -175,6 +251,7 @@ const generateTable = (fields, rows, {
 
 module.exports = {
 	checkNull,
+	generateDetailTable,
 	generateTable,
 	getGroupByField,
 	getItemFields,
