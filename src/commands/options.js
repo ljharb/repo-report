@@ -2,7 +2,6 @@
 
 'use strict';
 
-const logSymbols = require('log-symbols');
 const {
 	listFields,
 	getGroupByField,
