@@ -1,5 +1,3 @@
-/* eslint-disable max-lines-per-function */
-/* eslint-disable sort-keys */
 
 'use strict';
 
@@ -15,19 +13,15 @@ const {
 
 const getMergeStrategies = (item) => `${item.mergeCommitAllowed ? 'MERGE' : ''} ${item.squashMergeAllowed ? 'SQUASH' : ''} ${item.rebaseMergeAllowed ? 'REBASE' : ''}`.trim().split(' ').join(',');
 
+/* eslint-disable */
 const cmpMergeStrategies = (item, config) => {
-	let out = true;
-	if (config.MERGE !== undefined && config.MERGE !== item.mergeCommitAllowed) {
-		out = false;
-	}
-	if (config.SQUASH !== undefined && config.SQUASH !== item.squashMergeAllowed) {
-		out = false;
-	}
-	if (config.REBASE !== undefined && config.REBASE !== item.rebaseMergeAllowed) {
-		out = false;
-	}
-	return out;
+	return (config.MERGE === undefined || config.MERGE === item.mergeCommitAllowed)
+		&& (config.SQUASH === undefined || config.SQUASH === item.squashMergeAllowed)
+		&& (config.REBASE === undefined || config.REBASE === item.rebaseMergeAllowed);
 };
+/* eslint-enable */
+/* eslint-disable max-lines-per-function */
+/* eslint-disable sort-keys */
 
 const cmpAccess = (item, config) => config.includes(item.viewerPermission);
 const cmpLicense = (item, config) => config.includes(item.licenseInfo?.name || null);
