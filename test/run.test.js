@@ -11,8 +11,11 @@ const { mockGetRepositories } = require('./mocks.js');
 test('list command', (t) => {
 	t.plan(1);
 	t.test('list command should return users repositories', async (t) => {
-		const data = await mockGetRepositories(mockRepositoriesData);
-		console.log(data.data.viewer.repositories, '&&&&&&&&&&&&');
+		/*
+		 * const data = mockGetRepositories(mockRepositoriesData);
+		 * console.log(data, '&&&&&&&&&&&&');
+		 */
+		mockGetRepositories(mockRepositoriesData).log(console.log);
 		const wrapper = createCLIWrapper();
 		const result = wrapper.run(['list']);
 		console.log(result.stdout);
