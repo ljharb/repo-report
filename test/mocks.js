@@ -54,8 +54,8 @@ const { graphql } = require('@octokit/graphql');
  * }).then((result) => result);
  */
 
-const mockGetRepositories = (Response) => nock('https://api.github.com')
-	.post('/')
+const mockGetRepositories = (Response) => nock('https://api.github.com/graphl')
+	.post('')
 	.reply(201, Response);
 module.exports = {
 	mockGetRepositories,
