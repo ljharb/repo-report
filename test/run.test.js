@@ -1,14 +1,22 @@
+/* eslint-disable no-shadow */
+
 'use strict';
 
 const test = require('tape');
-const createCLIWrapper = require('../test/test-utils');
+
+const { createCLIWrapper } = require('../test/test-utils');
+const { mockRepositoriesData } = require('./fixtures/fixtures.js');
+const { mockGetRepositories } = require('./mocks.js');
 
 test('list command', (t) => {
-	t.plan(2);
-	t.test('list command should return users repositories', (t) => {
+	t.plan(1);
+	t.test('list command should return users repositories', async (t) => {
+		const data = await mockGetRepositories(mockRepositoriesData);
+		console.log(data.data.viewer.repositories, '&&&&&&&&&&&&');
 		const wrapper = createCLIWrapper();
 		const result = wrapper.run(['list']);
 		console.log(result.stdout);
+		t.end();
 	});
 
 	/*
