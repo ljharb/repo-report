@@ -21,11 +21,13 @@
     "jsonschema": "^1.4.0",
     "log-symbols": "^4.0.0",
     "tap-spec": "5.0.0",
-    "tape": "5.2.2",
     "yargs": "^16.2.0"
   },
   "devDependencies": {
     "@ljharb/eslint-config": "^17.5.1",
-    "eslint": "^7.20.0"
+    "eslint": "^7.20.0",
+    "fetch-mock": "9.11.0",
+    "isomorphic-fetch": "3.0.0",
+    "tape": "5.2.2"
   }
 }
