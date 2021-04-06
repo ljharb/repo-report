@@ -71,15 +71,15 @@ const getItemFields = (item) => {
 	};
 };
 
-const fetchData = (endCursor, generateQuery) => graphql(
-	generateQuery(endCursor),
+const fetchData = (endCursor, generateQuery, flags) => graphql(
+	generateQuery(endCursor, flags),
 	{
 		headers: {
 			authorization: `token ${process.env.GITHUB_PAT}`,
 		},
 	},
 );
-const getRepositories = async (generateQuery) => {
+const getRepositories = async (generateQuery, flags, filter) => {
 	// Repeated requests to get all repositories
 	let endCursor,
 		hasNextPage,
@@ -92,7 +92,7 @@ const getRepositories = async (generateQuery) => {
 				repositories: { nodes, pageInfo },
 			},
 			rateLimit,
-		} = await fetchData(endCursor, generateQuery);
+		} = await fetchData(endCursor, generateQuery, flags);
 
 		endCursor = pageInfo.endCursor;
 		hasNextPage = pageInfo.hasNextPage;
@@ -100,6 +100,9 @@ const getRepositories = async (generateQuery) => {
 		points.remaining = rateLimit.remaining;
 		repositories = repositories.concat(nodes);
 	} while (hasNextPage);
+	if (filter) {
+		repositories = repositories.filter(filter);
+	}
 	return { points, repositories };
 };
 
@@ -166,6 +169,10 @@ const generateDetailTable = (fields, rows, {
 	all,
 	goodness,
 } = {}) => {
+	if (!rows.length) {
+		console.log(`\n${logSymbols.info} Nothing to show!\n`);
+		return null;
+	}
 	let table;
 	if (sort) {
 		rows.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));

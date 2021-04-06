@@ -103,6 +103,16 @@ Yargs.usage('Usage: $0 <command> [options]')
 				.option('goodness', {
 					describe: 'Prefix actual values with goodness values',
 				})
+				.option('f', {
+					choices: [
+						'sources',
+						'forks',
+						'templates',
+						'private',
+						'public',
+					],
+					describe: 'Focus repo types',
+				})
 				.alias('s', 'sort')
 				.describe('s', 'Sort repos alphabetically')
 				.help('h')

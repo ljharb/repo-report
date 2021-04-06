@@ -2,7 +2,6 @@
 'use strict';
 
 const {
-	listFields,
 	printAPIPoints,
 	getRepositories,
 	generateDetailTable,
@@ -29,7 +28,10 @@ const cmpSubscription = (item, config) => config.includes(item.viewerSubscriptio
 
 // Field names and their extraction method to be used on the query result
 const fields = [
-	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
+	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.isFork ? '🍴 ' : item.isPrivate ? ' ' : ''}${item.nameWithOwner}` },
+	{
+		name: 'isFork', extract: (item) => item.isFork, dontPrint: true,
+	},
 	{
 		name: 'Access', extract: (item) => item.viewerPermission, compare: cmpAccess,
 	},
@@ -62,13 +64,28 @@ const fields = [
 	},
 ];
 
-const generateQuery = (endCursor) => `
-query {
+const generateQuery = (endCursor, {
+	f,
+}) => {
+	let showForks = true;
+	let showSources = true;
+	let showPrivate = true;
+	let showPublic = true;
+	if (f && f.length) {
+		showForks = f.includes('forks');
+		showSources = f.includes('sources');
+		showPrivate = f.includes('private');
+		showPublic = f.includes('public');
+	}
+	return (
+		`query {
   viewer {
 	repositories(
 	  first: 100
 	  affiliations: [OWNER, ORGANIZATION_MEMBER, COLLABORATOR]
 	  ${endCursor ? `after: "${endCursor}"` : ''}
+	  ${showForks === showSources ? '' : showForks ? 'isFork: true' : 'isFork: false'}
+	  ${showPrivate === showPublic ? '' : showPublic ? 'privacy: PUBLIC' : 'privacy: PRIVATE'}
 	) {
 	  totalCount
 	  pageInfo {
@@ -96,8 +113,10 @@ query {
 		hasWikiEnabled
 		isArchived
 		isBlankIssuesEnabled
+		isFork
 		isPrivate
 		isSecurityPolicyEnabled
+		isTemplate
 		licenseInfo {
 			name
 		}
@@ -121,14 +140,10 @@ query {
 	remaining
   }
 }
-`;
+`);
+};
 
 const detail = async (flags) => {
-	// List available fields
-	if (flags.f) {
-		return listFields(fields);
-	}
-
 	// Get index of field to be grouped by
 	let groupBy;
 	if (flags.g) {
@@ -138,8 +153,14 @@ const detail = async (flags) => {
 		}
 	}
 
+	// Additional Filter on repos
+	let filter;
+	if (flags.f?.includes('templates')) {
+		filter = (repo) => repo.isTemplate;
+	}
+
 	// Get all repositories
-	const { points, repositories } = await getRepositories(generateQuery);
+	const { points, repositories } = await getRepositories(generateQuery, flags, filter);
 
 	let table;
 
@@ -148,7 +169,9 @@ const detail = async (flags) => {
 		sort: flags.s, actual: flags.actual, all: flags.all, goodness: flags.goodness,
 	});
 
-	console.log(table.toString());
+	if (table) {
+		console.log(table.toString());
+	}
 
 	printAPIPoints(points);
 	return null;
