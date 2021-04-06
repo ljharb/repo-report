@@ -157,11 +157,11 @@ const generateDetailTable = (fields, rows, {
 	const getMetricOut = (value, diffValue) => {
 		if (actual && goodness && diffValue) {
 			return `${diffValue} ${value}`;
-		} else if (actual) {
-			return value;
-		} else {
-			return diffValue || value;
 		}
+		if (actual) {
+			return `${value}`;
+		}
+		return `${diffValue || value}`;
 	};
 
 	if (all) {
