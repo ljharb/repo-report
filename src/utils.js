@@ -41,7 +41,6 @@ const getItemFields = (item) => {
 	return {
 		allowsDeletions,
 		allowsForcePushes,
-		// defBranch,
 		dismissesStaleReviews,
 		nameWithOwner,
 		pattern,
