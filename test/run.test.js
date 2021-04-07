@@ -3,6 +3,8 @@
 'use strict';
 
 const test = require('tape');
+const {	DetailTableColumns } = require('./fixtures/fixtures');
+// const mockGetRepositories = require('./mocks');
 
 const { cliWrapper } = require('../test/test-utils');
 
@@ -10,6 +12,7 @@ test('list command', async (t) => {
 	t.plan(5);
 	t.test('output to have correct columns', async (t) => {
 		const wrapper = cliWrapper();
+		// mockGetRepositories(mockRepositoriesData);
 		const result = wrapper.run(['list']);
 		const tableColumns = ['Repository', 'Access', 'DefBranch'];
 		t.ok(tableColumns.every((column) => result.stdout.includes(column)));
@@ -143,8 +146,9 @@ test('detail command', async (t) => {
 	t.test('output to have correct columns', async (t) => {
 		const wrapper = cliWrapper();
 		const result = wrapper.run(['detail']);
-		const tableColumns = ['Repository', 'Access', 'IssuesEnabled', 'ProjectsEnabled', 'WikiEnabled', 'Archived', 'BlankIssuesEnabled', 'SecurityPolicyEnabled', 'License', 'Merge Strategies', 'DeleteOnMerge', 'HasStarred', 'Subscription', 'DefBranch', 'AllowsForcePushes', 'AllowsDeletions', 'DismissesStaleReviews', 'ReqApprovingReviewCount', 'ReqApprovingReviews', 'ReqCodeOwnerReviews', 'isPrivate'];
-		t.ok(tableColumns.every((column) => result.stdout.includes(column)));
+		const data = DetailTableColumns.filter((column) => !result.stdout.includes(column));
+		console.log(data);
+		t.ok(DetailTableColumns.every((column) => result.stdout.includes(column)));
 		t.end();
 	});
 
@@ -159,8 +163,9 @@ test('detail command', async (t) => {
 	t.test('field output to be correct', (t) => {
 		const wrapper = cliWrapper();
 		const result = wrapper.run(['detail', '-f']);
-		const fields = '- Repository\n- DefBranch\n- AllowsForcePushes\n- AllowsDeletions\n- DismissesStaleReviews\n- ReqApprovingReviewCount\n- ReqApprovingReviews\n- ReqCodeOwnerReviews\n- isPrivate\n';
-		t.equal(result.stdout, fields);
+		const fields = [...DetailTableColumns, 'isPrivate'];
+		const detailFields = fields.map((column) => `- ${column}\n`);
+		t.equal(result.stdout, detailFields.join(''));
 		t.end();
 	});
 
@@ -180,5 +185,6 @@ test('detail command', async (t) => {
 		t.ok(helpInfo.every((info) => result.stdout.includes(info)));
 		t.end();
 	});
+
 });
 
