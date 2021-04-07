@@ -5,7 +5,8 @@
 const test = require('tape');
 const logSymbols = require('log-symbols');
 const { stdout } = require('../test/test-utils');
-const { repositories } = require('./fixtures/fixtures.js');
+const { mockRepositoriesData: { data: { viewer: { repositories } } }, tableOutput } = require('./fixtures/fixtures');
+
 const {
 	listFields,
 	getGroupByField,
@@ -85,21 +86,21 @@ test('checkNull', (t) => {
 });
 
 test('generateTable,', (t) => {
-
 	t.plan(2);
 	t.test('return a generated table', (t) => {
-		const actualResult = generateTable(fields, repositories);
-
-		console.log(actualResult, '******');
-
-		// t.deepEqual(actualResult.toString() ,expectedResults.toString() );
+		const actualResult = generateTable(fields, repositories.nodes);
+		t.deepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutput));
 		t.end();
 	});
 
+	const columns = [
+		{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
+		{ name: 'Access', extract: (item) => item.viewerPermission },
+		{ name: 'branch', extract: (item) => item.defaultBranchRef?.name || '---' },
+	];
 	t.test('return invalid output', (t) => {
-		const actualResult = checkNull('');
-		const expectedResults = '---';
-		t.equal(expectedResults, actualResult);
+		const actualResult = generateTable(columns, repositories.nodes);
+		t.notDeepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutput));
 		t.end();
 	});
 });
