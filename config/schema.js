@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 'use strict';
 
 const fs = require('fs');
@@ -9,28 +11,43 @@ const schemaValidator = new Validator();
 const metricSchema = {
 	id: '/metrics',
 	properties: {
-		Access: { type: 'array' },
+		Access: {
+			'enum': [
+				'WRITE', 'ADMIN', 'MAINTAIN', 'TRIAGE', 'READ',
+			],
+			items: { type: 'string' },
+			type: 'array',
+			uniqueItems: true,
+		},
 		AllowsDeletions: { type: 'boolean' },
 		AllowsForcePushes: { type: 'boolean' },
 		'Archived?': { type: 'boolean' },
 		'BlankIssuesEnabled?': { type: 'boolean' },
-		DefBranch: 'master',
+		DefBranch: 'main',
 		DeleteOnMerge: { type: 'boolean' },
 		DismissesStaleReviews: { type: 'boolean' },
 		'HasStarred?': { type: 'boolean' },
 		'IssuesEnabled?': { type: 'boolean' },
-		License: { type: 'array' },
+		License: { items: { type: 'string' }, type: 'array' },
 		'Merge Strategies': {
 			MERGE: { type: 'boolean' },
 			REBASE: { type: 'boolean' },
 			SQUASH: { type: 'boolean' },
 		},
 		'ProjectsEnabled?': { type: 'boolean' },
-		ReqApprovingReviewCount: { type: 'integer' },
+		ReqApprovingReviewCount: { minimum: 1, type: 'integer' },
 		ReqApprovingReviews: { type: 'boolean' },
 		ReqCodeOwnerReviews: { type: 'boolean' },
 		'SecurityPolicyEnabled?': { type: 'boolean' },
-		Subscription: { type: 'array' },
+		Subscription: {
+			'enum': [
+				'IGNORED', 'SUBSCRIBED', 'UNSUBSCRIBED',
+			],
+			items: { type: 'string' },
+			minItems: 1,
+			type: 'array',
+			uniqueItems: true,
+		},
 		'WikiEnabled?': { type: 'boolean' },
 	},
 	type: 'object',
@@ -58,11 +75,13 @@ const configSchema = {
 
 schemaValidator.addSchema(metricSchema, '/metrics');
 schemaValidator.addSchema(repoSchema, '/repo');
+console.log(configSchema);
 const { instance, errors } = schemaValidator.validate(config, configSchema);
-
+console.log(instance, '*******');
 if (errors && errors.length) {
-	const errorList = errors.map((error) => `${error.instance} ${error.message}`);
-	throw new Error(`Config validation error(s):\n${errorList.join('\n')}`);
+	// const errorList = errors.map((error) => `${error.instance} ${error.message}`);
+	console.log('hello');
+	// throw new Error(`Config validation error(s):\n${errorList.join('\n')}`);
 }
 
 module.exports = instance;
