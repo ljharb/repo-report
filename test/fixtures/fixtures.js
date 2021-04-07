@@ -75,6 +75,41 @@ const mockRepositoriesData = 	{
 	},
 };
 
+const tableOutput = {
+	0: ['name/project-eraser', 'ADMIN', 'master'],
+	1: ['name/guidelines-questionnaire', 'ADMIN', 'master'],
+	2: ['name/challenges-book', 'ADMIN', 'master'],
+	3: ['🔒 name/microservice', 'ADMIN', 'master'],
+	4: ['name/responsive-design', 'ADMIN', 'master'],
+	5: ['name/media-upload-app', 'ADMIN', 'develop'],
+	options: { chars:
+    { top: '─', 'top-mid': '┬', 'top-left': '┌', 'top-right': '┐', bottom: '─', 'bottom-mid': '┴', 'bottom-left': '└', 'bottom-right': '┘', left: '│', 'left-mid': '├', mid: '─', 'mid-mid': '┼', right: '│', 'right-mid': '┤', middle: '│' },
+	truncate: '…', colWidths: [], colAligns: [], style: { 'padding-left': 1, 'padding-right': 1, head: ['red'], border: ['grey'], compact: false }, head: ['Repository', 'Access', 'DefBranch'] },
+	length: 6 };
+
+const DetailTableColumns = [
+	'Repository',
+	'Access',
+	'IssuesEnabled?',
+	'ProjectsEnabled?',
+	'WikiEnabled?',
+	'Archived?',
+	'BlankIssuesEnabled?',
+	'SecurityPolicyEnabled?',
+	'License',
+	'Merge Strategies',
+	'DeleteOnMerge',
+	'HasStarred?',
+	'Subscription',
+	'DefBranch',
+	'AllowsForcePushes',
+	'AllowsDeletions',
+	'DismissesStaleReviews',
+	'ReqApprovingReviewCount',
+	'ReqApprovingReviews',
+	'ReqCodeOwnerReviews'];
 module.exports = {
 	mockRepositoriesData,
+	tableOutput,
+	DetailTableColumns,
 };
