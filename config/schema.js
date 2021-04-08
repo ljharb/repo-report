@@ -31,7 +31,7 @@ const metricSchema = {
 		'IssuesEnabled?': { type: 'boolean' },
 		License: {
 			items: {
-				type: 'any',
+				type: ['string', 'null'],
 			},
 			type: 'array',
 			uniqueItems: true,
