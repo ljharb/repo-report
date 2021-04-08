@@ -15,7 +15,7 @@ const listFields = (fields) => fields.map((field) => console.log(`- ${field.name
 const getSymbol = (value) => value || false;
 
 // eslint-disable-next-line max-params
-const getDiffSymbol = (item, configValue, value, compare) => {
+const getDiffSymbol = (item, configValue, value, field) => {
 	if (configValue === undefined) {
 		return undefined;
 	}
@@ -23,12 +23,12 @@ const getDiffSymbol = (item, configValue, value, compare) => {
 		return logSymbols.success;
 	}
 	let out;
-	if (compare) {
-		out = compare(item, configValue);
+	if (field.compare) {
+		out = field.compare(item, configValue);
 	} else {
 		out = configValue === value;
 	}
-	return out ? logSymbols.success : logSymbols.error;
+	return `${out ? logSymbols.success : logSymbols.error}${field.permissions && !field.permissions.includes(item.viewerPermission) && !out ? ' 🤷' : ''}`;
 };
 
 const checkNull = (value) => value || '---';
@@ -201,7 +201,7 @@ const generateDetailTable = (fields, rows, {
 			table.push(filteredFields.map((field) => {
 				const key = field.name;
 				const value = field.extract(item);
-				const diffValue = getDiffSymbol(item, config.metrics[key], value, field.compare);
+				const diffValue = getDiffSymbol(item, config.metrics[key], value, field);
 
 				return getMetricOut(value, diffValue);
 			}));
@@ -223,7 +223,7 @@ const generateDetailTable = (fields, rows, {
 					const field = buckets[bucket][i];
 					const key = field.name;
 					const value = field.extract(item);
-					const diffValue = getDiffSymbol(item, config.metrics[key], value, field.compare);
+					const diffValue = getDiffSymbol(item, config.metrics[key], value, field);
 
 					let valueToCheck = getMetricOut(value, diffValue);
 					bucketNew.push([field, valueToCheck]);
@@ -249,7 +249,7 @@ const generateDetailTable = (fields, rows, {
 			tableRows.push(filteredFields.map((field) => {
 				const key = field.name;
 				const value = field.extract(item);
-				const diffValue = getDiffSymbol(item, config.metrics[key], value, field.compare);
+				const diffValue = getDiffSymbol(item, config.metrics[key], value, field);
 
 				return getMetricOut(value, diffValue);
 			}));

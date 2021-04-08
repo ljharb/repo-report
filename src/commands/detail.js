@@ -36,8 +36,12 @@ const fields = [
 		name: 'Access', extract: (item) => item.viewerPermission, compare: cmpAccess,
 	},
 	{ name: 'IssuesEnabled?', extract: (item) => getSymbol(item.hasIssuesEnabled) },
-	{ name: 'ProjectsEnabled?', extract: (item) => getSymbol(item.hasProjectsEnabled) },
-	{ name: 'WikiEnabled?', extract: (item) => getSymbol(item.hasWikiEnabled) },
+	{
+		name: 'ProjectsEnabled?', extract: (item) => getSymbol(item.hasProjectsEnabled), permissions: ['ADMIN', 'MAINTAIN'],
+	},
+	{
+		name: 'WikiEnabled?', extract: (item) => getSymbol(item.hasWikiEnabled), permissions: ['ADMIN', 'MAINTAIN'],
+	},
 	{ name: 'Archived?', extract: (item) => getSymbol(item.isArchived) },
 	{ name: 'BlankIssuesEnabled?', extract: (item) => getSymbol(item.isBlankIssuesEnabled) },
 	{ name: 'SecurityPolicyEnabled?', extract: (item) => getSymbol(item.isSecurityPolicyEnabled) },
@@ -45,14 +49,16 @@ const fields = [
 		name: 'License', extract: (item) => item.licenseInfo?.name || '---', compare: cmpLicense,
 	},
 	{
-		name: 'Merge Strategies', extract: getMergeStrategies, compare: cmpMergeStrategies,
+		name: 'Merge Strategies', extract: getMergeStrategies, compare: cmpMergeStrategies, permissions: ['ADMIN', 'MAINTAIN'],
 	},
 	{ name: 'DeleteOnMerge', extract: (item) => getSymbol(item.deleteBranchOnMerge) },
 	{ name: 'HasStarred?', extract: (item) => getSymbol(item.viewerHasStarred) },
 	{
 		name: 'Subscription', extract: (item) => item.viewerSubscription, compare: cmpSubscription,
 	},
-	{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' },
+	{
+		name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---', permissions: ['ADMIN'],
+	},
 	{ name: 'AllowsForcePushes', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsForcePushes || 'undefined') },
 	{ name: 'AllowsDeletions', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsDeletions || 'undefined') },
 	{ name: 'DismissesStaleReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.dismissesStaleReviews || 'undefined') },
