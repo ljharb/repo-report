@@ -162,6 +162,10 @@ const detail = async (flags) => {
 	// Get all repositories
 	const { points, repositories } = await getRepositories(generateQuery, flags, filter);
 
+	if (!flags.s) {
+		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+	}
+
 	let table;
 
 	// Generate output table
