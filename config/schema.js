@@ -16,6 +16,7 @@ const metricSchema = {
 				type: 'string',
 			},
 			type: 'array',
+			uniqueItems: true,
 		},
 		AllowsDeletions: { type: 'boolean' },
 		AllowsForcePushes: { type: 'boolean' },
@@ -31,6 +32,7 @@ const metricSchema = {
 				type: 'any',
 			},
 			type: 'array',
+			uniqueItems: true,
 		},
 		'Merge Strategies': {
 			MERGE: { type: 'boolean' },
@@ -47,6 +49,7 @@ const metricSchema = {
 				type: 'string',
 			},
 			type: 'array',
+			uniqueItems: true,
 		},
 		'WikiEnabled?': { type: 'boolean' },
 	},
