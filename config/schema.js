@@ -12,9 +12,10 @@ const metricSchema = {
 	id: '/metrics',
 	properties: {
 		Access: {
-			items: { type: 'string' },
-			type: 'array',
-			uniqueItems: true,
+			'enum': [
+				'WRITE', 'ADMIN', 'MAINTAIN', 'TRIAGE', 'READ',
+			],
+			type: 'string',
 		},
 		AllowsDeletions: { type: 'boolean' },
 		AllowsForcePushes: { type: 'boolean' },
@@ -25,7 +26,21 @@ const metricSchema = {
 		DismissesStaleReviews: { type: 'boolean' },
 		'HasStarred?': { type: 'boolean' },
 		'IssuesEnabled?': { type: 'boolean' },
-		License: { items: { type: 'any' }, type: 'array' },
+		License: {
+			'enum': [
+				'MIT License',
+				'Apache License 2.0',
+				'BSD 3-Clause "New" or "Revised" license',
+				'BSD 2-Clause "Simplified" or "FreeBSD" license',
+				'GNU General Public License (GPL)',
+				'GNU Library or "Lesser" General Public License (LGPL)',
+				'Mozilla Public License 2.0',
+				'Common Development and Distribution License',
+				'Eclipse Public License version 2.0',
+				null,
+			],
+			type: 'string',
+		},
 		'Merge Strategies': {
 			MERGE: { type: 'boolean' },
 			REBASE: { type: 'boolean' },
@@ -37,13 +52,14 @@ const metricSchema = {
 		ReqCodeOwnerReviews: { type: 'boolean' },
 		'SecurityPolicyEnabled?': { type: 'boolean' },
 		Subscription: {
-			items: { type: 'string' },
-			minItems: 1,
-			type: 'array',
-			uniqueItems: true,
+			'enum': [
+				'IGNORED', 'SUBSCRIBED', 'UNSUBSCRIBED',
+			],
+			type: 'string',
 		},
 		'WikiEnabled?': { type: 'boolean' },
 	},
+	required: ['DefBranch'],
 	type: 'object',
 };
 
@@ -60,7 +76,7 @@ const configSchema = {
 	properties: {
 		defaultView: {
 			'enum': ['tabular', 'csv'],
-			format: 'defaultView', required: true, type: 'string',
+			required: true, type: 'string',
 		},
 		metrics: { $ref: '/metrics' },
 	},
