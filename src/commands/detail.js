@@ -6,8 +6,6 @@ const {
 	getRepositories,
 	generateDetailTable,
 	getGroupByField,
-	getSymbol,
-	checkNull,
 } = require('../utils');
 
 const getMergeStrategies = (item) => `${item.mergeCommitAllowed ? 'MERGE' : ''} ${item.squashMergeAllowed ? 'SQUASH' : ''} ${item.rebaseMergeAllowed ? 'REBASE' : ''}`.trim().split(' ').join(',');
@@ -21,6 +19,7 @@ const cmpMergeStrategies = (item, config) => {
 /* eslint-enable */
 /* eslint-disable max-lines-per-function */
 /* eslint-disable sort-keys */
+/* eslint-disable no-magic-numbers */
 
 const cmpAccess = (item, config) => config.includes(item.viewerPermission);
 const cmpLicense = (item, config) => config.includes(item.licenseInfo?.name || null);
@@ -35,36 +34,36 @@ const fields = [
 	{
 		name: 'Access', extract: (item) => item.viewerPermission, compare: cmpAccess,
 	},
-	{ name: 'IssuesEnabled?', extract: (item) => getSymbol(item.hasIssuesEnabled) },
+	{ name: 'IssuesEnabled?', extract: (item) => item.hasIssuesEnabled },
 	{
-		name: 'ProjectsEnabled?', extract: (item) => getSymbol(item.hasProjectsEnabled), permissions: ['ADMIN', 'MAINTAIN'],
+		name: 'ProjectsEnabled?', extract: (item) => item.hasProjectsEnabled, permissions: ['ADMIN', 'MAINTAIN'],
 	},
 	{
-		name: 'WikiEnabled?', extract: (item) => getSymbol(item.hasWikiEnabled), permissions: ['ADMIN', 'MAINTAIN'],
+		name: 'WikiEnabled?', extract: (item) => item.hasWikiEnabled, permissions: ['ADMIN', 'MAINTAIN'],
 	},
-	{ name: 'Archived?', extract: (item) => getSymbol(item.isArchived) },
-	{ name: 'BlankIssuesEnabled?', extract: (item) => getSymbol(item.isBlankIssuesEnabled) },
-	{ name: 'SecurityPolicyEnabled?', extract: (item) => getSymbol(item.isSecurityPolicyEnabled) },
+	{ name: 'Archived?', extract: (item) => item.isArchived },
+	{ name: 'BlankIssuesEnabled?', extract: (item) => item.isBlankIssuesEnabled },
+	{ name: 'SecurityPolicyEnabled?', extract: (item) => item.isSecurityPolicyEnabled },
 	{
 		name: 'License', extract: (item) => item.licenseInfo?.name || '---', compare: cmpLicense,
 	},
 	{
 		name: 'Merge Strategies', extract: getMergeStrategies, compare: cmpMergeStrategies, permissions: ['ADMIN', 'MAINTAIN'],
 	},
-	{ name: 'DeleteOnMerge', extract: (item) => getSymbol(item.deleteBranchOnMerge) },
-	{ name: 'HasStarred?', extract: (item) => getSymbol(item.viewerHasStarred) },
+	{ name: 'DeleteOnMerge', extract: (item) => item.deleteBranchOnMerge },
+	{ name: 'HasStarred?', extract: (item) => item.viewerHasStarred },
 	{
 		name: 'Subscription', extract: (item) => item.viewerSubscription, compare: cmpSubscription,
 	},
 	{
 		name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---', permissions: ['ADMIN'],
 	},
-	{ name: 'AllowsForcePushes', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsForcePushes || 'undefined') },
-	{ name: 'AllowsDeletions', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsDeletions || 'undefined') },
-	{ name: 'DismissesStaleReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.dismissesStaleReviews || 'undefined') },
-	{ name: 'ReqApprovingReviewCount', extract: (item) => checkNull(item.defaultBranchRef?.branchProtectionRule?.requiredApprovingReviewCount || 'undefined') },
-	{ name: 'ReqApprovingReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresApprovingReviews || 'undefined') },
-	{ name: 'ReqCodeOwnerReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresCodeOwnerReviews || 'undefined') },
+	{ name: 'AllowsForcePushes', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.allowsForcePushes || false },
+	{ name: 'AllowsDeletions', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.allowsDeletions || false },
+	{ name: 'DismissesStaleReviews', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.dismissesStaleReviews || false },
+	{ name: 'ReqApprovingReviewCount', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.requiredApprovingReviewCount || 0 },
+	{ name: 'ReqApprovingReviews', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.requiresApprovingReviews || false },
+	{ name: 'ReqCodeOwnerReviews', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.requiresCodeOwnerReviews || false },
 	{
 		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
 	},
