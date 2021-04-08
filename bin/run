@@ -113,6 +113,9 @@ Yargs.usage('Usage: $0 <command> [options]')
 					],
 					describe: 'Focus repo types',
 				})
+				.option('cache', {
+					describe: 'Dump API requests and cleaned up data in cache/',
+				})
 				.alias('s', 'sort')
 				.describe('s', 'Sort repos alphabetically')
 				.help('h')

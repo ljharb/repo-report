@@ -4,11 +4,21 @@
 
 'use strict';
 
+const fs = require('fs');
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
 const Table = require('cli-table');
 
 const config = require('../config/config.json');
+
+const dumpCache = (filename, content) => {
+	const dir = `${__dirname}/../cache`;
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir);
+	}
+	console.log(dir);
+	fs.writeFileSync(`${dir}/${filename}`, content);
+};
 
 const listFields = (fields) => fields.map((field) => console.log(`- ${field.name}`));
 
@@ -74,14 +84,6 @@ const getItemFields = (item) => {
 	};
 };
 
-const fetchData = (endCursor, generateQuery, flags) => graphql(
-	generateQuery(endCursor, flags),
-	{
-		headers: {
-			authorization: `token ${process.env.GITHUB_PAT}`,
-		},
-	},
-);
 const getRepositories = async (generateQuery, flags, filter) => {
 	// Repeated requests to get all repositories
 	let endCursor,
@@ -90,12 +92,23 @@ const getRepositories = async (generateQuery, flags, filter) => {
 		repositories = [];
 
 	do {
+		const response = await graphql(
+			generateQuery(endCursor, flags),
+			{
+				headers: {
+					authorization: `token ${process.env.GITHUB_PAT}`,
+				},
+			},
+		);
+		if (flags.cache) {
+			dumpCache(`Response_${(new Date()).toISOString()}.json`, JSON.stringify(response, null, '\t'));
+		}
 		const {
 			viewer: {
 				repositories: { nodes, pageInfo },
 			},
 			rateLimit,
-		} = await fetchData(endCursor, generateQuery, flags);
+		} = response;
 
 		endCursor = pageInfo.endCursor;
 		hasNextPage = pageInfo.hasNextPage;
@@ -105,6 +118,9 @@ const getRepositories = async (generateQuery, flags, filter) => {
 	} while (hasNextPage);
 	if (filter) {
 		repositories = repositories.filter(filter);
+	}
+	if (flags.cache) {
+		dumpCache(`Repositories_${(new Date()).toISOString()}.json`, JSON.stringify(repositories, null, '\t'));
 	}
 	return { points, repositories };
 };
@@ -280,6 +296,7 @@ const generateDetailTable = (fields, rows, {
 module.exports = {
 	checkNull,
 	createTable,
+	dumpCache,
 	generateDetailTable,
 	generateTable,
 	generateTableData,
