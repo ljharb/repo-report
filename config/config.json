@@ -16,7 +16,7 @@
     "DeleteOnMerge": false,
     "HasStarred?": false,
     "Subscription": ["IGNORED", "SUBSCRIBED", "UNSUBSCRIBED"],
-    "DefBranch": "master",
+    "DefBranch": "main",
     "AllowsForcePushes": false,
     "AllowsDeletions": false,
     "DismissesStaleReviews": false,

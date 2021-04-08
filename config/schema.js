@@ -12,10 +12,10 @@ const metricSchema = {
 	id: '/metrics',
 	properties: {
 		Access: {
-			'enum': [
-				'WRITE', 'ADMIN', 'MAINTAIN', 'TRIAGE', 'READ',
-			],
-			type: 'string',
+			items: {
+				type: 'string',
+			},
+			type: 'array',
 		},
 		AllowsDeletions: { type: 'boolean' },
 		AllowsForcePushes: { type: 'boolean' },
@@ -27,19 +27,10 @@ const metricSchema = {
 		'HasStarred?': { type: 'boolean' },
 		'IssuesEnabled?': { type: 'boolean' },
 		License: {
-			'enum': [
-				'MIT License',
-				'Apache License 2.0',
-				'BSD 3-Clause "New" or "Revised" license',
-				'BSD 2-Clause "Simplified" or "FreeBSD" license',
-				'GNU General Public License (GPL)',
-				'GNU Library or "Lesser" General Public License (LGPL)',
-				'Mozilla Public License 2.0',
-				'Common Development and Distribution License',
-				'Eclipse Public License version 2.0',
-				null,
-			],
-			type: 'string',
+			items: {
+				type: 'any',
+			},
+			type: 'array',
 		},
 		'Merge Strategies': {
 			MERGE: { type: 'boolean' },
@@ -52,10 +43,10 @@ const metricSchema = {
 		ReqCodeOwnerReviews: { type: 'boolean' },
 		'SecurityPolicyEnabled?': { type: 'boolean' },
 		Subscription: {
-			'enum': [
-				'IGNORED', 'SUBSCRIBED', 'UNSUBSCRIBED',
-			],
-			type: 'string',
+			items: {
+				type: 'string',
+			},
+			type: 'array',
 		},
 		'WikiEnabled?': { type: 'boolean' },
 	},
