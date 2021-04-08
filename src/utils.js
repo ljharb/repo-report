@@ -19,6 +19,9 @@ const getDiffSymbol = (item, configValue, value, compare) => {
 	if (configValue === undefined) {
 		return undefined;
 	}
+	if (configValue === null) {
+		return logSymbols.success;
+	}
 	let out;
 	if (compare) {
 		out = compare(item, configValue);
@@ -188,12 +191,14 @@ const generateDetailTable = (fields, rows, {
 		return `${diffValue || value}`;
 	};
 
+	const filteredFields = fields.filter((field) => !field.dontPrint);
+
 	if (all) {
 		table = new Table({
-			head: fields.filter((field) => !field.dontPrint).map((field) => field.name),
+			head: filteredFields.map((field) => field.name),
 		});
 		rows.forEach((item) => {
-			table.push(fields.filter((field) => !field.dontPrint).map((field) => {
+			table.push(filteredFields.map((field) => {
 				const key = field.name;
 				const value = field.extract(item);
 				const diffValue = getDiffSymbol(item, config.metrics[key], value, field.compare);
@@ -203,10 +208,10 @@ const generateDetailTable = (fields, rows, {
 		});
 	} else {
 		let buckets = {
-			0: fields.filter((field) => !field.dontPrint),
+			0: filteredFields,
 		};
 		let fieldBucketMap = {};
-		fields.filter((field) => !field.dontPrint).forEach((field) => {
+		filteredFields.forEach((field) => {
 			fieldBucketMap[field.name] = 0;
 		});
 		let nextBucket = 1;
@@ -241,7 +246,7 @@ const generateDetailTable = (fields, rows, {
 
 		let tableRows = [];
 		rows.forEach((item) => {
-			tableRows.push(fields.filter((field) => !field.dontPrint).map((field) => {
+			tableRows.push(filteredFields.map((field) => {
 				const key = field.name;
 				const value = field.extract(item);
 				const diffValue = getDiffSymbol(item, config.metrics[key], value, field.compare);
@@ -252,16 +257,15 @@ const generateDetailTable = (fields, rows, {
 
 		let head = [];
 		let dontPrintIDs = {};
-		for (let i = 0; i < fields.length; i++) {
-			const bucket = fieldBucketMap[fields[i].name];
+		for (let i = 0; i < filteredFields.length; i++) {
+			const bucket = fieldBucketMap[filteredFields[i].name];
 			if (buckets[bucket]) {
 				head.push(buckets[bucket].map((field) => field.name).join('\n'));
 				delete buckets[bucket];
-			} else {
+			} else if (bucket) {
 				dontPrintIDs[i] = true;
 			}
 		}
-
 		table = new Table({
 			head,
 		});
