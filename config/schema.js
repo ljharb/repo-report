@@ -15,6 +15,8 @@ const metricSchema = {
 			items: {
 				type: 'string',
 			},
+			maxItems: 5,
+			minItems: 1,
 			type: 'array',
 			uniqueItems: true,
 		},
@@ -48,6 +50,8 @@ const metricSchema = {
 			items: {
 				type: 'string',
 			},
+			maxItems: 3,
+			minItems: 1,
 			type: 'array',
 			uniqueItems: true,
 		},
