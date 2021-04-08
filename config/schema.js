@@ -12,9 +12,6 @@ const metricSchema = {
 	id: '/metrics',
 	properties: {
 		Access: {
-			'enum': [
-				'WRITE', 'ADMIN', 'MAINTAIN', 'TRIAGE', 'READ',
-			],
 			items: { type: 'string' },
 			type: 'array',
 			uniqueItems: true,
@@ -23,12 +20,12 @@ const metricSchema = {
 		AllowsForcePushes: { type: 'boolean' },
 		'Archived?': { type: 'boolean' },
 		'BlankIssuesEnabled?': { type: 'boolean' },
-		DefBranch: 'main',
+		DefBranch: { type: 'string' },
 		DeleteOnMerge: { type: 'boolean' },
 		DismissesStaleReviews: { type: 'boolean' },
 		'HasStarred?': { type: 'boolean' },
 		'IssuesEnabled?': { type: 'boolean' },
-		License: { items: { type: 'string' }, type: 'array' },
+		License: { items: { type: 'any' }, type: 'array' },
 		'Merge Strategies': {
 			MERGE: { type: 'boolean' },
 			REBASE: { type: 'boolean' },
@@ -40,9 +37,6 @@ const metricSchema = {
 		ReqCodeOwnerReviews: { type: 'boolean' },
 		'SecurityPolicyEnabled?': { type: 'boolean' },
 		Subscription: {
-			'enum': [
-				'IGNORED', 'SUBSCRIBED', 'UNSUBSCRIBED',
-			],
 			items: { type: 'string' },
 			minItems: 1,
 			type: 'array',
@@ -70,18 +64,20 @@ const configSchema = {
 		},
 		metrics: { $ref: '/metrics' },
 	},
+	repositories: {
+		$ref: '/repo',
+	},
 	type: 'object',
 };
 
 schemaValidator.addSchema(metricSchema, '/metrics');
 schemaValidator.addSchema(repoSchema, '/repo');
-console.log(configSchema);
+
 const { instance, errors } = schemaValidator.validate(config, configSchema);
-console.log(instance, '*******');
+
 if (errors && errors.length) {
-	// const errorList = errors.map((error) => `${error.instance} ${error.message}`);
-	console.log('hello');
-	// throw new Error(`Config validation error(s):\n${errorList.join('\n')}`);
+	const errorList = errors.map((error) => `${error.instance} ${error.message}`);
+	throw new Error(`Config validation error(s):\n${errorList.join('\n')}`);
 }
 
 module.exports = instance;
