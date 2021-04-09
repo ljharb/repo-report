@@ -24,17 +24,23 @@ const metricSchema = {
 		AllowsForcePushes: { type: 'boolean' },
 		'Archived?': { type: 'boolean' },
 		'BlankIssuesEnabled?': { type: 'boolean' },
-		DefBranch: { type: 'string' },
+		DefBranch: {
+			oneOf: [
+				{ type: 'string' }, {
+					items: {
+						type: ['string', 'null'],
+					},
+					type: 'array',
+					uniqueItems: true,
+				}, { type: 'null' },
+			],
+		},
 		DeleteOnMerge: { type: 'boolean' },
 		DismissesStaleReviews: { type: 'boolean' },
 		'HasStarred?': { type: 'boolean' },
 		'IssuesEnabled?': { type: 'boolean' },
 		License: {
-			items: {
-				type: ['string', 'null'],
-			},
-			type: 'array',
-			uniqueItems: true,
+			type: ['string', 'null'],
 		},
 		'Merge Strategies': {
 			MERGE: { type: 'boolean' },
@@ -42,18 +48,30 @@ const metricSchema = {
 			SQUASH: { type: 'boolean' },
 		},
 		'ProjectsEnabled?': { type: 'boolean' },
-		ReqApprovingReviewCount: { minimum: 1, type: 'integer' },
+		ReqApprovingReviewCount: {
+			maximum: 6, minimum: 1, type: 'integer',
+		},
 		ReqApprovingReviews: { type: 'boolean' },
 		ReqCodeOwnerReviews: { type: 'boolean' },
 		'SecurityPolicyEnabled?': { type: 'boolean' },
 		Subscription: {
-			items: {
-				type: 'string',
-			},
-			maxItems: 3,
-			minItems: 1,
-			type: 'array',
-			uniqueItems: true,
+			oneOf: [
+				{
+					'enum': [
+						'IGNORED', 'SUBSCRIBED', 'UNSUBSCRIBED', null,
+					],
+					type: ['string', 'null'],
+				},
+				{
+					items: {
+						'enum': [
+							'IGNORED', 'SUBSCRIBED', 'UNSUBSCRIBED', null,
+						],
+						type: ['string', 'null'],
+					},
+					type: 'array',
+				},
+			],
 		},
 		'WikiEnabled?': { type: 'boolean' },
 	},
