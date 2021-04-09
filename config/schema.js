@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 'use strict';
 
 const fs = require('fs');
@@ -9,30 +11,71 @@ const schemaValidator = new Validator();
 const metricSchema = {
 	id: '/metrics',
 	properties: {
-		Access: { type: 'array' },
+		Access: {
+			items: {
+				type: 'string',
+			},
+			maxItems: 5,
+			minItems: 1,
+			type: 'array',
+			uniqueItems: true,
+		},
 		AllowsDeletions: { type: 'boolean' },
 		AllowsForcePushes: { type: 'boolean' },
 		'Archived?': { type: 'boolean' },
 		'BlankIssuesEnabled?': { type: 'boolean' },
-		DefBranch: 'master',
+		DefBranch: {
+			oneOf: [
+				{ type: 'string' }, {
+					items: {
+						type: ['string', 'null'],
+					},
+					type: 'array',
+					uniqueItems: true,
+				}, { type: 'null' },
+			],
+		},
 		DeleteOnMerge: { type: 'boolean' },
 		DismissesStaleReviews: { type: 'boolean' },
 		'HasStarred?': { type: 'boolean' },
 		'IssuesEnabled?': { type: 'boolean' },
-		License: { type: 'array' },
+		License: {
+			type: ['string', 'null'],
+		},
 		'Merge Strategies': {
 			MERGE: { type: 'boolean' },
 			REBASE: { type: 'boolean' },
 			SQUASH: { type: 'boolean' },
 		},
 		'ProjectsEnabled?': { type: 'boolean' },
-		ReqApprovingReviewCount: { type: 'integer' },
+		ReqApprovingReviewCount: {
+			maximum: 6, minimum: 1, type: 'integer',
+		},
 		ReqApprovingReviews: { type: 'boolean' },
 		ReqCodeOwnerReviews: { type: 'boolean' },
 		'SecurityPolicyEnabled?': { type: 'boolean' },
-		Subscription: { type: 'array' },
+		Subscription: {
+			oneOf: [
+				{
+					'enum': [
+						'IGNORED', 'SUBSCRIBED', 'UNSUBSCRIBED', null,
+					],
+					type: ['string', 'null'],
+				},
+				{
+					items: {
+						'enum': [
+							'IGNORED', 'SUBSCRIBED', 'UNSUBSCRIBED', null,
+						],
+						type: ['string', 'null'],
+					},
+					type: 'array',
+				},
+			],
+		},
 		'WikiEnabled?': { type: 'boolean' },
 	},
+	required: ['DefBranch'],
 	type: 'object',
 };
 
@@ -49,15 +92,19 @@ const configSchema = {
 	properties: {
 		defaultView: {
 			'enum': ['tabular', 'csv'],
-			format: 'defaultView', required: true, type: 'string',
+			required: true, type: 'string',
 		},
 		metrics: { $ref: '/metrics' },
+	},
+	repositories: {
+		$ref: '/repo',
 	},
 	type: 'object',
 };
 
 schemaValidator.addSchema(metricSchema, '/metrics');
 schemaValidator.addSchema(repoSchema, '/repo');
+
 const { instance, errors } = schemaValidator.validate(config, configSchema);
 
 if (errors && errors.length) {
