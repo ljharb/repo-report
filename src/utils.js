@@ -8,6 +8,7 @@ const fs = require('fs');
 const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
 const Table = require('cli-table');
+const minimatch = require('minimatch');
 
 const config = require('../config/config.json');
 
@@ -24,8 +25,42 @@ const listFields = (fields) => fields.map((field) => console.log(`- ${field.name
 
 const getSymbol = (value) => value || false;
 
+const getCurrMetrics = (item) => {
+	const repoName = item.nameWithOwner;
+	const { overrides, metrics } = config;
+	let currMetrics = metrics;
+	overrides.forEach((rule) => {
+		let shouldApply = false;
+		rule.repos.forEach((repoGlob) => {
+			if (minimatch(repoName, repoGlob)) {
+				shouldApply = true;
+			}
+		});
+		if (shouldApply) {
+			currMetrics = {
+				...currMetrics,
+				...rule.metrics,
+			};
+		}
+	});
+	return currMetrics;
+};
+
+const removeIgnoredRepos = (repos) => repos.filter((repo) => {
+	const repoName = repo.nameWithOwner;
+	const { repositories: { ignore } } = config;
+	let include = true;
+	ignore.forEach((glob) => {
+		if (minimatch(repoName, glob)) {
+			include = false;
+		}
+	});
+	return include;
+});
+
 // eslint-disable-next-line max-params
-const getDiffSymbol = (item, configValue, value, field) => {
+const getDiffSymbol = (item, currMetrics, value, field) => {
+	const configValue = currMetrics[field.name];
 	if (configValue === undefined) {
 		return undefined;
 	}
@@ -122,6 +157,7 @@ const getRepositories = async (generateQuery, flags, filter) => {
 	if (flags.cache) {
 		dumpCache(`Repositories_${(new Date()).toISOString()}.json`, JSON.stringify(repositories, null, '\t'));
 	}
+	repositories = removeIgnoredRepos(repositories);
 	return { points, repositories };
 };
 
@@ -214,10 +250,10 @@ const generateDetailTable = (fields, rows, {
 			head: filteredFields.map((field) => field.name),
 		});
 		rows.forEach((item) => {
+			const currMetrics = getCurrMetrics(item);
 			table.push(filteredFields.map((field) => {
-				const key = field.name;
 				const value = field.extract(item);
-				const diffValue = getDiffSymbol(item, config.metrics[key], value, field);
+				const diffValue = getDiffSymbol(item, currMetrics, value, field);
 
 				return getMetricOut(value, diffValue);
 			}));
@@ -233,13 +269,13 @@ const generateDetailTable = (fields, rows, {
 		let nextBucket = 1;
 
 		rows.forEach((item) => {
+			const currMetrics = getCurrMetrics(item);
 			for (const bucket of Object.keys(buckets)) {
 				let bucketNew = [];
 				for (let i = 0; i < buckets[bucket].length; i++) {
 					const field = buckets[bucket][i];
-					const key = field.name;
 					const value = field.extract(item);
-					const diffValue = getDiffSymbol(item, config.metrics[key], value, field);
+					const diffValue = getDiffSymbol(item, currMetrics, value, field);
 
 					let valueToCheck = getMetricOut(value, diffValue);
 					bucketNew.push([field, valueToCheck]);
@@ -262,10 +298,10 @@ const generateDetailTable = (fields, rows, {
 
 		let tableRows = [];
 		rows.forEach((item) => {
+			const currMetrics = getCurrMetrics(item);
 			tableRows.push(filteredFields.map((field) => {
-				const key = field.name;
 				const value = field.extract(item);
-				const diffValue = getDiffSymbol(item, config.metrics[key], value, field);
+				const diffValue = getDiffSymbol(item, currMetrics, value, field);
 
 				return getMetricOut(value, diffValue);
 			}));

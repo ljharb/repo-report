@@ -1,3 +1,6 @@
 {
-	"extends": ["@ljharb", "@ljharb/eslint-config/node/latest"]
+	"extends": ["@ljharb", "@ljharb/eslint-config/node/latest"],
+	"rules": {
+		"max-lines": "off",
+	},
 }

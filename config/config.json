@@ -26,14 +26,15 @@
   },
   "overrides": [
     {
-      "repos": ["globs"],
+      "repos": ["ljharb/*"],
       "metrics": {
+        "DefBranch": "main"
       }
     }
   ],
   "repositories": {
     "f": "npm*",
-    "ignore": "es5-shim*"
+    "ignore": ["ljharb/*"]
   },
   "defaultView": "tabular"
 }
