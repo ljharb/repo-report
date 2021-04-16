@@ -8,7 +8,7 @@
   },
   "scripts": {
     "tape": "tape 'test/**/*.test.js' | tap-spec",
-    "test": "yarn run tape"
+    "test": "npm run tape"
   },
   "repository": "https://github.com/ljharb/repo-report",
   "author": "ljharb",
