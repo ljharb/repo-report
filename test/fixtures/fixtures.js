@@ -108,8 +108,67 @@ const DetailTableColumns = [
 	'ReqApprovingReviewCount',
 	'ReqApprovingReviews',
 	'ReqCodeOwnerReviews'];
+
+const sortedRepositories = [
+	{ name: 'challenges-book',
+		nameWithOwner: 'name/challenges-book',
+		isPrivate: false,
+		defaultBranchRef: { name: 'master' },
+		viewerPermission: 'ADMIN' },
+	{ name: 'guidelines-questionnaire',
+		nameWithOwner: 'name/guidelines-questionnaire',
+		isPrivate: false,
+		defaultBranchRef: { name: 'master' },
+		viewerPermission: 'ADMIN' },
+	{ name: 'media-upload-app',
+		nameWithOwner: 'name/media-upload-app',
+		isPrivate: false,
+		defaultBranchRef: { name: 'develop' },
+		viewerPermission: 'ADMIN' },
+	{ name: 'microservice',
+		nameWithOwner: 'name/microservice',
+		isPrivate: true, defaultBranchRef: { name: 'master' },
+		viewerPermission: 'ADMIN' },
+	{ name: 'project-eraser',
+		nameWithOwner: 'name/project-eraser',
+		isPrivate: false,
+		defaultBranchRef: { name: 'master' },
+		viewerPermission: 'ADMIN' },
+	{ name: 'responsive-design',
+		nameWithOwner: 'name/responsive-design',
+		isPrivate: false,
+		defaultBranchRef: { name: 'master' },
+		viewerPermission: 'ADMIN' },
+];
+
+const tableData = {
+	body: [
+		['name/challenges-book', 'ADMIN', 'master'],
+		['name/guidelines-questionnaire', 'ADMIN', 'master'],
+		['name/media-upload-app', 'ADMIN', 'develop'],
+		['🔒 name/microservice', 'ADMIN', 'master'],
+		['name/project-eraser', 'ADMIN', 'master'],
+		['name/responsive-design', 'ADMIN', 'master'],
+	],
+	head: ['Repository', 'Access', 'DefBranch'],
+};
+
+const sortedTableData = {
+	body: [
+		['name/challenges-book', 'ADMIN', 'master'],
+		['name/guidelines-questionnaire', 'ADMIN', 'master'],
+		['name/media-upload-app', 'ADMIN', 'develop'],
+		['🔒 name/microservice', 'ADMIN', 'master'],
+		['name/project-eraser', 'ADMIN', 'master'],
+		['name/responsive-design', 'ADMIN', 'master'],
+	],
+	head: ['Repository', 'Access', 'DefBranch'],
+};
 module.exports = {
 	mockRepositoriesData,
 	tableOutput,
 	DetailTableColumns,
+	sortedRepositories,
+	tableData,
+	sortedTableData,
 };
