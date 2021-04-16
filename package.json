@@ -7,8 +7,13 @@
     "repo-report": "./bin/run"
   },
   "scripts": {
-    "tape": "tape 'test/**/*.test.js' | tap-spec",
-    "test": "yarn run tape"
+    "test": "npm run tests-only",
+    "tests-only": "nyc tape 'test/**/*.js'| tap-spec",
+    "lint": "eslint .",
+    "pretest": "npm run lint"
+  },
+  "engines": {
+    "node": "^15 || ^14 || ^13 || ^12 || ^11 || ^10"
   },
   "repository": "https://github.com/ljharb/repo-report",
   "author": "ljharb",
@@ -28,6 +33,7 @@
     "eslint": "^7.20.0",
     "fetch-mock": "9.11.0",
     "isomorphic-fetch": "3.0.0",
+    "nyc": "15.1.0",
     "tape": "5.2.2"
   }
 }
