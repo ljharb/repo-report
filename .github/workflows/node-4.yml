@@ -12,7 +12,7 @@ jobs:
       - uses: ljharb/actions/node/matrix@main
         id: set-matrix
         with:
-          preset: ">=4"
+          preset: ">=10"
 
   latest:
     needs: [matrix]
@@ -24,14 +24,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: ljharb/actions/node/install@main
         name: "nvm install ${{ matrix.node-version }} && npm install"
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm run tests-only
-      - run: bash <(curl -s https://codecov.io/bash) -f coverage/*.json;
+      - uses: codecov/codecov-action@v1
 
   minors:
     needs: [matrix, latest]
@@ -45,14 +43,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: ljharb/actions/node/install@main
         name: "nvm install ${{ matrix.node-version }} && npm install"
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm run tests-only
-      - run: bash <(curl -s https://codecov.io/bash) -f coverage/*.json;
+      - uses: codecov/codecov-action@v1
 
   node:
     name: "node 4+"
