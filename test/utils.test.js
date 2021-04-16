@@ -3,9 +3,16 @@
 'use strict';
 
 const test = require('tape');
+const Table = require('cli-table');
 const logSymbols = require('log-symbols');
 const { stdout } = require('../test/test-utils');
-const { mockRepositoriesData: { data: { viewer: { repositories } } }, tableOutput } = require('./fixtures/fixtures');
+
+const { mockRepositoriesData: { data: { viewer: { repositories } } },
+	tableOutput,
+	sortedRepositories,
+	tableData,
+	sortedTableData,
+} = require('./fixtures/fixtures');
 
 const {
 	listFields,
@@ -14,6 +21,9 @@ const {
 	printAPIPoints,
 	generateTable,
 	getSymbol,
+	createTable,
+	generateTableData,
+	sortRows,
 } = require('../src/utils');
 
 const fields = [
@@ -46,7 +56,7 @@ test('listFields', (t) => {
 	});
 });
 
-test('getGroupField', (t) => {
+test('getGroupByField', (t) => {
 	t.plan(2);
 	t.test('return the correct field', (t) => {
 		const actualField = getGroupByField('Access', fields);
@@ -109,15 +119,15 @@ test('generateTable,', (t) => {
 test('getSymbol,', (t) => {
 	t.plan(2);
 	t.test('return success symbol if value is true', (t) => {
-		const expectedResults =	`${logSymbols.success}`;
+		const expectedResults =	true;
 		const actualResult = getSymbol(true);
 		t.equal(expectedResults, actualResult);
 		t.end();
 	});
 
 	t.test('return error symbol if value is false', (t) => {
-		const expectedResults =	`${logSymbols.error}`;
-		const actualResult = getSymbol(false);
+		const expectedResults =	false;
+		const actualResult = getSymbol('');
 		t.equal(expectedResults, actualResult);
 		t.end();
 	});
@@ -141,6 +151,82 @@ test('printAPIPoints,', (t) => {
 		printAPIPoints({ cost: 2, remaining: 4997 });
 		output.restore();
 		t.notDeepEqual(output.loggedData, expectedResults);
+		t.end();
+	});
+});
+
+test('sortRows', (t) => {
+	const repositoriesData = [...repositories.nodes];
+	t.test('return the repositories correctly sorted', (t) => {
+		const actualResult = sortRows(repositories.nodes);
+		t.deepEqual(actualResult, sortedRepositories);
+		t.end();
+	});
+
+	t.test('return the repositories correctly sorted', (t) => {
+		const result = sortRows(repositories.nodes);
+		t.notDeepEqual(result, repositoriesData);
+		t.end();
+	});
+});
+
+test('generateTableData', (t) => {
+	const fields = [
+		{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
+		{ name: 'Access', extract: (item) => item.viewerPermission },
+		{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' },
+		{
+			name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
+		},
+	];
+
+	t.test(' generateTableData returns the correct table data required to generate a table', (t) => {
+		const actualResult = generateTableData(fields, [...repositories.nodes]);
+		t.deepEqual(actualResult, tableData);
+		t.end();
+	});
+
+	t.test('generateTableData returns the correct sorted table data required to generate a table', (t) => {
+		const actualResult = generateTableData(fields, [...repositories.nodes], '', true);
+		t.deepEqual(actualResult, sortedTableData);
+		t.end();
+	});
+
+	t.test('generateTableData returns the correct table data grouped as by access', (t) => {
+		const groupByAccess = 	{ name: 'Access', extract: (item) => item.viewerPermission };
+		const actualResult = generateTableData(fields, [...repositories.nodes], groupByAccess, true);
+		t.deepEqual(actualResult.head, ['Access', 'Repository', 'DefBranch']);
+		t.end();
+	});
+
+	t.test('generateTableData returns the wrong table data when grouped as by access', (t) => {
+		const groupByDefBranch = 	{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' };
+		const actualResult = generateTableData(fields, [...repositories.nodes], groupByDefBranch, true);
+		t.notDeepEqual(actualResult.head, ['Repository', 'Access', 'DefBranch']);
+		t.end();
+	});
+
+});
+
+test('createTable', (t) => {
+
+	t.test('return correctly generated values for table row 0 given the right data is passed', (t) => {
+		const table = createTable(tableData);
+		t.ok(table instanceof Table);
+		t.deepEqual(table[0], ['name/challenges-book', 'ADMIN', 'master']);
+		t.end();
+	});
+
+	t.test('return correctly generated values for table header given the right data is passed', (t) => {
+		const table = createTable(tableData);
+		t.ok(table instanceof Table);
+		t.deepEqual(table.options.head, ['Repository', 'Access', 'DefBranch']);
+		t.end();
+	});
+
+	t.test('returns correctlength of table given the right data is passed', (t) => {
+		const table = createTable(tableData);
+		t.equal(table.length, 6);
 		t.end();
 	});
 });
