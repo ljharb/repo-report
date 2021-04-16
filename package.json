@@ -8,7 +8,7 @@
   },
   "scripts": {
     "tape": "tape 'test/**/*.test.js' | tap-spec",
-    "test": "npm run tape"
+    "test": "yarn run tape"
   },
   "repository": "https://github.com/ljharb/repo-report",
   "author": "ljharb",
@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "@ljharb/eslint-config": "^17.5.1",
-    "@octokit/fixtures": "21.3.9",
     "eslint": "^7.20.0",
     "fetch-mock": "9.11.0",
     "isomorphic-fetch": "3.0.0",
