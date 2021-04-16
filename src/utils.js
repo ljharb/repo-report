@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-magic-numbers */
 
@@ -7,7 +8,27 @@ const { graphql } = require('@octokit/graphql');
 const logSymbols = require('log-symbols');
 const Table = require('cli-table');
 
+const config = require('../config/config.json');
+
 const listFields = (fields) => fields.map((field) => console.log(`- ${field.name}`));
+
+const getSymbol = (value) => value || false;
+
+// eslint-disable-next-line max-params
+const getDiffSymbol = (item, configValue, value, compare) => {
+	if (configValue === undefined) {
+		return undefined;
+	}
+	let out;
+	if (compare) {
+		out = compare(item, configValue);
+	} else {
+		out = configValue === value;
+	}
+	return out ? logSymbols.success : logSymbols.error;
+};
+
+const checkNull = (value) => value || '---';
 
 const getGroupByField = (group, fields) => {
 	let groupByIndex = fields.findIndex((field) => field.name.toLowerCase() === group.toLowerCase());
@@ -121,12 +142,115 @@ const generateTable = (fields, rows, { groupBy, sort } = {}) => {
 	return table;
 };
 
-const getSymbol = (value) => (value ? logSymbols.success : logSymbols.error);
+const generateDetailTable = (fields, rows, {
+	sort,
+	actual,
+	all,
+	goodness,
+} = {}) => {
+	let table;
+	if (sort) {
+		rows.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+	}
 
-const checkNull = (value) => value || '---';
+	const getMetricOut = (value, diffValue) => {
+		if (actual && goodness && diffValue) {
+			return `${diffValue} ${value}`;
+		}
+		if (actual) {
+			return `${value}`;
+		}
+		return `${diffValue || value}`;
+	};
+
+	if (all) {
+		table = new Table({
+			head: fields.filter((field) => !field.dontPrint).map((field) => field.name),
+		});
+		rows.forEach((item) => {
+			table.push(fields.filter((field) => !field.dontPrint).map((field) => {
+				const key = field.name;
+				const value = field.extract(item);
+				const diffValue = getDiffSymbol(item, config.metrics[key], value, field.compare);
+
+				return getMetricOut(value, diffValue);
+			}));
+		});
+	} else {
+		let buckets = {
+			0: fields.filter((field) => !field.dontPrint),
+		};
+		let fieldBucketMap = {};
+		fields.filter((field) => !field.dontPrint).forEach((field) => {
+			fieldBucketMap[field.name] = 0;
+		});
+		let nextBucket = 1;
+
+		rows.forEach((item) => {
+			for (const bucket of Object.keys(buckets)) {
+				let bucketNew = [];
+				for (let i = 0; i < buckets[bucket].length; i++) {
+					const field = buckets[bucket][i];
+					const key = field.name;
+					const value = field.extract(item);
+					const diffValue = getDiffSymbol(item, config.metrics[key], value, field.compare);
+
+					let valueToCheck = getMetricOut(value, diffValue);
+					bucketNew.push([field, valueToCheck]);
+				}
+				delete buckets[bucket];
+				let newBucketMap = {};
+				for (const [field, key] of bucketNew) {
+					if (newBucketMap[key]) {
+						buckets[newBucketMap[key]].push(field);
+						fieldBucketMap[field.name] = newBucketMap[key];
+					} else {
+						newBucketMap[key] = nextBucket;
+						buckets[nextBucket] = [field];
+						fieldBucketMap[field.name] = nextBucket;
+						nextBucket += 1;
+					}
+				}
+			}
+		});
+
+		let tableRows = [];
+		rows.forEach((item) => {
+			tableRows.push(fields.filter((field) => !field.dontPrint).map((field) => {
+				const key = field.name;
+				const value = field.extract(item);
+				const diffValue = getDiffSymbol(item, config.metrics[key], value, field.compare);
+
+				return getMetricOut(value, diffValue);
+			}));
+		});
+
+		let head = [];
+		let dontPrintIDs = {};
+		for (let i = 0; i < fields.length; i++) {
+			const bucket = fieldBucketMap[fields[i].name];
+			if (buckets[bucket]) {
+				head.push(buckets[bucket].map((field) => field.name).join('\n'));
+				delete buckets[bucket];
+			} else {
+				dontPrintIDs[i] = true;
+			}
+		}
+
+		table = new Table({
+			head,
+		});
+		tableRows.forEach((row) => {
+			table.push(row.filter((_, idx) => !dontPrintIDs[idx]));
+		});
+
+	}
+	return table;
+};
 
 module.exports = {
 	checkNull,
+	generateDetailTable,
 	generateTable,
 	getGroupByField,
 	getItemFields,
