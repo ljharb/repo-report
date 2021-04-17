@@ -30,9 +30,7 @@ const fields = [
 	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
 	{ name: 'Access', extract: (item) => item.viewerPermission },
 	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
-	{
-		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
-	},
+	{ name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true },
 ];
 
 test('listFields', (t) => {
@@ -106,7 +104,7 @@ test('generateTable,', (t) => {
 	const columns = [
 		{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
 		{ name: 'Access', extract: (item) => item.viewerPermission },
-		{ name: 'branch', extract: (item) => item.defaultBranchRef?.name || '---' },
+		{ name: 'branch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
 	];
 	t.test('return invalid output', (t) => {
 		const actualResult = generateTable(columns, repositories.nodes);
@@ -171,15 +169,6 @@ test('sortRows', (t) => {
 });
 
 test('generateTableData', (t) => {
-	const fields = [
-		{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
-		{ name: 'Access', extract: (item) => item.viewerPermission },
-		{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' },
-		{
-			name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
-		},
-	];
-
 	t.test(' generateTableData returns the correct table data required to generate a table', (t) => {
 		const actualResult = generateTableData(fields, [...repositories.nodes]);
 		t.deepEqual(actualResult, tableData);
@@ -200,7 +189,7 @@ test('generateTableData', (t) => {
 	});
 
 	t.test('generateTableData returns the wrong table data when grouped as by access', (t) => {
-		const groupByDefBranch = 	{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' };
+		const groupByDefBranch = 	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' };
 		const actualResult = generateTableData(fields, [...repositories.nodes], groupByDefBranch, true);
 		t.notDeepEqual(actualResult.head, ['Repository', 'Access', 'DefBranch']);
 		t.end();
