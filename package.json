@@ -10,10 +10,11 @@
     "test": "npm run tests-only",
     "tests-only": "nyc tape 'test/**/*.js'| tap-spec",
     "lint": "eslint .",
-    "pretest": "npm run lint"
+    "pretest": "npm run lint",
+    "posttest": "aud --production"
   },
   "engines": {
-    "node": "^15 || ^14 || ^13 || ^12 || ^11 || ^10"
+    "node": ">=10"
   },
   "repository": "https://github.com/ljharb/repo-report",
   "author": "ljharb",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@ljharb/eslint-config": "^17.5.1",
+    "aud": "1.1.4",
     "eslint": "^7.20.0",
     "fetch-mock": "9.11.0",
     "isomorphic-fetch": "3.0.0",
