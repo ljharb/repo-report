@@ -14,7 +14,7 @@
     "posttest": "aud --production"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "repository": "https://github.com/ljharb/repo-report",
   "author": "ljharb",

@@ -12,7 +12,7 @@ jobs:
       - uses: ljharb/actions/node/matrix@main
         id: set-matrix
         with:
-          preset: ">=10"
+          preset: ">=14"
 
   latest:
     needs: [matrix]
@@ -51,7 +51,7 @@ jobs:
       - uses: codecov/codecov-action@v1
 
   node:
-    name: "node 10+"
+    name: "node 14+"
     needs: [latest, minors]
     runs-on: ubuntu-latest
     steps:
