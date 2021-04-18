@@ -14,7 +14,7 @@ const {
 const fields = [
 	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
 	{ name: 'Access', extract: (item) => item.viewerPermission },
-	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
+	{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' },
 	{
 		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
 	},

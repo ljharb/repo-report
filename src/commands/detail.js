@@ -24,7 +24,7 @@ const cmpMergeStrategies = (item, config) => {
 /* eslint-disable sort-keys */
 
 const cmpAccess = (item, config) => config.includes(item.viewerPermission);
-const cmpLicense = (item, config) => config.includes((item.licenseInfo || {}).name || null);
+const cmpLicense = (item, config) => config.includes(item.licenseInfo?.name || null);
 const cmpSubscription = (item, config) => config.includes(item.viewerSubscription);
 
 // Field names and their extraction method to be used on the query result
@@ -40,7 +40,7 @@ const fields = [
 	{ name: 'BlankIssuesEnabled?', extract: (item) => getSymbol(item.isBlankIssuesEnabled) },
 	{ name: 'SecurityPolicyEnabled?', extract: (item) => getSymbol(item.isSecurityPolicyEnabled) },
 	{
-		name: 'License', extract: (item) => (item.licenseInfo || {}).name || '---', compare: cmpLicense,
+		name: 'License', extract: (item) => item.licenseInfo?.name || '---', compare: cmpLicense,
 	},
 	{
 		name: 'Merge Strategies', extract: getMergeStrategies, compare: cmpMergeStrategies,
@@ -50,13 +50,13 @@ const fields = [
 	{
 		name: 'Subscription', extract: (item) => item.viewerSubscription, compare: cmpSubscription,
 	},
-	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
-	{ name: 'AllowsForcePushes', extract: (item) => getSymbol(((item.defaultBranchRef || {}).branchProtectionRule || {}).allowsForcePushes) },
-	{ name: 'AllowsDeletions', extract: (item) => getSymbol(((item.defaultBranchRef || {}).branchProtectionRule || {}).allowsDeletions) },
-	{ name: 'DismissesStaleReviews', extract: (item) => getSymbol(((item.defaultBranchRef || {}).branchProtectionRule || {}).dismissesStaleReviews) },
-	{ name: 'ReqApprovingReviewCount', extract: (item) => checkNull(((item.defaultBranchRef || {}).branchProtectionRule || {}).requiredApprovingReviewCount) },
-	{ name: 'ReqApprovingReviews', extract: (item) => getSymbol(((item.defaultBranchRef || {}).branchProtectionRule || {}).requiresApprovingReviews) },
-	{ name: 'ReqCodeOwnerReviews', extract: (item) => getSymbol(((item.defaultBranchRef || {}).branchProtectionRule || {}).requiresCodeOwnerReviews) },
+	{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' },
+	{ name: 'AllowsForcePushes', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsForcePushes) },
+	{ name: 'AllowsDeletions', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsDeletions) },
+	{ name: 'DismissesStaleReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.dismissesStaleReviews) },
+	{ name: 'ReqApprovingReviewCount', extract: (item) => checkNull(item.defaultBranchRef?.branchProtectionRule?.requiredApprovingReviewCount) },
+	{ name: 'ReqApprovingReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresApprovingReviews) },
+	{ name: 'ReqCodeOwnerReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresCodeOwnerReviews) },
 	{
 		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
 	},

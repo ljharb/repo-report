@@ -14,13 +14,13 @@ const {
 
 const fields = [
 	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
-	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
-	{ name: 'AllowsForcePushes', extract: (item) => getSymbol(((item.defaultBranchRef || {}).branchProtectionRule || {}).allowsForcePushes) },
-	{ name: 'AllowsDeletions', extract: (item) => getSymbol(((item.defaultBranchRef || {}).branchProtectionRule || {}).allowsDeletions) },
-	{ name: 'DismissesStaleReviews', extract: (item) => getSymbol(((item.defaultBranchRef || {}).branchProtectionRule || {}).dismissesStaleReviews) },
-	{ name: 'ReqApprovingReviewCount', extract: (item) => checkNull(((item.defaultBranchRef || {}).branchProtectionRule || {}).requiredApprovingReviewCount) },
-	{ name: 'ReqApprovingReviews', extract: (item) => getSymbol(((item.defaultBranchRef || {}).branchProtectionRule || {}).requiresApprovingReviews) },
-	{ name: 'ReqCodeOwnerReviews', extract: (item) => getSymbol(((item.defaultBranchRef || {}).branchProtectionRule || {}).requiresCodeOwnerReviews) },
+	{ name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---' },
+	{ name: 'AllowsForcePushes', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsForcePushes) },
+	{ name: 'AllowsDeletions', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.allowsDeletions) },
+	{ name: 'DismissesStaleReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.dismissesStaleReviews) },
+	{ name: 'ReqApprovingReviewCount', extract: (item) => checkNull(item.defaultBranchRef?.branchProtectionRule?.requiredApprovingReviewCount) },
+	{ name: 'ReqApprovingReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresApprovingReviews) },
+	{ name: 'ReqCodeOwnerReviews', extract: (item) => getSymbol(item.defaultBranchRef?.branchProtectionRule?.requiresCodeOwnerReviews) },
 	{
 		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
 	},
