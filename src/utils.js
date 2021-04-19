@@ -62,7 +62,6 @@ const getItemFields = (item) => {
 	return {
 		allowsDeletions,
 		allowsForcePushes,
-		// defBranch,
 		dismissesStaleReviews,
 		nameWithOwner,
 		pattern,
@@ -72,6 +71,14 @@ const getItemFields = (item) => {
 	};
 };
 
+const fetchData = (endCursor, generateQuery) => graphql(
+	generateQuery(endCursor),
+	{
+		headers: {
+			authorization: `token ${process.env.GITHUB_PAT}`,
+		},
+	},
+);
 const getRepositories = async (generateQuery) => {
 	// Repeated requests to get all repositories
 	let endCursor,
@@ -85,14 +92,7 @@ const getRepositories = async (generateQuery) => {
 				repositories: { nodes, pageInfo },
 			},
 			rateLimit,
-		} = await graphql(
-			generateQuery(endCursor),
-			{
-				headers: {
-					authorization: `token ${process.env.GITHUB_PAT}`,
-				},
-			},
-		);
+		} = await fetchData(endCursor, generateQuery);
 
 		endCursor = pageInfo.endCursor;
 		hasNextPage = pageInfo.hasNextPage;
@@ -103,21 +103,25 @@ const getRepositories = async (generateQuery) => {
 	return { points, repositories };
 };
 
-const generateTable = (fields, rows, { groupBy, sort } = {}) => {
-	let table;
+const sortRows = (rows) => rows.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+
+// eslint-disable-next-line max-params
+const generateTableData = (fields, rows, groupBy, sort) => {
+	let repositories = rows;
+	let tableData	= { body: [], head: [] };
 	if (sort) {
-		rows.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+		repositories =	sortRows(rows);
 	}
 	if (groupBy) {
 		const otherFields = fields.filter((field) => field.name !== groupBy.name);
-		table = new Table({
-			head: [
-				...groupBy.dontPrint ? [] : [groupBy.name],
-				...otherFields.filter((field) => !field.dontPrint).map((field) => field.name),
-			],
-		});
+
+		tableData.head = [
+			...groupBy.dontPrint ? [] : [groupBy.name],
+			...otherFields.filter((field) => !field.dontPrint).map((field) => field.name),
+		];
+
 		const groupedObj = {};
-		rows.forEach((item) => {
+		repositories.forEach((item) => {
 			const key = groupBy.extract(item);
 			const value = otherFields.filter((field) => !field.dontPrint).map((field) => field.extract(item));
 			if (key in groupedObj) {
@@ -127,20 +131,33 @@ const generateTable = (fields, rows, { groupBy, sort } = {}) => {
 
 		Object.entries(groupedObj).forEach((item) => {
 			const [key, value] = item;
-			table.push([
+			tableData.body.push([
 				...groupBy.dontPrint ? [] : [key],
 				...value,
 			]);
 		});
 	} else {
-		table = new Table({
-			head: fields.filter((field) => !field.dontPrint).map((field) => field.name),
-		});
-		rows.forEach((item) => {
-			table.push(fields.filter((field) => !field.dontPrint).map((field) => field.extract(item)));
+
+		tableData.head = fields.filter((field) => !field.dontPrint).map((field) => field.name);
+		repositories.forEach((item) => {
+			tableData.body.push(fields.filter((field) => !field.dontPrint).map((field) => field.extract(item)));
 		});
 	}
+	return tableData;
+
+};
+
+const createTable = (tableData) => {
+	const table = new Table({ head: tableData.head });
+	tableData.body.forEach((item) => {
+		table.push(item);
+	});
 	return table;
+};
+
+const generateTable = (fields, rows, { groupBy, sort } = {}) => {
+	const data = generateTableData(fields, rows, groupBy, sort);
+	return createTable(data);
 };
 
 const generateDetailTable = (fields, rows, {
@@ -251,12 +268,16 @@ const generateDetailTable = (fields, rows, {
 
 module.exports = {
 	checkNull,
+	createTable,
 	generateDetailTable,
 	generateTable,
+	generateTableData,
+	getDiffSymbol,
 	getGroupByField,
 	getItemFields,
 	getRepositories,
 	getSymbol,
 	listFields,
 	printAPIPoints,
+	sortRows,
 };
