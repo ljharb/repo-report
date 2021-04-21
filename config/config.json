@@ -1,20 +1,20 @@
 {
   "metrics": {
     "Access": ["ADMIN", "MAINTAIN", "WRITE", "TRIAGE", "READ"],
-    "IssuesEnabled?": true,
-    "ProjectsEnabled?": true,
-    "WikiEnabled?": false,
-    "Archived?": false,
-    "BlankIssuesEnabled?": false,
-    "SecurityPolicyEnabled?": false,
+    "IssuesEnabled": true,
+    "ProjectsEnabled": true,
+    "WikiEnabled": false,
+    "Archived": false,
+    "BlankIssuesEnabled": false,
+    "SecurityPolicyEnabled": false,
     "License": ["MIT License", null],
-    "Merge Strategies": {
+    "MergeStrategies": {
       "MERGE": true,
       "SQUASH": true,
       "REBASE": true
     },
     "DeleteOnMerge": false,
-    "HasStarred?": false,
+    "HasStarred": false,
     "Subscription": ["IGNORED", "SUBSCRIBED", "UNSUBSCRIBED"],
     "DefBranch": "main",
     "AllowsForcePushes": false,

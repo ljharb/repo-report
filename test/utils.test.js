@@ -15,8 +15,8 @@ const { mockRepositoriesData: { data: { viewer: { repositories } } },
 } = require('./fixtures/fixtures');
 
 const {
-	listFields,
-	getGroupByField,
+	listMetrics,
+	getGroupByMetric,
 	checkNull,
 	printAPIPoints,
 	generateTable,
@@ -26,50 +26,50 @@ const {
 	sortRows,
 } = require('../src/utils');
 
-const fields = [
+const metrics = [
 	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
 	{ name: 'Access', extract: (item) => item.viewerPermission },
 	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
 	{ name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true },
 ];
 
-test('listFields', (t) => {
+test('listMetrics', (t) => {
 	t.plan(2);
-	t.test('output each field name', (t) => {
+	t.test('output each metric name', (t) => {
 		const output = stdout();
 		const expectedResults = ['- Repository\n', '- Access\n', '- DefBranch\n', '- isPrivate\n'];
-		listFields(fields);
+		listMetrics(metrics);
 		output.restore();
 		t.deepEqual(output.loggedData, expectedResults);
 		t.end();
 	});
 
-	t.test('output incorrect field values', (t) => {
+	t.test('output incorrect metric values', (t) => {
 		const output = stdout();
 		const expectedResults = ['- Repository\n- Access\n- DefBranch'];
-		listFields(fields);
+		listMetrics(metrics);
 		output.restore();
 		t.notDeepEqual(output.loggedData, expectedResults);
 		t.end();
 	});
 });
 
-test('getGroupByField', (t) => {
+test('getGroupByMetric', (t) => {
 	t.plan(2);
-	t.test('return the correct field', (t) => {
-		const actualField = getGroupByField('Access', fields);
+	t.test('return the correct metric', (t) => {
+		const actualMetric = getGroupByMetric('Access', metrics);
 		const expectedResults = { name: 'Access', extract: (item) => item.viewerPermission };
-		t.equal(expectedResults.toString(), actualField.toString());
+		t.equal(expectedResults.toString(), actualMetric.toString());
 		t.end();
 	});
 
-	t.test('return null when the field is not present', (t) => {
+	t.test('return null when the metric is not present', (t) => {
 		const output = stdout();
-		const actualField = getGroupByField('newAccess', fields);
+		const actualMetric = getGroupByMetric('newAccess', metrics);
 		const expectedResults = null;
 		output.restore();
-		t.deepEqual(output.loggedData, [`${logSymbols.error} Invalid Field\n`]);
-		t.deepEqual(expectedResults, actualField);
+		t.deepEqual(output.loggedData, [`${logSymbols.error} Invalid Metric\n`]);
+		t.deepEqual(expectedResults, actualMetric);
 		t.end();
 	});
 });
@@ -96,7 +96,7 @@ test('checkNull', (t) => {
 test('generateTable,', (t) => {
 	t.plan(2);
 	t.test('return a generated table', (t) => {
-		const actualResult = generateTable(fields, repositories.nodes);
+		const actualResult = generateTable(metrics, repositories.nodes);
 		t.deepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutput));
 		t.end();
 	});
@@ -170,27 +170,27 @@ test('sortRows', (t) => {
 
 test('generateTableData', (t) => {
 	t.test(' generateTableData returns the correct table data required to generate a table', (t) => {
-		const actualResult = generateTableData(fields, [...repositories.nodes]);
+		const actualResult = generateTableData(metrics, [...repositories.nodes]);
 		t.deepEqual(actualResult, tableData);
 		t.end();
 	});
 
 	t.test('generateTableData returns the correct sorted table data required to generate a table', (t) => {
-		const actualResult = generateTableData(fields, [...repositories.nodes], '', true);
+		const actualResult = generateTableData(metrics, [...repositories.nodes], '', true);
 		t.deepEqual(actualResult, sortedTableData);
 		t.end();
 	});
 
 	t.test('generateTableData returns the correct table data grouped as by access', (t) => {
 		const groupByAccess = 	{ name: 'Access', extract: (item) => item.viewerPermission };
-		const actualResult = generateTableData(fields, [...repositories.nodes], groupByAccess, true);
+		const actualResult = generateTableData(metrics, [...repositories.nodes], groupByAccess, true);
 		t.deepEqual(actualResult.head, ['Access', 'Repository', 'DefBranch']);
 		t.end();
 	});
 
 	t.test('generateTableData returns the wrong table data when grouped as by access', (t) => {
 		const groupByDefBranch = 	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' };
-		const actualResult = generateTableData(fields, [...repositories.nodes], groupByDefBranch, true);
+		const actualResult = generateTableData(metrics, [...repositories.nodes], groupByDefBranch, true);
 		t.notDeepEqual(actualResult.head, ['Repository', 'Access', 'DefBranch']);
 		t.end();
 	});

@@ -9,7 +9,7 @@ const Yargs = require('yargs');
 const logSymbols = require('log-symbols');
 const list = require('../src/commands/list');
 const options = require('../src/commands/options');
-const branchProtections = require('../src/commands/branch-protection');
+const branchProtections = require('../src/commands/branchProtections');
 const prStatus = require('../src/commands/pr-status');
 const detail = require('../src/commands/detail');
 
@@ -29,9 +29,9 @@ Yargs.usage('Usage: $0 <command> [options]')
 			.alias('g', 'group-by')
 			.nargs('g', 1)
 			.describe('g', 'Field to be grouped by')
-			.alias('f', 'fields')
-			.boolean('f')
-			.describe('f', 'Show available fields')
+			.alias('m', 'metrics')
+			.boolean('m')
+			.describe('m', 'Show available metrics')
 			.alias('s', 'sort')
 			.describe('s', 'Sort repos alphabetically')
 			.help('h')
@@ -44,9 +44,9 @@ Yargs.usage('Usage: $0 <command> [options]')
 			.alias('g', 'group-by')
 			.nargs('g', 1)
 			.describe('g', 'Field to be grouped by')
-			.alias('f', 'fields')
-			.boolean('f')
-			.describe('f', 'Show available fields')
+			.alias('m', 'metrics')
+			.boolean('m')
+			.describe('m', 'Show available metrics')
 			.alias('s', 'sort')
 			.describe('s', 'Sort repos alphabetically')
 			.help('h')
@@ -54,17 +54,17 @@ Yargs.usage('Usage: $0 <command> [options]')
 		options(argv);
 	})
 	.command(
-		'branchProtection',
+		'branchProtections',
 		'list branch protections for default branch for all repositories',
 		function (yargs) {
 			const argv = yargs
-				.usage('Usage: $0 branchProtection [options]')
+				.usage('Usage: $0 branchProtections [options]')
 				.alias('g', 'group-by')
 				.nargs('g', 1)
 				.describe('g', 'Field to be grouped by')
-				.alias('f', 'fields')
-				.boolean('f')
-				.describe('f', 'Show available fields')
+				.alias('m', 'metrics')
+				.boolean('m')
+				.describe('m', 'Show available metrics')
 				.help('h')
 				.alias('h', 'help').argv;
 			branchProtections(argv);

@@ -21,7 +21,7 @@ const dumpCache = (filename, content) => {
 	fs.writeFileSync(`${dir}/${filename}`, content);
 };
 
-const listFields = (fields) => fields.map((field) => console.log(`- ${field.name}`));
+const listMetrics = (metrics) => metrics.map((metric) => console.log(`- ${metric.name}`));
 
 const getSymbol = (value) => value || false;
 
@@ -59,8 +59,8 @@ const removeIgnoredRepos = (repos) => repos.filter((repo) => {
 });
 
 // eslint-disable-next-line max-params
-const getDiffSymbol = (item, currMetrics, value, field) => {
-	const configValue = currMetrics[field.name];
+const getDiffSymbol = (item, currMetrics, value, metric) => {
+	const configValue = currMetrics[metric.name];
 	if (configValue === undefined) {
 		return undefined;
 	}
@@ -68,23 +68,23 @@ const getDiffSymbol = (item, currMetrics, value, field) => {
 		return logSymbols.success;
 	}
 	let out;
-	if (field.compare) {
-		out = field.compare(item, configValue);
+	if (metric.compare) {
+		out = metric.compare(item, configValue);
 	} else {
 		out = configValue === value;
 	}
-	return `${out ? logSymbols.success : logSymbols.error}${field.permissions && !field.permissions.includes(item.viewerPermission) && !out ? ' 🤷' : ''}`;
+	return `${out ? logSymbols.success : logSymbols.error}${metric.permissions && !metric.permissions.includes(item.viewerPermission) && !out ? ' 🤷' : ''}`;
 };
 
 const checkNull = (value) => value || '---';
 
-const getGroupByField = (group, fields) => {
-	let groupByIndex = fields.findIndex((field) => field.name.toLowerCase() === group.toLowerCase());
+const getGroupByMetric = (group, metrics) => {
+	let groupByIndex = metrics.findIndex((metric) => metric.name.toLowerCase() === group.toLowerCase());
 	if (groupByIndex === -1) {
-		console.log(`${logSymbols.error} Invalid Field`);
+		console.log(`${logSymbols.error} Invalid Metric`);
 		return null;
 	}
-	return fields[groupByIndex];
+	return metrics[groupByIndex];
 
 };
 
@@ -94,7 +94,7 @@ const printAPIPoints = (points) => {
   \tremaining\t-\t${points.remaining}`);
 };
 
-const getItemFields = (item) => {
+const getItemMetrics = (item) => {
 	const nameWithOwner = item.nameWithOwner;
 	const { branchProtectionRule } = item.defaultBranchRef || {};
 	const {
@@ -119,7 +119,7 @@ const getItemFields = (item) => {
 	};
 };
 
-const getRepositories = async (generateQuery, flags, filter) => {
+const getRepositories = async (generateQuery, flags = {}, filter = undefined) => {
 	// Repeated requests to get all repositories
 	let endCursor,
 		hasNextPage,
@@ -164,24 +164,24 @@ const getRepositories = async (generateQuery, flags, filter) => {
 const sortRows = (rows) => rows.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 
 // eslint-disable-next-line max-params
-const generateTableData = (fields, rows, groupBy, sort) => {
+const generateTableData = (metrics, rows, groupBy, sort) => {
 	let repositories = rows;
 	let tableData	= { body: [], head: [] };
 	if (sort) {
 		repositories =	sortRows(rows);
 	}
 	if (groupBy) {
-		const otherFields = fields.filter((field) => field.name !== groupBy.name);
+		const otherMetrics = metrics.filter((metric) => metric.name !== groupBy.name);
 
 		tableData.head = [
 			...groupBy.dontPrint ? [] : [groupBy.name],
-			...otherFields.filter((field) => !field.dontPrint).map((field) => field.name),
+			...otherMetrics.filter((metric) => !metric.dontPrint).map((metric) => metric.name),
 		];
 
 		const groupedObj = {};
 		repositories.forEach((item) => {
 			const key = groupBy.extract(item);
-			const value = otherFields.filter((field) => !field.dontPrint).map((field) => field.extract(item));
+			const value = otherMetrics.filter((metric) => !metric.dontPrint).map((metric) => metric.extract(item));
 			if (key in groupedObj) {
 				groupedObj[key] = groupedObj[key].map((v, i) => `${v}\n${value[i]}`);
 			} else { groupedObj[key] = value; }
@@ -195,10 +195,9 @@ const generateTableData = (fields, rows, groupBy, sort) => {
 			]);
 		});
 	} else {
-
-		tableData.head = fields.filter((field) => !field.dontPrint).map((field) => field.name);
+		tableData.head = metrics.filter((metric) => !metric.dontPrint).map((metric) => metric.name);
 		repositories.forEach((item) => {
-			tableData.body.push(fields.filter((field) => !field.dontPrint).map((field) => field.extract(item)));
+			tableData.body.push(metrics.filter((metric) => !metric.dontPrint).map((metric) => metric.extract(item)));
 		});
 	}
 	return tableData;
@@ -213,8 +212,8 @@ const createTable = (tableData) => {
 	return table;
 };
 
-const generateTable = (fields, rows, { groupBy, sort } = {}) => {
-	const data = generateTableData(fields, rows, groupBy, sort);
+const generateTable = (metrics, rows, { groupBy, sort } = {}) => {
+	const data = generateTableData(metrics, rows, groupBy, sort);
 	return createTable(data);
 };
 
@@ -270,7 +269,7 @@ const collapseCols = (rows, metrics) => {
 	for (let i = 0; i < metrics.length; i++) {
 		const bucket = bucketIDMap[metrics[i].name];
 		if (buckets[bucket]) {
-			head.push(buckets[bucket].map((field) => field.name).join('\n'));
+			head.push(buckets[bucket].map((metric) => metric.name).join('\n'));
 			delete buckets[bucket];
 		} else if (bucket) {
 			dontPrintIDs[i] = true;
@@ -313,7 +312,7 @@ const collapseRows = (rows, key) => {
 	return out;
 };
 
-const generateDetailTable = (fields, rowData, {
+const generateDetailTable = (metrics, rowData, {
 	sort,
 	actual,
 	all,
@@ -329,17 +328,17 @@ const generateDetailTable = (fields, rowData, {
 		rowData.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 	}
 
-	const filteredFields = fields.filter((field) => !field.dontPrint);
+	const filteredMetrics = metrics.filter((metric) => !metric.dontPrint);
 
 	if (pick.length > 0) {
-		filteredFields.filter((field) => pick.includes(field.name.toLowerCase()));
+		filteredMetrics.filter((metric) => pick.includes(metric.name.toLowerCase()));
 	}
 
 	const rows = rowData.map((item) => {
 		const currMetrics = getCurrMetrics(item);
-		return filteredFields.map((field) => {
-			const value = field.extract(item);
-			const diffValue = getDiffSymbol(item, currMetrics, value, field);
+		return filteredMetrics.map((metric) => {
+			const value = metric.extract(item);
+			const diffValue = getDiffSymbol(item, currMetrics, value, metric);
 
 			return getMetricOut(value, diffValue, { actual, goodness });
 		});
@@ -347,13 +346,13 @@ const generateDetailTable = (fields, rowData, {
 
 	if (all) {
 		table = new Table({
-			head: filteredFields.map((field) => field.name),
+			head: filteredMetrics.map((metric) => metric.name),
 		});
 		rows.forEach((row) => {
 			table.push(row);
 		});
 	} else {
-		let { head, tableRows } = collapseCols(rows, filteredFields);
+		let { head, tableRows } = collapseCols(rows, filteredMetrics);
 		tableRows = collapseRows(tableRows, 0);
 		table = new Table({
 			head,
@@ -374,11 +373,11 @@ module.exports = {
 	generateTable,
 	generateTableData,
 	getDiffSymbol,
-	getGroupByField,
-	getItemFields,
+	getGroupByMetric,
+	getItemMetrics,
 	getRepositories,
 	getSymbol,
-	listFields,
+	listMetrics,
 	printAPIPoints,
 	sortRows,
 };

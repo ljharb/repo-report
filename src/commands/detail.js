@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 
 'use strict';
 
@@ -5,68 +6,35 @@ const {
 	printAPIPoints,
 	getRepositories,
 	generateDetailTable,
-	getGroupByField,
+	getGroupByMetric,
 } = require('../utils');
 
-const getMergeStrategies = (item) => `${item.mergeCommitAllowed ? 'MERGE' : ''} ${item.squashMergeAllowed ? 'SQUASH' : ''} ${item.rebaseMergeAllowed ? 'REBASE' : ''}`.trim().split(' ').join(',');
+const { getMetrics } = require('../metrics');
 
-/* eslint-disable */
-const cmpMergeStrategies = (item, config) => {
-	return (config.MERGE === undefined || config.MERGE === item.mergeCommitAllowed)
-		&& (config.SQUASH === undefined || config.SQUASH === item.squashMergeAllowed)
-		&& (config.REBASE === undefined || config.REBASE === item.rebaseMergeAllowed);
-};
-/* eslint-enable */
-/* eslint-disable max-lines-per-function */
-/* eslint-disable sort-keys */
-/* eslint-disable no-magic-numbers */
-
-const cmpAccess = (item, config) => config.includes(item.viewerPermission);
-const cmpLicense = (item, config) => config.includes(item.licenseInfo?.name || null);
-const cmpSubscription = (item, config) => config.includes(item.viewerSubscription);
-
-// Field names and their extraction method to be used on the query result
-const fields = [
-	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.isFork ? '🍴 ' : item.isPrivate ? ' ' : ''}${item.nameWithOwner}` },
-	{
-		name: 'isFork', extract: (item) => item.isFork, dontPrint: true,
-	},
-	{
-		name: 'Access', extract: (item) => item.viewerPermission, compare: cmpAccess,
-	},
-	{ name: 'IssuesEnabled?', extract: (item) => item.hasIssuesEnabled },
-	{
-		name: 'ProjectsEnabled?', extract: (item) => item.hasProjectsEnabled, permissions: ['ADMIN', 'MAINTAIN'],
-	},
-	{
-		name: 'WikiEnabled?', extract: (item) => item.hasWikiEnabled, permissions: ['ADMIN', 'MAINTAIN'],
-	},
-	{ name: 'Archived?', extract: (item) => item.isArchived },
-	{ name: 'BlankIssuesEnabled?', extract: (item) => item.isBlankIssuesEnabled },
-	{ name: 'SecurityPolicyEnabled?', extract: (item) => item.isSecurityPolicyEnabled },
-	{
-		name: 'License', extract: (item) => item.licenseInfo?.name || '---', compare: cmpLicense,
-	},
-	{
-		name: 'Merge Strategies', extract: getMergeStrategies, compare: cmpMergeStrategies, permissions: ['ADMIN', 'MAINTAIN'],
-	},
-	{ name: 'DeleteOnMerge', extract: (item) => item.deleteBranchOnMerge },
-	{ name: 'HasStarred?', extract: (item) => item.viewerHasStarred },
-	{
-		name: 'Subscription', extract: (item) => item.viewerSubscription, compare: cmpSubscription,
-	},
-	{
-		name: 'DefBranch', extract: (item) => item.defaultBranchRef?.name || '---', permissions: ['ADMIN'],
-	},
-	{ name: 'AllowsForcePushes', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.allowsForcePushes || false },
-	{ name: 'AllowsDeletions', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.allowsDeletions || false },
-	{ name: 'DismissesStaleReviews', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.dismissesStaleReviews || false },
-	{ name: 'ReqApprovingReviewCount', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.requiredApprovingReviewCount || 0 },
-	{ name: 'ReqApprovingReviews', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.requiresApprovingReviews || false },
-	{ name: 'ReqCodeOwnerReviews', extract: (item) => item.defaultBranchRef?.branchProtectionRule?.requiresCodeOwnerReviews || false },
-	{
-		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
-	},
+// Metric names and their extraction method to be used on the query result (Order is preserved)
+const metricNames = [
+	'Repository',
+	'isFork',
+	'Access',
+	'IssuesEnabled',
+	'ProjectsEnabled',
+	'WikiEnabled',
+	'Archived',
+	'BlankIssuesEnabled',
+	'SecurityPolicyEnabled',
+	'License',
+	'MergeStrategies',
+	'DeleteOnMerge',
+	'HasStarred',
+	'Subscription',
+	'DefBranch',
+	'AllowsForcePushes',
+	'AllowsDeletions',
+	'DismissesStaleReviews',
+	'ReqApprovingReviewCount',
+	'ReqApprovingReviews',
+	'ReqCodeOwnerReviews',
+	'isPrivate',
 ];
 
 const generateQuery = (endCursor, {
@@ -149,10 +117,11 @@ const generateQuery = (endCursor, {
 };
 
 const detail = async (flags) => {
-	// Get index of field to be grouped by
+	const metrics = getMetrics(metricNames);
+	// Get index of metric to be grouped by
 	let groupBy;
 	if (flags.g) {
-		groupBy = getGroupByField(flags.g, fields);
+		groupBy = getGroupByMetric(flags.g, metrics);
 		if (groupBy === null) {
 			return null;
 		}
@@ -174,8 +143,8 @@ const detail = async (flags) => {
 	let table;
 
 	// Generate output table
-	table = generateDetailTable(fields, repositories, {
-		sort: flags.s, actual: flags.actual, all: flags.all, goodness: flags.goodness,
+	table = generateDetailTable(metrics, repositories, {
+		actual: flags.actual, all: flags.all, goodness: flags.goodness, sort: flags.s,
 	});
 
 	if (table) {
