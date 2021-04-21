@@ -1,0 +1,20 @@
+{
+  "IssuesEnabled?": ["WRITE", "ADMIN", "MAINTAIN"],
+  "ProjectsEnabled?": ["ADMIN", "MAINTAIN"],
+  "WikiEnabled?": ["ADMIN", "MAINTAIN"],
+  "Archived?": ["ADMIN"],
+  "BlankIssuesEnabled?": ["WRITE", "ADMIN", "MAINTAIN"],
+  "SecurityPolicyEnabled?": ["WRITE", "ADMIN", "MAINTAIN"],
+  "License": ["WRITE", "ADMIN", "MAINTAIN"],
+  "Merge Strategies": ["WRITE", "ADMIN", "MAINTAIN"],
+  "DeleteOnMerge": ["ADMIN"],
+  "HasStarred?": ["WRITE", "ADMIN", "MAINTAIN", "TRIAGE", "READ"],
+  "Subscription": ["WRITE", "ADMIN", "MAINTAIN", "TRIAGE", "READ"],
+  "DefBranch": ["ADMIN"],
+  "AllowsForcePushes": ["ADMIN"],
+  "AllowsDeletions": ["ADMIN"],
+  "DismissesStaleReviews": ["ADMIN"],
+  "ReqApprovingReviewCount": ["ADMIN"],
+  "ReqApprovingReviews": ["ADMIN"],
+  "ReqCodeOwnerReviews": ["ADMIN"]
+}
