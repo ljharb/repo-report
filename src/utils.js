@@ -1,4 +1,4 @@
-/* eslint-disable max-lines-per-function */
+/* eslint-disable max-lines */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-magic-numbers */
 
@@ -218,111 +218,148 @@ const generateTable = (fields, rows, { groupBy, sort } = {}) => {
 	return createTable(data);
 };
 
-const generateDetailTable = (fields, rows, {
+const getMetricOut = (value, diffValue, { actual, goodness }) => {
+	if (actual && goodness && diffValue) {
+		return `${diffValue} ${value}`;
+	}
+	if (actual) {
+		return `${value}`;
+	}
+	return `${diffValue || value}`;
+};
+
+const collapseCols = (rows, metrics) => {
+	// eslint-disable-next-line no-param-reassign
+	metrics = metrics.map((metric, idx) => ({ ...metric, idx }));
+	let buckets = {
+		0: metrics,
+	};
+	let bucketIDMap = {};
+	metrics.forEach((metric) => {
+		bucketIDMap[metric.name] = 0;
+	});
+	let nextBucket = 1;
+
+	rows.forEach((row) => {
+		for (const ID of Object.keys(buckets)) {
+			let newBucket = [];
+			for (let i = 0; i < buckets[ID].length; i++) {
+				const metric = buckets[ID][i];
+
+				let valueToCheck = row[metric.idx];
+				newBucket.push([metric, valueToCheck]);
+			}
+			delete buckets[ID];
+			let valueBucketIDMap = {};
+			for (const [metric, key] of newBucket) {
+				if (valueBucketIDMap[key]) {
+					buckets[valueBucketIDMap[key]].push(metric);
+					bucketIDMap[metric.name] = valueBucketIDMap[key];
+				} else {
+					valueBucketIDMap[key] = nextBucket;
+					buckets[nextBucket] = [metric];
+					bucketIDMap[metric.name] = nextBucket;
+					nextBucket += 1;
+				}
+			}
+		}
+	});
+
+	let head = [];
+	let dontPrintIDs = {};
+	for (let i = 0; i < metrics.length; i++) {
+		const bucket = bucketIDMap[metrics[i].name];
+		if (buckets[bucket]) {
+			head.push(buckets[bucket].map((field) => field.name).join('\n'));
+			delete buckets[bucket];
+		} else if (bucket) {
+			dontPrintIDs[i] = true;
+		}
+	}
+	const tableRows = rows.map((row) => row.filter((_, idx) => !dontPrintIDs[idx]));
+	return { head, tableRows };
+};
+
+const collapseRows = (rows, key) => {
+	const buckets = {};
+	for (let i = 0; i < rows.length; i++) {
+		let row = [];
+		for (let j = 0; j < rows[i].length; j++) {
+			if (j !== key) {
+				row.push(rows[i][j]);
+			}
+		}
+		const hash = JSON.stringify(row);
+		if (buckets[hash]) {
+			buckets[hash].push(i);
+		} else {
+			buckets[hash] = [i];
+		}
+	}
+
+	let out = [];
+	for (const rowIDs of Object.values(buckets)) {
+		if (rowIDs.length < 2) {
+			out.push(rows[rowIDs[0]]);
+		} else {
+			let curr = rows[rowIDs[0]];
+			for (let i = 1; i < rowIDs.length; i++) {
+				const newRow = rows[rowIDs[i]];
+				curr[key] = `${curr[key]}\n${newRow[key]}`;
+			}
+			out.push(curr);
+		}
+	}
+	return out;
+};
+
+const generateDetailTable = (fields, rowData, {
 	sort,
 	actual,
 	all,
 	goodness,
+	pick = [],
 } = {}) => {
-	if (!rows.length) {
+	if (!rowData.length) {
 		console.log(`\n${logSymbols.info} Nothing to show!\n`);
 		return null;
 	}
 	let table;
 	if (sort) {
-		rows.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+		rowData.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 	}
 
-	const getMetricOut = (value, diffValue) => {
-		if (actual && goodness && diffValue) {
-			return `${diffValue} ${value}`;
-		}
-		if (actual) {
-			return `${value}`;
-		}
-		return `${diffValue || value}`;
-	};
-
 	const filteredFields = fields.filter((field) => !field.dontPrint);
+
+	if (pick.length > 0) {
+		filteredFields.filter((field) => pick.includes(field.name.toLowerCase()));
+	}
+
+	const rows = rowData.map((item) => {
+		const currMetrics = getCurrMetrics(item);
+		return filteredFields.map((field) => {
+			const value = field.extract(item);
+			const diffValue = getDiffSymbol(item, currMetrics, value, field);
+
+			return getMetricOut(value, diffValue, { actual, goodness });
+		});
+	});
 
 	if (all) {
 		table = new Table({
 			head: filteredFields.map((field) => field.name),
 		});
-		rows.forEach((item) => {
-			const currMetrics = getCurrMetrics(item);
-			table.push(filteredFields.map((field) => {
-				const value = field.extract(item);
-				const diffValue = getDiffSymbol(item, currMetrics, value, field);
-
-				return getMetricOut(value, diffValue);
-			}));
+		rows.forEach((row) => {
+			table.push(row);
 		});
 	} else {
-		let buckets = {
-			0: filteredFields,
-		};
-		let fieldBucketMap = {};
-		filteredFields.forEach((field) => {
-			fieldBucketMap[field.name] = 0;
-		});
-		let nextBucket = 1;
-
-		rows.forEach((item) => {
-			const currMetrics = getCurrMetrics(item);
-			for (const bucket of Object.keys(buckets)) {
-				let bucketNew = [];
-				for (let i = 0; i < buckets[bucket].length; i++) {
-					const field = buckets[bucket][i];
-					const value = field.extract(item);
-					const diffValue = getDiffSymbol(item, currMetrics, value, field);
-
-					let valueToCheck = getMetricOut(value, diffValue);
-					bucketNew.push([field, valueToCheck]);
-				}
-				delete buckets[bucket];
-				let newBucketMap = {};
-				for (const [field, key] of bucketNew) {
-					if (newBucketMap[key]) {
-						buckets[newBucketMap[key]].push(field);
-						fieldBucketMap[field.name] = newBucketMap[key];
-					} else {
-						newBucketMap[key] = nextBucket;
-						buckets[nextBucket] = [field];
-						fieldBucketMap[field.name] = nextBucket;
-						nextBucket += 1;
-					}
-				}
-			}
-		});
-
-		let tableRows = [];
-		rows.forEach((item) => {
-			const currMetrics = getCurrMetrics(item);
-			tableRows.push(filteredFields.map((field) => {
-				const value = field.extract(item);
-				const diffValue = getDiffSymbol(item, currMetrics, value, field);
-
-				return getMetricOut(value, diffValue);
-			}));
-		});
-
-		let head = [];
-		let dontPrintIDs = {};
-		for (let i = 0; i < filteredFields.length; i++) {
-			const bucket = fieldBucketMap[filteredFields[i].name];
-			if (buckets[bucket]) {
-				head.push(buckets[bucket].map((field) => field.name).join('\n'));
-				delete buckets[bucket];
-			} else if (bucket) {
-				dontPrintIDs[i] = true;
-			}
-		}
+		let { head, tableRows } = collapseCols(rows, filteredFields);
+		tableRows = collapseRows(tableRows, 0);
 		table = new Table({
 			head,
 		});
 		tableRows.forEach((row) => {
-			table.push(row.filter((_, idx) => !dontPrintIDs[idx]));
+			table.push(row);
 		});
 
 	}
