@@ -46,13 +46,23 @@ const getCurrMetrics = (item) => {
 	return currMetrics;
 };
 
-const removeIgnoredRepos = (repos) => repos.filter((repo) => {
+const removeIgnoredRepos = (repos, ignore) => repos.filter((repo) => {
 	const repoName = repo.nameWithOwner;
-	const { repositories: { ignore } } = config;
 	let include = true;
 	ignore.forEach((glob) => {
 		if (minimatch(repoName, glob)) {
 			include = false;
+		}
+	});
+	return include;
+});
+
+const focusRepos = (repos, focus) => repos.filter((repo) => {
+	const repoName = repo.nameWithOwner;
+	let include = false;
+	focus.forEach((glob) => {
+		if (minimatch(repoName, glob)) {
+			include = true;
 		}
 	});
 	return include;
@@ -157,7 +167,13 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 	if (flags.cache) {
 		dumpCache(`Repositories_${(new Date()).toISOString()}.json`, JSON.stringify(repositories, null, '\t'));
 	}
-	repositories = removeIgnoredRepos(repositories);
+	const { repositories: { focus, ignore } } = config;
+	if (ignore.length > 0) {
+		repositories = removeIgnoredRepos(repositories, ignore);
+	}
+	if (focus.length > 0) {
+		repositories = focusRepos(repositories, focus);
+	}
 	return { points, repositories };
 };
 

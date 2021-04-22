@@ -33,7 +33,7 @@
     }
   ],
   "repositories": {
-    "f": "npm*",
+    "focus": ["thehanimo/*"],
     "ignore": ["ljharb/*"]
   },
   "defaultView": "tabular"
