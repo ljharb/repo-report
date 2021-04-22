@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable max-lines-per-function */
 /* eslint-disable no-throw-literal */
 /* eslint-disable no-magic-numbers */
 
@@ -112,6 +113,32 @@ Yargs.usage('Usage: $0 <command> [options]')
 						'public',
 					],
 					describe: 'Focus repo types',
+				})
+				.option('p', {
+					alias: 'pick',
+					choices: [
+						'Access',
+						'IssuesEnabled',
+						'ProjectsEnabled',
+						'WikiEnabled',
+						'Archived',
+						'BlankIssuesEnabled',
+						'SecurityPolicyEnabled',
+						'License',
+						'MergeStrategies',
+						'DeleteOnMerge',
+						'HasStarred',
+						'Subscription',
+						'DefBranch',
+						'AllowsForcePushes',
+						'AllowsDeletions',
+						'DismissesStaleReviews',
+						'ReqApprovingReviewCount',
+						'ReqApprovingReviews',
+						'ReqCodeOwnerReviews',
+					],
+					describe: 'Pick metrics',
+
 				})
 				.option('cache', {
 					describe: 'Dump API requests and cleaned up data in cache/',

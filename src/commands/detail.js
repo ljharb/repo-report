@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable max-lines-per-function */
 
 'use strict';
@@ -117,7 +118,17 @@ const generateQuery = (endCursor, {
 };
 
 const detail = async (flags) => {
-	const metrics = getMetrics(metricNames);
+	let metrics;
+	if (flags.p?.length > 0) {
+		metrics = getMetrics([
+			'Repository',
+			'isFork',
+			'isPrivate',
+			...metricNames.filter((name) => flags.p.includes(name)),
+		]);
+	} else {
+		metrics = getMetrics(metricNames);
+	}
 	// Get index of metric to be grouped by
 	let groupBy;
 	if (flags.g) {
