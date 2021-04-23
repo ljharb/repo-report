@@ -25,17 +25,36 @@ const listMetrics = (metrics) => metrics.map((metric) => console.log(`- ${metric
 
 const getSymbol = (value) => value || false;
 
+const sanitizeGlob = (glob) => {
+	if (Array.isArray(glob)) {
+		return glob.map((el) => (el === '*' ? '**' : el));
+	} else if (glob === '*') {
+		return '**';
+	}
+	return glob;
+};
+
+const globMatch = (test, glob) => {
+	if (Array.isArray(glob)) {
+		let out = true;
+		glob.forEach((pattern) => {
+			out = out && minimatch(test, pattern);
+		});
+		return out;
+	}
+	return minimatch(test, glob);
+};
+
 const getCurrMetrics = (item) => {
 	const repoName = item.nameWithOwner;
 	const { overrides, metrics } = config;
 	let currMetrics = metrics;
 	overrides.forEach((rule) => {
 		let shouldApply = false;
-		rule.repos.forEach((repoGlob) => {
-			if (minimatch(repoName, repoGlob)) {
-				shouldApply = true;
-			}
-		});
+		const glob = sanitizeGlob(rule.repos);
+		if (globMatch(repoName, glob)) {
+			shouldApply = true;
+		}
 		if (shouldApply) {
 			currMetrics = {
 				...currMetrics,
@@ -46,25 +65,21 @@ const getCurrMetrics = (item) => {
 	return currMetrics;
 };
 
-const removeIgnoredRepos = (repos, ignore) => repos.filter((repo) => {
+const removeIgnoredRepos = (repos, glob) => repos.filter((repo) => {
 	const repoName = repo.nameWithOwner;
 	let include = true;
-	ignore.forEach((glob) => {
-		if (minimatch(repoName, glob)) {
-			include = false;
-		}
-	});
+	if (globMatch(repoName, glob)) {
+		include = false;
+	}
 	return include;
 });
 
-const focusRepos = (repos, focus) => repos.filter((repo) => {
+const focusRepos = (repos, glob) => repos.filter((repo) => {
 	const repoName = repo.nameWithOwner;
 	let include = false;
-	focus.forEach((glob) => {
-		if (minimatch(repoName, glob)) {
-			include = true;
-		}
-	});
+	if (globMatch(repoName, glob)) {
+		include = true;
+	}
 	return include;
 });
 
@@ -168,12 +183,8 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 		dumpCache(`Repositories_${(new Date()).toISOString()}.json`, JSON.stringify(repositories, null, '\t'));
 	}
 	const { repositories: { focus, ignore } } = config;
-	if (ignore.length > 0) {
-		repositories = removeIgnoredRepos(repositories, ignore);
-	}
-	if (focus.length > 0) {
-		repositories = focusRepos(repositories, focus);
-	}
+	repositories = removeIgnoredRepos(repositories, sanitizeGlob(ignore));
+	repositories = focusRepos(repositories, sanitizeGlob(focus));
 	return { points, repositories };
 };
 
