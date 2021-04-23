@@ -183,9 +183,13 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 	if (flags.cache) {
 		dumpCache(`Repositories_${(new Date()).toISOString()}.json`, JSON.stringify(repositories, null, '\t'));
 	}
-	const { repositories: { focus, ignore } } = config;
-	repositories = removeIgnoredRepos(repositories, sanitizeGlob(ignore));
-	repositories = focusRepos(repositories, sanitizeGlob(focus));
+	const { repositories: { focus = [], ignore = [] } } = config;
+	if (ignore.length > 0) {
+		repositories = removeIgnoredRepos(repositories, ignore);
+	}
+	if (focus.length > 0) {
+		repositories = focusRepos(repositories, focus);
+	}
 	return { points, repositories };
 };
 
