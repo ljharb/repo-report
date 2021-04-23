@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-magic-numbers */
+/* eslint no-unused-vars: ["error", { "varsIgnorePattern": "^_" }] */
 
 'use strict';
 
@@ -339,6 +340,12 @@ const collapseRows = (rows, key) => {
 	return out;
 };
 
+const sortRowsByErrors = (a, b) => {
+	let aErrCount = a.join('').split(logSymbols.error).length;
+	let bErrCount = b.join('').split(logSymbols.error).length;
+	return bErrCount - aErrCount;
+};
+
 const generateDetailTable = (metrics, rowData, {
 	sort,
 	actual,
@@ -370,6 +377,8 @@ const generateDetailTable = (metrics, rowData, {
 			return getMetricOut(value, diffValue, { actual, goodness });
 		});
 	});
+
+	rows.sort(sortRowsByErrors);
 
 	if (all) {
 		table = new Table({
