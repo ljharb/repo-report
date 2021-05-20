@@ -155,7 +155,7 @@ const detail = async (flags) => {
 
 	// Generate output table
 	table = generateDetailTable(metrics, repositories, {
-		actual: flags.actual, all: flags.all, goodness: flags.goodness, sort: flags.s,
+		actionable: flags.actionable, actual: flags.actual, all: flags.all, goodness: flags.goodness, sort: flags.s,
 	});
 
 	if (table) {

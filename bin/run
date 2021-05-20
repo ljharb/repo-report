@@ -95,6 +95,9 @@ Yargs.usage('Usage: $0 <command> [options]')
 		function (yargs) {
 			const argv = yargs
 				.usage('Usage: $0 detail [options]')
+				.option('actionable', {
+					describe: 'Convert unactionable values to good ones',
+				})
 				.option('actual', {
 					describe: 'Show metrics’ true values',
 				})

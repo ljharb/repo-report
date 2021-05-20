@@ -85,8 +85,8 @@ const focusRepos = (repos, glob) => repos.filter((repo) => {
 });
 
 // eslint-disable-next-line max-params
-const getDiffSymbol = (item, currMetrics, value, metric) => {
-	const configValue = currMetrics[metric.name];
+const getDiffSymbol = (item, allMetrics, value, metric, { actionable }) => {
+	const configValue = allMetrics[metric.name];
 	if (configValue === undefined) {
 		return undefined;
 	}
@@ -99,7 +99,8 @@ const getDiffSymbol = (item, currMetrics, value, metric) => {
 	} else {
 		out = configValue === value;
 	}
-	return `${out ? logSymbols.success : logSymbols.error}${metric.permissions && !metric.permissions.includes(item.viewerPermission) && !out ? ' 🤷' : ''}`;
+	const hasEditPermission = !metric.permissions || metric.permissions.includes(item.viewerPermission);
+	return `${out || !hasEditPermission ? logSymbols.success : logSymbols.error}${hasEditPermission || out || actionable ? '' : ' 🤷'}`;
 };
 
 const checkNull = (value) => value || '---';
@@ -351,6 +352,7 @@ const sortRowsByErrors = (a, b) => {
 };
 
 const generateDetailTable = (metrics, rowData, {
+	actionable,
 	sort,
 	actual,
 	all,
@@ -371,7 +373,7 @@ const generateDetailTable = (metrics, rowData, {
 		const currMetrics = getCurrMetrics(item);
 		return filteredMetrics.map((metric) => {
 			const value = metric.extract(item);
-			const diffValue = getDiffSymbol(item, currMetrics, value, metric);
+			const diffValue = getDiffSymbol(item, currMetrics, value, metric, { actionable });
 
 			return getMetricOut(value, diffValue, { actual, goodness });
 		});
