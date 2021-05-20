@@ -355,7 +355,6 @@ const generateDetailTable = (metrics, rowData, {
 	actual,
 	all,
 	goodness,
-	pick = [],
 } = {}) => {
 	if (!rowData.length) {
 		console.log(`\n${logSymbols.info} Nothing to show!\n`);
@@ -367,10 +366,6 @@ const generateDetailTable = (metrics, rowData, {
 	}
 
 	const filteredMetrics = metrics.filter((metric) => !metric.dontPrint);
-
-	if (pick.length > 0) {
-		filteredMetrics.filter((metric) => pick.includes(metric.name.toLowerCase()));
-	}
 
 	const rows = rowData.map((item) => {
 		const currMetrics = getCurrMetrics(item);
