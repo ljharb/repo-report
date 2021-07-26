@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-magic-numbers */
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "^_" }] */
@@ -13,50 +12,34 @@ const minimatch = require('minimatch');
 
 const config = require('../config/config.json');
 
-const dumpCache = (filename, content) => {
-	const dir = `${__dirname}/../cache`;
-	if (!fs.existsSync(dir)) {
-		fs.mkdirSync(dir);
+const dumpCache = (date, filename, content) => {
+	const cacheDir = `${__dirname}/../cache`;
+	if (!fs.existsSync(cacheDir)) {
+		fs.mkdirSync(cacheDir);
 	}
-	console.log(dir);
-	fs.writeFileSync(`${dir}/${filename}`, content);
+	const dateDir = `${__dirname}/../cache/${date}`;
+	if (!fs.existsSync(dateDir)) {
+		fs.mkdirSync(dateDir);
+	}
+	fs.writeFileSync(`${dateDir}/${filename}`, content);
 };
 
 const listMetrics = (metrics) => metrics.map((metric) => console.log(`- ${metric.name}`));
 
 const getSymbol = (value) => value || false;
 
-const sanitizeGlob = (glob) => {
-	if (Array.isArray(glob)) {
-		return glob.map((el) => (el === '*' ? '**' : el));
-	} else if (glob === '*') {
-		return '**';
-	}
-	return glob;
-};
+const sanitizeGlob = (glob) => [].concat(glob).map((el) => (el === '*' ? '**' : el));
 
-const globMatch = (test, glob) => {
-	if (Array.isArray(glob)) {
-		let out = true;
-		glob.forEach((pattern) => {
-			out = out && minimatch(test, pattern);
-		});
-		return out;
-	}
-	return minimatch(test, glob);
-};
+const globMatch = (test, glob) => [].concat(glob).every((pattern) => minimatch(test, pattern));
+
+const ignoreGlobMatch = (test, glob) => [].concat(glob).some((pattern) => minimatch(test, pattern));
 
 const getCurrMetrics = (item) => {
 	const repoName = item.nameWithOwner;
 	const { overrides, metrics } = config;
 	let currMetrics = metrics;
 	overrides.forEach((rule) => {
-		let shouldApply = false;
-		const glob = sanitizeGlob(rule.repos);
-		if (globMatch(repoName, glob)) {
-			shouldApply = true;
-		}
-		if (shouldApply) {
+		if (globMatch(repoName, sanitizeGlob(rule.repos))) {
 			currMetrics = {
 				...currMetrics,
 				...rule.metrics,
@@ -66,23 +49,9 @@ const getCurrMetrics = (item) => {
 	return currMetrics;
 };
 
-const removeIgnoredRepos = (repos, glob) => repos.filter((repo) => {
-	const repoName = repo.nameWithOwner;
-	let include = true;
-	if (globMatch(repoName, glob)) {
-		include = false;
-	}
-	return include;
-});
+const removeIgnoredRepos = (repos, glob) => repos.filter((repo) => !ignoreGlobMatch(repo.nameWithOwner, glob));
 
-const focusRepos = (repos, glob) => repos.filter((repo) => {
-	const repoName = repo.nameWithOwner;
-	let include = false;
-	if (globMatch(repoName, glob)) {
-		include = true;
-	}
-	return include;
-});
+const focusRepos = (repos, glob) => repos.filter((repo) => globMatch(repo.nameWithOwner, glob));
 
 // eslint-disable-next-line max-params
 const getDiffSymbol = (item, allMetrics, value, metric, { actionable }) => {
@@ -148,10 +117,12 @@ const getItemMetrics = (item) => {
 
 const getRepositories = async (generateQuery, flags = {}, filter = undefined) => {
 	// Repeated requests to get all repositories
+	const date = new Date();
 	let endCursor,
 		hasNextPage,
 		points = { cost: 0 },
-		repositories = [];
+		repositories = [],
+		requestCount = 1;
 
 	do {
 		const response = await graphql(
@@ -177,12 +148,16 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 		points.cost += rateLimit.cost;
 		points.remaining = rateLimit.remaining;
 		repositories = repositories.concat(nodes);
+		if (flags.cache) {
+			dumpCache(date.toISOString(), `response${requestCount > 1 || hasNextPage ? `-${requestCount}` : ''}.json`, JSON.stringify(response, null, '\t'));
+		}
+		requestCount += 1;
 	} while (hasNextPage);
 	if (filter) {
 		repositories = repositories.filter(filter);
 	}
 	if (flags.cache) {
-		dumpCache(`Repositories_${(new Date()).toISOString()}.json`, JSON.stringify(repositories, null, '\t'));
+		dumpCache(date.toISOString(), 'repos.json', JSON.stringify(repositories, null, '\t'));
 	}
 	const { repositories: { focus = [], ignore = [] } } = config;
 	if (ignore.length > 0) {

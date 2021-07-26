@@ -24,17 +24,10 @@
     "ReqApprovingReviews": false,
     "ReqCodeOwnerReviews": false
   },
-  "overrides": [
-    {
-      "repos": ["ljharb/*"],
-      "metrics": {
-        "DefBranch": "main"
-      }
-    }
-  ],
+  "overrides": [],
   "repositories": {
-    "focus": ["thehanimo/*"],
-    "ignore": ["ljharb/*"]
+    "focus": [],
+    "ignore": []
   },
   "defaultView": "tabular"
 }
