@@ -26,6 +26,7 @@
 		"dotenv": "^8.2.0",
 		"jsonschema": "^1.4.0",
 		"log-symbols": "^4.0.0",
+		"minimatch": "^3.0.4",
 		"yargs": "^16.2.0"
 	},
 	"devDependencies": {

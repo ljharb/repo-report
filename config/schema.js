@@ -22,8 +22,8 @@ const metricSchema = {
 		},
 		AllowsDeletions: { type: 'boolean' },
 		AllowsForcePushes: { type: 'boolean' },
-		'Archived?': { type: 'boolean' },
-		'BlankIssuesEnabled?': { type: 'boolean' },
+		Archived: { type: 'boolean' },
+		BlankIssuesEnabled: { type: 'boolean' },
 		DefBranch: {
 			oneOf: [
 				{ type: 'string' }, {
@@ -37,23 +37,23 @@ const metricSchema = {
 		},
 		DeleteOnMerge: { type: 'boolean' },
 		DismissesStaleReviews: { type: 'boolean' },
-		'HasStarred?': { type: 'boolean' },
-		'IssuesEnabled?': { type: 'boolean' },
+		HasStarred: { type: 'boolean' },
+		IssuesEnabled: { type: 'boolean' },
 		License: {
 			type: ['string', 'null'],
 		},
-		'Merge Strategies': {
+		MergeStrategies: {
 			MERGE: { type: 'boolean' },
 			REBASE: { type: 'boolean' },
 			SQUASH: { type: 'boolean' },
 		},
-		'ProjectsEnabled?': { type: 'boolean' },
+		ProjectsEnabled: { type: 'boolean' },
 		ReqApprovingReviewCount: {
 			maximum: 6, minimum: 1, type: 'integer',
 		},
 		ReqApprovingReviews: { type: 'boolean' },
 		ReqCodeOwnerReviews: { type: 'boolean' },
-		'SecurityPolicyEnabled?': { type: 'boolean' },
+		SecurityPolicyEnabled: { type: 'boolean' },
 		Subscription: {
 			oneOf: [
 				{
@@ -73,7 +73,7 @@ const metricSchema = {
 				},
 			],
 		},
-		'WikiEnabled?': { type: 'boolean' },
+		WikiEnabled: { type: 'boolean' },
 	},
 	required: ['DefBranch'],
 	type: 'object',

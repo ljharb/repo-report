@@ -13,47 +13,56 @@ const { getMetrics } = require('../metrics');
 // Metric names and their extraction method to be used on the query result (Order is preserved)
 const metricNames = [
 	'Repository',
-	'Access',
 	'DefBranch',
-	'isFork',
+	'AllowsForcePushes',
+	'AllowsDeletions',
+	'DismissesStaleReviews',
+	'ReqApprovingReviewCount',
+	'ReqApprovingReviews',
+	'ReqCodeOwnerReviews',
 	'isPrivate',
 ];
 
 const generateQuery = (endCursor) => `
-query {
+query{
   viewer {
-	repositories(
-	  first: 100
-	  affiliations: [OWNER, ORGANIZATION_MEMBER, COLLABORATOR]
-	  ${endCursor ? `after: "${endCursor}"` : ''}
-	) {
-	  totalCount
-	  pageInfo {
-		endCursor
-		hasNextPage
-	  }
-	  nodes {
-		name
-		nameWithOwner
-		isFork
+    repositories(last: 100,
+    affiliations: [OWNER, ORGANIZATION_MEMBER, COLLABORATOR]
+    ${endCursor ? `after: "${endCursor}"` : ''}
+      ) {
+      totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      nodes {
+        nameWithOwner
 		isPrivate
-		defaultBranchRef {
-			name
-		}
-		viewerPermission
-	  }
-	}
+        defaultBranchRef {
+          branchProtectionRule {
+            allowsForcePushes
+            allowsDeletions
+            dismissesStaleReviews
+            requiredApprovingReviewCount
+            requiresApprovingReviews
+            requiresCodeOwnerReviews
+            restrictsPushes
+          }
+        }
+      }
+    }
   }
   rateLimit {
-	cost
-	remaining
+    cost
+    remaining
   }
 }
+
+
 `;
 
-const list = async (flags) => {
+const branchProtections = async (flags) => {
 	const metrics = getMetrics(metricNames);
-	// List available metrics
 	if (flags.m) {
 		return listMetrics(metrics);
 	}
@@ -73,7 +82,7 @@ const list = async (flags) => {
 	let table;
 
 	// Generate output table
-	table = generateTable(metrics, repositories, { groupBy, sort: flags.s });
+	table = generateTable(metrics, repositories, { groupBy });
 
 	console.log(table.toString());
 
@@ -81,4 +90,4 @@ const list = async (flags) => {
 	return null;
 };
 
-module.exports = list;
+module.exports = branchProtections;

@@ -1,29 +1,25 @@
-/* eslint-disable sort-keys */
-
 'use strict';
 
 const {
-	listFields,
-	getGroupByField,
+	listMetrics,
+	getGroupByMetric,
 	printAPIPoints,
 	getRepositories,
 	generateTable,
-	getSymbol,
 } = require('../utils');
 
-// Field names and their extraction method to be used on the query result
-const fields = [
-	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
-	{ name: 'Wiki', extract: (item) => getSymbol(item.hasWikiEnabled) },
-	{ name: 'Projects', extract: (item) => getSymbol(item.hasProjectsEnabled) },
-	{ name: 'securityPolicy', extract: (item) => getSymbol(item.isSecurityPolicyEnabled) },
-	{ name: 'mergeCommit', extract: (item) => getSymbol(item.mergeCommitAllowed) },
-	{ name: 'squashMerge', extract: (item) => getSymbol(item.squashMergeAllowed) },
-	{ name: 'rebaseMerge', extract: (item) => getSymbol(item.rebaseMergeAllowed) },
-	{ name: 'deleteOnMerge', extract: (item) => getSymbol(item.deleteBranchOnMerge) },
-	{
-		name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true,
-	},
+const { getMetrics } = require('../metrics');
+
+// Metric names and their extraction method to be used on the query result (Order is preserved)
+const metricNames = [
+	'Repository',
+	'WikiEnabled',
+	'ProjectsEnabled',
+	'SecurityPolicyEnabled',
+	'MergeStrategies',
+	'DeleteOnMerge',
+	'isFork',
+	'isPrivate',
 ];
 
 const generateQuery = (endCursor) => `
@@ -42,6 +38,7 @@ query {
 	  nodes {
 		name
 		nameWithOwner
+		isFork
 		isPrivate
         hasWikiEnabled
         hasProjectsEnabled
@@ -62,16 +59,16 @@ query {
 `;
 
 const optionsList = async (flags) => {
-
-	// List available fields
-	if (flags.f) {
-		return listFields(fields);
+	const metrics = getMetrics(metricNames);
+	// List available metrics
+	if (flags.m) {
+		return listMetrics(metrics);
 	}
 
-	// Get index of field to be grouped by
+	// Get index of metric to be grouped by
 	let groupBy;
 	if (flags.g) {
-		groupBy = getGroupByField(flags.g, fields);
+		groupBy = getGroupByMetric(flags.g, metrics);
 		if (groupBy === null) {
 			return null;
 		}
@@ -83,7 +80,7 @@ const optionsList = async (flags) => {
 	let table;
 
 	// Generate output table
-	table = generateTable(fields, repositories, { groupBy, sort: flags.s });
+	table = generateTable(metrics, repositories, { groupBy, sort: flags.s });
 
 	console.log(table.toString());
 

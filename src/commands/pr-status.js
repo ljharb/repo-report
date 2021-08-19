@@ -71,8 +71,8 @@ const getBuildInfo = (pullRequest) => {
 	}
 };
 
-// Field names and their extraction method to be used on the query result
-const fields = [
+// Metric names and their extraction method to be used on the query result
+const metrics = [
 	{ name: 'Mergeable?', extract: isMergeable },
 	{ name: 'Approved?', extract:	isApproved },
 	{ name: 'Build', extract:	getBuildInfo },
@@ -92,7 +92,7 @@ const prStatus = async (flags) => {
 				},
 			},
 		);
-		const table = generateTable(fields, [pullRequest]);
+		const table = generateTable(metrics, [pullRequest]);
 		console.log(table.toString());
 		printAPIPoints(rateLimit);
 	} catch (err) {

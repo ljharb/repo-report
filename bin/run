@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable max-lines-per-function */
 /* eslint-disable no-throw-literal */
 /* eslint-disable no-magic-numbers */
 
@@ -9,7 +10,7 @@ const Yargs = require('yargs');
 const logSymbols = require('log-symbols');
 const list = require('../src/commands/list');
 const options = require('../src/commands/options');
-const branchProtections = require('../src/commands/branch-protection');
+const branchProtections = require('../src/commands/branchProtections');
 const prStatus = require('../src/commands/pr-status');
 const detail = require('../src/commands/detail');
 
@@ -29,9 +30,9 @@ Yargs.usage('Usage: $0 <command> [options]')
 			.alias('g', 'group-by')
 			.nargs('g', 1)
 			.describe('g', 'Field to be grouped by')
-			.alias('f', 'fields')
-			.boolean('f')
-			.describe('f', 'Show available fields')
+			.alias('m', 'metrics')
+			.boolean('m')
+			.describe('m', 'Show available metrics')
 			.alias('s', 'sort')
 			.describe('s', 'Sort repos alphabetically')
 			.help('h')
@@ -44,9 +45,9 @@ Yargs.usage('Usage: $0 <command> [options]')
 			.alias('g', 'group-by')
 			.nargs('g', 1)
 			.describe('g', 'Field to be grouped by')
-			.alias('f', 'fields')
-			.boolean('f')
-			.describe('f', 'Show available fields')
+			.alias('m', 'metrics')
+			.boolean('m')
+			.describe('m', 'Show available metrics')
 			.alias('s', 'sort')
 			.describe('s', 'Sort repos alphabetically')
 			.help('h')
@@ -54,17 +55,17 @@ Yargs.usage('Usage: $0 <command> [options]')
 		options(argv);
 	})
 	.command(
-		'branchProtection',
+		'branchProtections',
 		'list branch protections for default branch for all repositories',
 		function (yargs) {
 			const argv = yargs
-				.usage('Usage: $0 branchProtection [options]')
+				.usage('Usage: $0 branchProtections [options]')
 				.alias('g', 'group-by')
 				.nargs('g', 1)
 				.describe('g', 'Field to be grouped by')
-				.alias('f', 'fields')
-				.boolean('f')
-				.describe('f', 'Show available fields')
+				.alias('m', 'metrics')
+				.boolean('m')
+				.describe('m', 'Show available metrics')
 				.help('h')
 				.alias('h', 'help').argv;
 			branchProtections(argv);
@@ -94,6 +95,9 @@ Yargs.usage('Usage: $0 <command> [options]')
 		function (yargs) {
 			const argv = yargs
 				.usage('Usage: $0 detail [options]')
+				.option('actionable', {
+					describe: 'Convert unactionable values to good ones',
+				})
 				.option('actual', {
 					describe: 'Show metrics’ true values',
 				})
@@ -102,6 +106,45 @@ Yargs.usage('Usage: $0 <command> [options]')
 				})
 				.option('goodness', {
 					describe: 'Prefix actual values with goodness values',
+				})
+				.option('f', {
+					choices: [
+						'sources',
+						'forks',
+						'templates',
+						'private',
+						'public',
+					],
+					describe: 'Focus repo types',
+				})
+				.option('p', {
+					alias: 'pick',
+					choices: [
+						'Access',
+						'IssuesEnabled',
+						'ProjectsEnabled',
+						'WikiEnabled',
+						'Archived',
+						'BlankIssuesEnabled',
+						'SecurityPolicyEnabled',
+						'License',
+						'MergeStrategies',
+						'DeleteOnMerge',
+						'HasStarred',
+						'Subscription',
+						'DefBranch',
+						'AllowsForcePushes',
+						'AllowsDeletions',
+						'DismissesStaleReviews',
+						'ReqApprovingReviewCount',
+						'ReqApprovingReviews',
+						'ReqCodeOwnerReviews',
+					],
+					describe: 'Pick metrics',
+
+				})
+				.option('cache', {
+					describe: 'Dump API requests and cleaned up data in cache/',
 				})
 				.alias('s', 'sort')
 				.describe('s', 'Sort repos alphabetically')
