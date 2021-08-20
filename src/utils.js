@@ -30,16 +30,16 @@ const getSymbol = (value) => value || false;
 
 const sanitizeGlob = (glob) => [].concat(glob).map((el) => (el === '*' ? '**' : el));
 
-const globMatch = (test, glob) => [].concat(glob).every((pattern) => minimatch(test, pattern));
+const everyGlobMatch = (test, glob) => [].concat(glob).every((pattern) => minimatch(test, pattern));
 
-const ignoreGlobMatch = (test, glob) => [].concat(glob).some((pattern) => minimatch(test, pattern));
+const anyGlobMatch = (test, glob) => [].concat(glob).some((pattern) => minimatch(test, pattern));
 
 const getCurrMetrics = (item) => {
 	const repoName = item.nameWithOwner;
 	const { overrides, metrics } = config;
 	let currMetrics = metrics;
 	overrides.forEach((rule) => {
-		if (globMatch(repoName, sanitizeGlob(rule.repos))) {
+		if (anyGlobMatch(repoName, sanitizeGlob(rule.repos))) {
 			currMetrics = {
 				...currMetrics,
 				...rule.metrics,
@@ -49,9 +49,9 @@ const getCurrMetrics = (item) => {
 	return currMetrics;
 };
 
-const removeIgnoredRepos = (repos, glob) => repos.filter((repo) => !ignoreGlobMatch(repo.nameWithOwner, glob));
+const removeIgnoredRepos = (repos, glob) => repos.filter((repo) => !anyGlobMatch(repo.nameWithOwner, glob));
 
-const focusRepos = (repos, glob) => repos.filter((repo) => globMatch(repo.nameWithOwner, glob));
+const focusRepos = (repos, glob) => repos.filter((repo) => everyGlobMatch(repo.nameWithOwner, glob));
 
 // eslint-disable-next-line max-params
 const getDiffSymbol = (item, allMetrics, value, metric, { actionable }) => {
