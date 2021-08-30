@@ -78,7 +78,8 @@ const metrics = [
 	{ name: 'Build', extract:	getBuildInfo },
 ];
 
-const prStatus = async (flags) => {
+module.exports = async function prStatus(flags) {
+	const { token } = flags;
 	try {
 		const [owner, ...repo] = flags.repo.split('/');
 		const prId = flags.id;
@@ -88,7 +89,7 @@ const prStatus = async (flags) => {
 			}),
 			{
 				headers: {
-					authorization: `token ${process.env.GITHUB_PAT}`,
+					authorization: `token ${token}`,
 				},
 			},
 		);
@@ -100,5 +101,3 @@ const prStatus = async (flags) => {
 		printAPIPoints(err.data.rateLimit);
 	}
 };
-
-module.exports = prStatus;

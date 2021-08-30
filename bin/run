@@ -14,14 +14,19 @@ const branchProtections = require('../src/commands/branchProtections');
 const prStatus = require('../src/commands/pr-status');
 const detail = require('../src/commands/detail');
 
+const {
+	GH_TOKEN,
+	GITHUB_TOKEN,
+} = process.env;
+
 Yargs.usage('Usage: $0 <command> [options]')
-	.default('token', process.env.GITHUB_PAT)
+	.default('token', GH_TOKEN || GITHUB_TOKEN)
 	.hide('token')
 	.check((arg) => {
 		if (arg.token) {
 			return true;
 		}
-		throw `${logSymbols.error} env variable GITHUB_PAT not found. Refer to #Installation in README.md on how to set env variable`;
+		throw `${logSymbols.error} env variable GH_TOKEN or GITHUB_TOKEN not found. Refer to #Installation in README.md on how to set an env variable`;
 	})
 	.command('list', 'lists all repositories', function (yargs) {
 		const argv = yargs

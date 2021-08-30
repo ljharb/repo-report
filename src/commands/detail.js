@@ -1,5 +1,4 @@
 /* eslint-disable no-magic-numbers */
-/* eslint-disable max-lines-per-function */
 
 'use strict';
 

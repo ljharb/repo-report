@@ -116,24 +116,25 @@ const getItemMetrics = (item) => {
 };
 
 const getRepositories = async (generateQuery, flags = {}, filter = undefined) => {
-	// Repeated requests to get all repositories
-	const date = new Date();
-	let endCursor,
-		hasNextPage,
-		points = { cost: 0 },
-		repositories = [],
-		requestCount = 1;
+	const { cache, token } = flags;
 
-	do {
+	const date = new Date();
+	let endCursor;
+	let hasNextPage;
+	const points = { cost: 0 };
+	let repositories = [];
+	let requestCount = 1;
+
+	do { // Repeated requests to get all repositories
 		const response = await graphql(
 			generateQuery(endCursor, flags),
 			{
 				headers: {
-					authorization: `token ${process.env.GITHUB_PAT}`,
+					authorization: `token ${token}`,
 				},
 			},
 		);
-		if (flags.cache) {
+		if (cache) {
 			dumpCache(`Response_${(new Date()).toISOString()}.json`, JSON.stringify(response, null, '\t'));
 		}
 		const {
@@ -148,17 +149,20 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 		points.cost += rateLimit.cost;
 		points.remaining = rateLimit.remaining;
 		repositories = repositories.concat(nodes);
-		if (flags.cache) {
+		if (cache) {
 			dumpCache(date.toISOString(), `response${requestCount > 1 || hasNextPage ? `-${requestCount}` : ''}.json`, JSON.stringify(response, null, '\t'));
 		}
 		requestCount += 1;
 	} while (hasNextPage);
+
 	if (filter) {
 		repositories = repositories.filter(filter);
 	}
-	if (flags.cache) {
+
+	if (cache) {
 		dumpCache(date.toISOString(), 'repos.json', JSON.stringify(repositories, null, '\t'));
 	}
+
 	const { repositories: { focus = [], ignore = [] } } = config;
 	if (ignore.length > 0) {
 		repositories = removeIgnoredRepos(repositories, ignore);
@@ -166,6 +170,7 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 	if (focus.length > 0) {
 		repositories = focusRepos(repositories, focus);
 	}
+
 	return { points, repositories };
 };
 

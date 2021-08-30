@@ -3,5 +3,10 @@
 	"rules": {
 		"array-bracket-newline": "off",
 		"max-lines": "off",
+		"max-lines-per-function": ["error", {
+			"max": 100,
+			"skipComments": true,
+			"skipBlankLines": true,
+		}],
 	},
 }

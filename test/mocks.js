@@ -1,5 +1,3 @@
-/* eslint-disable max-lines-per-function */
-
 'use strict';
 
 // octokit/fixture, proxy
