@@ -70,10 +70,8 @@ const list = async (flags) => {
 	// Get all repositories
 	const { points, repositories } = await getRepositories(generateQuery);
 
-	let table;
-
 	// Generate output table
-	table = generateTable(metrics, repositories, { groupBy, sort: flags.s });
+	const table = generateTable(metrics, repositories, { groupBy, sort: flags.s });
 
 	console.log(table.toString());
 

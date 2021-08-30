@@ -150,10 +150,8 @@ const detail = async (flags) => {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 	}
 
-	let table;
-
 	// Generate output table
-	table = generateDetailTable(metrics, repositories, {
+	const table = generateDetailTable(metrics, repositories, {
 		actionable: flags.actionable, actual: flags.actual, all: flags.all, goodness: flags.goodness, sort: flags.s,
 	});
 

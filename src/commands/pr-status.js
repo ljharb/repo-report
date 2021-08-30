@@ -44,18 +44,18 @@ const isMergeable = (pullRequest) => {
 	const mergeablilityStatus = pullRequest.mergeable;
 	if (mergeablilityStatus === 'MERGEABLE') {
 		return logSymbols.success;
-	} else {
-		return logSymbols.error;
 	}
+	return logSymbols.error;
+
 };
 
 const isApproved = (pullRequest) => {
-	let reviewDecision = pullRequest.reviewDecision;
+	const { reviewDecision } = pullRequest;
 	if (reviewDecision === 'APPROVED') {
 		return logSymbols.success;
-	} else {
-		return logSymbols.error;
 	}
+	return logSymbols.error;
+
 };
 
 const getBuildInfo = (pullRequest) => {
@@ -63,12 +63,12 @@ const getBuildInfo = (pullRequest) => {
 	if (status) {
 		if (status.state === 'SUCCESS') {
 			return logSymbols.success;
-		} else {
-			return logSymbols.error;
 		}
-	} else {
-		return '---';
+		return logSymbols.error;
+
 	}
+	return '---';
+
 };
 
 // Metric names and their extraction method to be used on the query result

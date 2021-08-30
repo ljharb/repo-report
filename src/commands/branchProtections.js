@@ -79,10 +79,8 @@ const branchProtections = async (flags) => {
 	// Get all repositories
 	const { points, repositories } = await getRepositories(generateQuery);
 
-	let table;
-
 	// Generate output table
-	table = generateTable(metrics, repositories, { groupBy });
+	const table = generateTable(metrics, repositories, { groupBy });
 
 	console.log(table.toString());
 

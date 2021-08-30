@@ -76,7 +76,7 @@ const dontPrint = {
 };
 
 const getMetrics = (metrics) => {
-	let out = [];
+	const out = [];
 	metrics.forEach((name) => {
 		out.push({
 			compare: compareMethods[name],

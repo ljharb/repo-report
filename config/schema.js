@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 const config = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
-const Validator = require('jsonschema').Validator;
+const { Validator } = require('jsonschema');
 
 const schemaValidator = new Validator();
 

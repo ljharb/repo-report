@@ -75,7 +75,7 @@ const getDiffSymbol = (item, allMetrics, value, metric, { actionable }) => {
 const checkNull = (value) => value || '---';
 
 const getGroupByMetric = (group, metrics) => {
-	let groupByIndex = metrics.findIndex((metric) => metric.name.toLowerCase() === group.toLowerCase());
+	const groupByIndex = metrics.findIndex((metric) => metric.name.toLowerCase() === group.toLowerCase());
 	if (groupByIndex === -1) {
 		console.log(`${logSymbols.error} Invalid Metric`);
 		return null;
@@ -91,7 +91,7 @@ const printAPIPoints = (points) => {
 };
 
 const getItemMetrics = (item) => {
-	const nameWithOwner = item.nameWithOwner;
+	const { nameWithOwner } = item;
 	const { branchProtectionRule } = item.defaultBranchRef || {};
 	const {
 		allowsForcePushes,
@@ -144,8 +144,7 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 			rateLimit,
 		} = response;
 
-		endCursor = pageInfo.endCursor;
-		hasNextPage = pageInfo.hasNextPage;
+		({ endCursor, hasNextPage } = pageInfo);
 		points.cost += rateLimit.cost;
 		points.remaining = rateLimit.remaining;
 		repositories = repositories.concat(nodes);
@@ -179,7 +178,7 @@ const sortRows = (rows) => rows.sort((a, b) => a.name.toLowerCase().localeCompar
 // eslint-disable-next-line max-params
 const generateTableData = (metrics, rows, groupBy, sort) => {
 	let repositories = rows;
-	let tableData = { body: [], head: [] };
+	const tableData = { body: [], head: [] };
 	if (sort) {
 		repositories = sortRows(rows);
 	}
@@ -243,10 +242,10 @@ const getMetricOut = (value, diffValue, { actual, goodness }) => {
 const collapseCols = (rows, metrics) => {
 	// eslint-disable-next-line no-param-reassign
 	metrics = metrics.map((metric, idx) => ({ ...metric, idx }));
-	let buckets = {
+	const buckets = {
 		0: metrics,
 	};
-	let bucketIDMap = {};
+	const bucketIDMap = {};
 	metrics.forEach((metric) => {
 		bucketIDMap[metric.name] = 0;
 	});
@@ -254,15 +253,15 @@ const collapseCols = (rows, metrics) => {
 
 	rows.forEach((row) => {
 		for (const ID of Object.keys(buckets)) {
-			let newBucket = [];
+			const newBucket = [];
 			for (let i = 0; i < buckets[ID].length; i++) {
 				const metric = buckets[ID][i];
 
-				let valueToCheck = row[metric.idx];
+				const valueToCheck = row[metric.idx];
 				newBucket.push([metric, valueToCheck]);
 			}
 			delete buckets[ID];
-			let valueBucketIDMap = {};
+			const valueBucketIDMap = {};
 			for (const [metric, key] of newBucket) {
 				if (valueBucketIDMap[key]) {
 					buckets[valueBucketIDMap[key]].push(metric);
@@ -277,8 +276,8 @@ const collapseCols = (rows, metrics) => {
 		}
 	});
 
-	let head = [];
-	let dontPrintIDs = {};
+	const head = [];
+	const dontPrintIDs = {};
 	for (let i = 0; i < metrics.length; i++) {
 		const bucket = bucketIDMap[metrics[i].name];
 		if (buckets[bucket]) {
@@ -295,7 +294,7 @@ const collapseCols = (rows, metrics) => {
 const collapseRows = (rows, key) => {
 	const buckets = {};
 	for (let i = 0; i < rows.length; i++) {
-		let row = [];
+		const row = [];
 		for (let j = 0; j < rows[i].length; j++) {
 			if (j !== key) {
 				row.push(rows[i][j]);
@@ -309,12 +308,12 @@ const collapseRows = (rows, key) => {
 		}
 	}
 
-	let out = [];
+	const out = [];
 	for (const rowIDs of Object.values(buckets)) {
 		if (rowIDs.length < 2) {
 			out.push(rows[rowIDs[0]]);
 		} else {
-			let curr = rows[rowIDs[0]];
+			const curr = rows[rowIDs[0]];
 			for (let i = 1; i < rowIDs.length; i++) {
 				const newRow = rows[rowIDs[i]];
 				curr[key] = `${curr[key]}\n${newRow[key]}`;
@@ -326,8 +325,8 @@ const collapseRows = (rows, key) => {
 };
 
 const sortRowsByErrors = (a, b) => {
-	let aErrCount = a.join('').split(logSymbols.error).length;
-	let bErrCount = b.join('').split(logSymbols.error).length;
+	const aErrCount = a.join('').split(logSymbols.error).length;
+	const bErrCount = b.join('').split(logSymbols.error).length;
 	return bErrCount - aErrCount;
 };
 
@@ -342,7 +341,6 @@ const generateDetailTable = (metrics, rowData, {
 		console.log(`\n${logSymbols.info} Nothing to show!\n`);
 		return null;
 	}
-	let table;
 	if (sort) {
 		rowData.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 	}
@@ -361,6 +359,7 @@ const generateDetailTable = (metrics, rowData, {
 
 	rows.sort(sortRowsByErrors);
 
+	let table;
 	if (all) {
 		table = new Table({
 			head: filteredMetrics.map((metric) => metric.name),
@@ -369,12 +368,11 @@ const generateDetailTable = (metrics, rowData, {
 			table.push(row);
 		});
 	} else {
-		let { head, tableRows } = collapseCols(rows, filteredMetrics);
-		tableRows = collapseRows(tableRows, 0);
+		const { head, tableRows } = collapseCols(rows, filteredMetrics);
 		table = new Table({
 			head,
 		});
-		tableRows.forEach((row) => {
+		collapseRows(tableRows, 0).forEach((row) => {
 			table.push(row);
 		});
 
