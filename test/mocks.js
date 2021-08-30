@@ -76,9 +76,9 @@ const mockGetRepositories = (response) => graphql(`{ viewer {
 
 /*
  * const mockGetRepositories = (Response) => nock('https://api.github.com')
- * 	.post('/graphl')
- * 	.reply(201, Response);
+ *  .post('/graphl')
+ *  .reply(201, Response);
  */
 
-module.exports = 	mockGetRepositories;
+module.exports = mockGetRepositories;
 

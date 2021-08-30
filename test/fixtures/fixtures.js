@@ -1,7 +1,7 @@
 'use strict';
 
 // const fixtures = require("@octokit/fixtures");
-const mockRepositoriesData = 	{
+const mockRepositoriesData = {
 	data: {
 		viewer: {
 			repositories: {

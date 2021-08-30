@@ -117,14 +117,14 @@ test('generateTable,', (t) => {
 test('getSymbol,', (t) => {
 	t.plan(2);
 	t.test('return success symbol if value is true', (t) => {
-		const expectedResults =	true;
+		const expectedResults = true;
 		const actualResult = getSymbol(true);
 		t.equal(expectedResults, actualResult);
 		t.end();
 	});
 
 	t.test('return error symbol if value is false', (t) => {
-		const expectedResults =	false;
+		const expectedResults = false;
 		const actualResult = getSymbol('');
 		t.equal(expectedResults, actualResult);
 		t.end();
@@ -182,14 +182,14 @@ test('generateTableData', (t) => {
 	});
 
 	t.test('generateTableData returns the correct table data grouped as by access', (t) => {
-		const groupByAccess = 	{ name: 'Access', extract: (item) => item.viewerPermission };
+		const groupByAccess = { name: 'Access', extract: (item) => item.viewerPermission };
 		const actualResult = generateTableData(metrics, [...repositories.nodes], groupByAccess, true);
 		t.deepEqual(actualResult.head, ['Access', 'Repository', 'DefBranch']);
 		t.end();
 	});
 
 	t.test('generateTableData returns the wrong table data when grouped as by access', (t) => {
-		const groupByDefBranch = 	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' };
+		const groupByDefBranch = { name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' };
 		const actualResult = generateTableData(metrics, [...repositories.nodes], groupByDefBranch, true);
 		t.notDeepEqual(actualResult.head, ['Repository', 'Access', 'DefBranch']);
 		t.end();

@@ -74,8 +74,8 @@ const getBuildInfo = (pullRequest) => {
 // Metric names and their extraction method to be used on the query result
 const metrics = [
 	{ name: 'Mergeable?', extract: isMergeable },
-	{ name: 'Approved?', extract:	isApproved },
-	{ name: 'Build', extract:	getBuildInfo },
+	{ name: 'Approved?', extract: isApproved },
+	{ name: 'Build', extract: getBuildInfo },
 ];
 
 module.exports = async function prStatus(flags) {

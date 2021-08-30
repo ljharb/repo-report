@@ -179,9 +179,9 @@ const sortRows = (rows) => rows.sort((a, b) => a.name.toLowerCase().localeCompar
 // eslint-disable-next-line max-params
 const generateTableData = (metrics, rows, groupBy, sort) => {
 	let repositories = rows;
-	let tableData	= { body: [], head: [] };
+	let tableData = { body: [], head: [] };
 	if (sort) {
-		repositories =	sortRows(rows);
+		repositories = sortRows(rows);
 	}
 	if (groupBy) {
 		const otherMetrics = metrics.filter((metric) => metric.name !== groupBy.name);
