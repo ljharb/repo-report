@@ -159,6 +159,7 @@ Yargs.usage('Usage: $0 <command> [options]')
 						'ReqApprovingReviewCount',
 						'ReqApprovingReviews',
 						'ReqCodeOwnerReviews',
+						'ReqConversationResolution',
 					],
 					describe: 'Pick metrics',
 

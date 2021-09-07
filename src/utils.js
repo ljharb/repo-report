@@ -100,6 +100,7 @@ const getItemMetrics = (item) => {
 		requiredApprovingReviewCount,
 		requiresApprovingReviews,
 		requiresCodeOwnerReviews,
+		requiresConversationResolution,
 		pattern,
 	} = branchProtectionRule || {};
 
@@ -112,6 +113,7 @@ const getItemMetrics = (item) => {
 		requiredApprovingReviewCount,
 		requiresApprovingReviews,
 		requiresCodeOwnerReviews,
+		requiresConversationResolution,
 	};
 };
 

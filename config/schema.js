@@ -53,6 +53,7 @@ const metricSchema = {
 		},
 		ReqApprovingReviews: { type: 'boolean' },
 		ReqCodeOwnerReviews: { type: 'boolean' },
+		ReqConversationResolution: { type: 'boolean' },
 		SecurityPolicyEnabled: { type: 'boolean' },
 		Subscription: {
 			oneOf: [

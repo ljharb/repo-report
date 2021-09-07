@@ -34,6 +34,7 @@ const metricNames = [
 	'ReqApprovingReviewCount',
 	'ReqApprovingReviews',
 	'ReqCodeOwnerReviews',
+	'ReqConversationResolution',
 	'isPrivate',
 ];
 
@@ -77,6 +78,7 @@ const generateQuery = (endCursor, {
 				requiredApprovingReviewCount
 				requiresApprovingReviews
 				requiresCodeOwnerReviews
+				requiresConversationResolution
 				restrictsPushes
 			}
 		}

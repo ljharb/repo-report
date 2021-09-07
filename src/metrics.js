@@ -8,25 +8,27 @@ const getMergeStrategies = (item) => `${item.mergeCommitAllowed ? 'MERGE' : ''} 
 const cmpAccess = (item, config) => config.includes(item.viewerPermission);
 const cmpLicense = (item, config) => config.includes(item.licenseInfo?.name || null);
 const cmpSubscription = (item, config) => config.includes(item.viewerSubscription);
+const getBPRules = (item) => item.defaultBranchRef?.branchProtectionRule;
 
 const extractMethods = {
 	Access: (item) => item.viewerPermission,
-	AllowsDeletions: (item) => item.defaultBranchRef?.branchProtectionRule?.allowsDeletions || false,
-	AllowsForcePushes: (item) => item.defaultBranchRef?.branchProtectionRule?.allowsForcePushes || false,
+	AllowsDeletions: (item) => !!getBPRules(item)?.allowsDeletions,
+	AllowsForcePushes: (item) => !!getBPRules(item)?.allowsForcePushes,
 	Archived: (item) => item.isArchived,
 	BlankIssuesEnabled: (item) => item.isBlankIssuesEnabled,
 	DefBranch: (item) => item.defaultBranchRef?.name || '---',
 	DeleteOnMerge: (item) => item.deleteBranchOnMerge,
-	DismissesStaleReviews: (item) => item.defaultBranchRef?.branchProtectionRule?.dismissesStaleReviews || false,
+	DismissesStaleReviews: (item) => !!getBPRules(item)?.dismissesStaleReviews,
 	HasStarred: (item) => item.viewerHasStarred,
 	IssuesEnabled: (item) => item.hasIssuesEnabled,
 	License: (item) => item.licenseInfo?.name || '---',
 	MergeStrategies: getMergeStrategies,
 	ProjectsEnabled: (item) => item.hasProjectsEnabled,
 	Repository: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.isFork ? '🍴 ' : item.isPrivate ? ' ' : ''}${item.nameWithOwner}`,
-	ReqApprovingReviewCount: (item) => item.defaultBranchRef?.branchProtectionRule?.requiredApprovingReviewCount || 0,
-	ReqApprovingReviews: (item) => item.defaultBranchRef?.branchProtectionRule?.requiresApprovingReviews || false,
-	ReqCodeOwnerReviews: (item) => item.defaultBranchRef?.branchProtectionRule?.requiresCodeOwnerReviews || false,
+	ReqApprovingReviewCount: (item) => getBPRules(item)?.requiredApprovingReviewCount || 0,
+	ReqApprovingReviews: (item) => !!getBPRules(item)?.requiresApprovingReviews,
+	ReqCodeOwnerReviews: (item) => !!getBPRules(item)?.requiresCodeOwnerReviews,
+	ReqConversationResolution: (item) => !!getBPRules(item)?.requiresConversationResolution,
 	SecurityPolicyEnabled: (item) => item.isSecurityPolicyEnabled,
 	Subscription: (item) => item.viewerSubscription,
 	WikiEnabled: (item) => item.hasWikiEnabled,
@@ -50,6 +52,7 @@ const permissions = {
 	ReqApprovingReviewCount: ['ADMIN'],
 	ReqApprovingReviews: ['ADMIN'],
 	ReqCodeOwnerReviews: ['ADMIN'],
+	ReqConversationResolution: ['ADMIN'],
 	SecurityPolicyEnabled: ['ADMIN', 'MAINTAIN', 'WRITE'],
 	Subscription: ['WRITE', 'ADMIN', 'MAINTAIN', 'WRITE', 'TRIAGE', 'READ'],
 	WikiEnabled: ['ADMIN', 'MAINTAIN'],

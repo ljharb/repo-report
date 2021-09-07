@@ -107,7 +107,9 @@ const DetailTableColumns = [
 	'DismissesStaleReviews',
 	'ReqApprovingReviewCount',
 	'ReqApprovingReviews',
-	'ReqCodeOwnerReviews'];
+	'ReqCodeOwnerReviews',
+	'ReqConversationResolution',
+];
 
 const sortedRepositories = [
 	{ name: 'challenges-book',

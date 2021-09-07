@@ -22,7 +22,8 @@
     "DismissesStaleReviews": false,
     "ReqApprovingReviewCount": 1,
     "ReqApprovingReviews": false,
-    "ReqCodeOwnerReviews": false
+    "ReqCodeOwnerReviews": false,
+    "ReqConversationResolution": false
   },
   "overrides": [],
   "repositories": {
