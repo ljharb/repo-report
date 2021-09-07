@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable max-lines-per-function */
 /* eslint-disable no-throw-literal */
 /* eslint-disable no-magic-numbers */
 
@@ -22,49 +21,61 @@ const {
 Yargs.usage('Usage: $0 <command> [options]')
 	.default('token', GH_TOKEN || GITHUB_TOKEN)
 	.hide('token')
-	.check((arg) => {
-		if (arg.token) {
+	.check(({ token }) => {
+		if (token) {
 			return true;
 		}
 		throw `${logSymbols.error} env variable GH_TOKEN or GITHUB_TOKEN not found. Refer to #Installation in README.md on how to set an env variable`;
 	})
-	.command('list', 'lists all repositories', function (yargs) {
-		const argv = yargs
-			.usage('Usage: $0 list [options]')
+	.command(
+		'list',
+		'lists all repositories',
+		(yargs) => {
+			const { argv } = yargs
+				.usage('Usage: $0 list [options]')
 
-			.alias('g', 'group-by')
-			.nargs('g', 1)
-			.describe('g', 'Field to be grouped by')
-			.alias('m', 'metrics')
-			.boolean('m')
-			.describe('m', 'Show available metrics')
-			.alias('s', 'sort')
-			.describe('s', 'Sort repos alphabetically')
-			.help('h')
-			.alias('h', 'help').argv;
-		list(argv);
-	})
-	.command('options', 'lists option settings', function (yargs) {
-		const argv = yargs
-			.usage('Usage: $0 options [options]')
-			.alias('g', 'group-by')
-			.nargs('g', 1)
-			.describe('g', 'Field to be grouped by')
-			.alias('m', 'metrics')
-			.boolean('m')
-			.describe('m', 'Show available metrics')
-			.alias('s', 'sort')
-			.describe('s', 'Sort repos alphabetically')
-			.help('h')
-			.alias('h', 'help').argv;
-		options(argv);
-	})
+				.alias('g', 'group-by')
+				.nargs('g', 1)
+				.describe('g', 'Field to be grouped by')
+				.alias('m', 'metrics')
+				.boolean('m')
+				.describe('m', 'Show available metrics')
+				.alias('s', 'sort')
+				.describe('s', 'Sort repos alphabetically')
+				.help('h')
+				.alias('h', 'help');
+
+			list(argv);
+		},
+	)
+	.command(
+		'options',
+		'lists option settings',
+		(yargs) => {
+			const { argv } = yargs
+				.usage('Usage: $0 options [options]')
+
+				.alias('g', 'group-by')
+				.nargs('g', 1)
+				.describe('g', 'Field to be grouped by')
+				.alias('m', 'metrics')
+				.boolean('m')
+				.describe('m', 'Show available metrics')
+				.alias('s', 'sort')
+				.describe('s', 'Sort repos alphabetically')
+				.help('h')
+				.alias('h', 'help');
+
+			options(argv);
+		},
+	)
 	.command(
 		'branchProtections',
 		'list branch protections for default branch for all repositories',
-		function (yargs) {
-			const argv = yargs
+		(yargs) => {
+			const { argv } = yargs
 				.usage('Usage: $0 branchProtections [options]')
+
 				.alias('g', 'group-by')
 				.nargs('g', 1)
 				.describe('g', 'Field to be grouped by')
@@ -72,16 +83,18 @@ Yargs.usage('Usage: $0 <command> [options]')
 				.boolean('m')
 				.describe('m', 'Show available metrics')
 				.help('h')
-				.alias('h', 'help').argv;
+				.alias('h', 'help');
+
 			branchProtections(argv);
 		},
 	)
 	.command(
 		'pr-status',
 		'fetch status checks for a particular repository and a given pull request number',
-		function (yargs) {
-			const argv = yargs
+		(yargs) => {
+			const { argv } = yargs
 				.usage('Usage: $0 pr-status --repo <owner/repo> --id <pr-id> [options]')
+
 				.option('repo', {
 					describe: 'the owner\'s name and the repository\'s name separated by /',
 				})
@@ -90,16 +103,18 @@ Yargs.usage('Usage: $0 <command> [options]')
 				})
 				.demandOption(['repo', 'id'])
 				.help('h')
-				.alias('h', 'help').argv;
+				.alias('h', 'help');
+
 			prStatus(argv);
 		},
 	)
 	.command(
 		'detail',
 		'fetch all available details about all of your repositories',
-		function (yargs) {
-			const argv = yargs
+		(yargs) => {
+			const { argv } = yargs
 				.usage('Usage: $0 detail [options]')
+
 				.option('actionable', {
 					describe: 'Convert unactionable values to good ones',
 				})
@@ -154,7 +169,8 @@ Yargs.usage('Usage: $0 <command> [options]')
 				.alias('s', 'sort')
 				.describe('s', 'Sort repos alphabetically')
 				.help('h')
-				.alias('h', 'help').argv;
+				.alias('h', 'help');
+
 			detail(argv);
 		},
 	)
