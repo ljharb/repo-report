@@ -21,13 +21,13 @@
 	"license": "MIT",
 	"private": false,
 	"dependencies": {
-		"@octokit/graphql": "^4.6.0",
-		"cli-table": "^0.3.4",
-		"dotenv": "^8.2.0",
+		"@octokit/graphql": "^4.8.0",
+		"cli-table": "^0.3.6",
+		"dotenv": "^10.0.0",
 		"jsonschema": "^1.4.0",
-		"log-symbols": "^4.0.0",
+		"log-symbols": "^4.1.0",
 		"minimatch": "^3.0.4",
-		"yargs": "^16.2.0"
+		"yargs": "^17.1.1"
 	},
 	"devDependencies": {
 		"@ljharb/eslint-config": "^18.0.0",
