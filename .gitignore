@@ -106,5 +106,7 @@ dist
 # TernJS port file
 .tern-port
 
-# Lockfiles
+# Only apps should have lockfiles
+npm-shrinkwrap.json
+package-lock.json
 yarn.lock
