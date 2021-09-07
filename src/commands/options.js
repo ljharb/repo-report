@@ -75,7 +75,7 @@ const optionsList = async (flags) => {
 	}
 
 	// Get all repositories
-	const { points, repositories } = await getRepositories(generateQuery);
+	const { points, repositories } = await getRepositories(generateQuery, flags);
 
 	// Generate output table
 	const table = generateTable(metrics, repositories, { groupBy, sort: flags.s });
