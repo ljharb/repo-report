@@ -69,7 +69,7 @@ const getDiffSymbol = (item, allMetrics, value, metric, { actionable }) => {
 		out = configValue === value;
 	}
 	const hasEditPermission = !metric.permissions || metric.permissions.includes(item.viewerPermission);
-	return `${out || !hasEditPermission ? symbols.success : symbols.error}${hasEditPermission || out || actionable ? '' : ' 🤷'}`;
+	return `${out || !hasEditPermission ? symbols.success : symbols.error}${hasEditPermission || out || actionable ? '' : ` ${symbols.unactionable}`}`;
 };
 
 const checkNull = (value) => value || '---';

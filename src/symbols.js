@@ -7,5 +7,6 @@ module.exports = {
 	fork: '🍴',
 	isPrivate: '🔒',
 	success: colors.green('✔'),
+	unactionable: '🤷',
 	warning: colors.yellow('⚠️'),
 };
