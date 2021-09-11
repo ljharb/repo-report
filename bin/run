@@ -6,7 +6,7 @@
 
 require('dotenv').config();
 const Yargs = require('yargs');
-const logSymbols = require('log-symbols');
+const symbols = require('../src/symbols');
 const list = require('../src/commands/list');
 const options = require('../src/commands/options');
 const branchProtections = require('../src/commands/branchProtections');
@@ -25,7 +25,7 @@ Yargs.usage('Usage: $0 <command> [options]')
 		if (token) {
 			return true;
 		}
-		throw `${logSymbols.error} env variable GH_TOKEN or GITHUB_TOKEN not found. Refer to #Installation in README.md on how to set an env variable`;
+		throw `${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN not found. Refer to #Installation in README.md on how to set an env variable`;
 	})
 	.command(
 		'list',

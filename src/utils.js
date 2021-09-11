@@ -6,10 +6,10 @@
 
 const fs = require('fs');
 const { graphql } = require('@octokit/graphql');
-const logSymbols = require('log-symbols');
 const Table = require('cli-table');
 const minimatch = require('minimatch');
 
+const symbols = require('./symbols');
 const config = require('../config/config.json');
 
 const dumpCache = (date, filename, content) => {
@@ -60,7 +60,7 @@ const getDiffSymbol = (item, allMetrics, value, metric, { actionable }) => {
 		return undefined;
 	}
 	if (configValue === null) {
-		return logSymbols.success;
+		return symbols.success;
 	}
 	let out;
 	if (metric.compare) {
@@ -69,7 +69,7 @@ const getDiffSymbol = (item, allMetrics, value, metric, { actionable }) => {
 		out = configValue === value;
 	}
 	const hasEditPermission = !metric.permissions || metric.permissions.includes(item.viewerPermission);
-	return `${out || !hasEditPermission ? logSymbols.success : logSymbols.error}${hasEditPermission || out || actionable ? '' : ' 🤷'}`;
+	return `${out || !hasEditPermission ? symbols.success : symbols.error}${hasEditPermission || out || actionable ? '' : ' 🤷'}`;
 };
 
 const checkNull = (value) => value || '---';
@@ -77,7 +77,7 @@ const checkNull = (value) => value || '---';
 const getGroupByMetric = (group, metrics) => {
 	const groupByIndex = metrics.findIndex((metric) => metric.name.toLowerCase() === group.toLowerCase());
 	if (groupByIndex === -1) {
-		console.log(`${logSymbols.error} Invalid Metric`);
+		console.log(`${symbols.error} Invalid Metric`);
 		return null;
 	}
 	return metrics[groupByIndex];
@@ -327,8 +327,8 @@ const collapseRows = (rows, key) => {
 };
 
 const sortRowsByErrors = (a, b) => {
-	const aErrCount = a.join('').split(logSymbols.error).length;
-	const bErrCount = b.join('').split(logSymbols.error).length;
+	const aErrCount = a.join('').split(symbols.error).length;
+	const bErrCount = b.join('').split(symbols.error).length;
 	return bErrCount - aErrCount;
 };
 
@@ -340,7 +340,7 @@ const generateDetailTable = (metrics, rowData, {
 	goodness,
 } = {}) => {
 	if (!rowData.length) {
-		console.log(`\n${logSymbols.info} Nothing to show!\n`);
+		console.log(`\n${symbols.info} Nothing to show!\n`);
 		return null;
 	}
 	if (sort) {

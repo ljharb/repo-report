@@ -3,7 +3,7 @@
 'use strict';
 
 const { graphql } = require('@octokit/graphql');
-const logSymbols = require('log-symbols');
+const symbols = require('../symbols');
 const {
 	printAPIPoints,
 	generateTable,
@@ -39,22 +39,22 @@ query {
 
 const isMergeable = (pullRequest) => {
 	if (pullRequest.merged) {
-		return `${logSymbols.info} Merged`;
+		return `${symbols.info} Merged`;
 	}
 	const mergeablilityStatus = pullRequest.mergeable;
 	if (mergeablilityStatus === 'MERGEABLE') {
-		return logSymbols.success;
+		return symbols.success;
 	}
-	return logSymbols.error;
+	return symbols.error;
 
 };
 
 const isApproved = (pullRequest) => {
 	const { reviewDecision } = pullRequest;
 	if (reviewDecision === 'APPROVED') {
-		return logSymbols.success;
+		return symbols.success;
 	}
-	return logSymbols.error;
+	return symbols.error;
 
 };
 
@@ -62,9 +62,9 @@ const getBuildInfo = (pullRequest) => {
 	const [{ commit: { status } }] = pullRequest.commits.nodes;
 	if (status) {
 		if (status.state === 'SUCCESS') {
-			return logSymbols.success;
+			return symbols.success;
 		}
-		return logSymbols.error;
+		return symbols.error;
 
 	}
 	return '---';

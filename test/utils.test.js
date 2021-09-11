@@ -4,7 +4,7 @@
 
 const test = require('tape');
 const Table = require('cli-table');
-const logSymbols = require('log-symbols');
+const symbols = require('../src/symbols');
 const { stdout } = require('../test/test-utils');
 
 const { mockRepositoriesData: { data: { viewer: { repositories } } },
@@ -68,7 +68,7 @@ test('getGroupByMetric', (t) => {
 		const actualMetric = getGroupByMetric('newAccess', metrics);
 		const expectedResults = null;
 		output.restore();
-		t.deepEqual(output.loggedData, [`${logSymbols.error} Invalid Metric\n`]);
+		t.deepEqual(output.loggedData, [`${symbols.error} Invalid Metric\n`]);
 		t.deepEqual(expectedResults, actualMetric);
 		t.end();
 	});

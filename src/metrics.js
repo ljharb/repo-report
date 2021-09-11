@@ -1,5 +1,7 @@
 'use strict';
 
+const symbols = require('./symbols');
+
 const getMergeStrategies = (item) => `${item.mergeCommitAllowed ? 'MERGE' : ''} ${item.squashMergeAllowed ? 'SQUASH' : ''} ${item.rebaseMergeAllowed ? 'REBASE' : ''}`.split(' ').filter((strat) => strat).join(',');
 
 /* eslint-disable no-magic-numbers */
@@ -24,7 +26,7 @@ const extractMethods = {
 	License: (item) => item.licenseInfo?.name || '---',
 	MergeStrategies: getMergeStrategies,
 	ProjectsEnabled: (item) => item.hasProjectsEnabled,
-	Repository: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.isFork ? '🍴 ' : item.isPrivate ? ' ' : ''}${item.nameWithOwner}`,
+	Repository: (item) => `${item.isPrivate ? `${symbols.isPrivate} ` : ''}${item.isFork ? `${symbols.fork} ` : item.isPrivate ? ' ' : ''}${item.nameWithOwner}`,
 	ReqApprovingReviewCount: (item) => getBPRules(item)?.requiredApprovingReviewCount || 0,
 	ReqApprovingReviews: (item) => !!getBPRules(item)?.requiresApprovingReviews,
 	ReqCodeOwnerReviews: (item) => !!getBPRules(item)?.requiresCodeOwnerReviews,
