@@ -41,9 +41,9 @@ const metricNames = [
 const generateQuery = (endCursor, {
 	f,
 }) => {
-	let showForks = true;
+	let showForks = false;
 	let showSources = true;
-	let showPrivate = true;
+	let showPrivate = false;
 	let showPublic = true;
 	if (f && f.length) {
 		showForks = f.includes('forks');
@@ -154,7 +154,7 @@ const detail = async (flags) => {
 
 	// Generate output table
 	const table = generateDetailTable(metrics, repositories, {
-		actionable: flags.actionable, actual: flags.actual, all: flags.all, goodness: flags.goodness, sort: flags.s,
+		actual: flags.actual, all: flags.all, goodness: flags.goodness, sort: flags.s, unactionable: flags.unactionable,
 	});
 
 	if (table) {

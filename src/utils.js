@@ -54,7 +54,7 @@ const removeIgnoredRepos = (repos, glob) => repos.filter((repo) => !anyGlobMatch
 const focusRepos = (repos, glob) => repos.filter((repo) => everyGlobMatch(repo.nameWithOwner, glob));
 
 // eslint-disable-next-line max-params
-const getDiffSymbol = (item, allMetrics, value, metric, { actionable }) => {
+const getDiffSymbol = (item, allMetrics, value, metric, { unactionable }) => {
 	const configValue = allMetrics[metric.name];
 	if (configValue === undefined) {
 		return undefined;
@@ -69,7 +69,7 @@ const getDiffSymbol = (item, allMetrics, value, metric, { actionable }) => {
 		out = configValue === value;
 	}
 	const hasEditPermission = !metric.permissions || metric.permissions.includes(item.viewerPermission);
-	return `${out || !hasEditPermission ? symbols.success : symbols.error}${hasEditPermission || out || actionable ? '' : ` ${symbols.unactionable}`}`;
+	return `${out || !hasEditPermission ? symbols.success : symbols.error}${hasEditPermission || out || !unactionable ? '' : ` ${symbols.unactionable}`}`;
 };
 
 const checkNull = (value) => value || '---';
@@ -333,7 +333,7 @@ const sortRowsByErrors = (a, b) => {
 };
 
 const generateDetailTable = (metrics, rowData, {
-	actionable,
+	unactionable,
 	sort,
 	actual,
 	all,
@@ -353,7 +353,7 @@ const generateDetailTable = (metrics, rowData, {
 		const currMetrics = getCurrMetrics(item);
 		return filteredMetrics.map((metric) => {
 			const value = metric.extract(item);
-			const diffValue = getDiffSymbol(item, currMetrics, value, metric, { actionable });
+			const diffValue = getDiffSymbol(item, currMetrics, value, metric, { unactionable });
 
 			return getMetricOut(value, diffValue, { actual, goodness });
 		});

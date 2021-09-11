@@ -110,13 +110,13 @@ Yargs.usage('Usage: $0 <command> [options]')
 	)
 	.command(
 		'detail',
-		'fetch all available details about all of your repositories',
+		`Fetch actionable details about your public, source (non-fork, non-template) repositories. Unactionable metrics are converted to ${symbols.success} by default.`,
 		(yargs) => {
 			const { argv } = yargs
 				.usage('Usage: $0 detail [options]')
 
-				.option('actionable', {
-					describe: 'Convert unactionable values to good ones',
+				.option('unactionable', {
+					describe: `Shows values of metrics you lack permissions to change, with a ${symbols.unactionable} next to it`,
 				})
 				.option('actual', {
 					describe: 'Show metrics’ true values',
