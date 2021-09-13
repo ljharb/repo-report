@@ -6,26 +6,53 @@
 
 require('dotenv').config();
 const Yargs = require('yargs');
+const colors = require('colors/safe');
+const homedir = require('os').homedir();
+const path = require('path');
+
 const symbols = require('../src/symbols');
 const list = require('../src/commands/list');
 const options = require('../src/commands/options');
 const branchProtections = require('../src/commands/branchProtections');
 const prStatus = require('../src/commands/pr-status');
 const detail = require('../src/commands/detail');
+const { isConfigValid } = require('../src/utils');
 
 const {
 	GH_TOKEN,
 	GITHUB_TOKEN,
 } = process.env;
 
+// Variable to prevent calling isConfigValid twice
+let configValidated;
+const defaultConfigPaths = [].concat(
+	process.env.XDG_CONFIG_HOME ? path.join(process.env.XDG_CONFIG_HOME, 'repo-report.json') : [],
+	path.join(homedir, '.repo-report.json'),
+);
+
 Yargs.usage('Usage: $0 <command> [options]')
+	.check(({ config }) => {
+		if (configValidated) {
+			return true;
+		}
+		configValidated = true;
+		const configPaths = [].concat(
+			config || [],
+			defaultConfigPaths,
+		);
+		const { valid, error } = isConfigValid(configPaths);
+		if (!valid) {
+			throw `${symbols.error} ${colors.red(error)}`;
+		}
+		return true;
+	})
 	.default('token', GH_TOKEN || GITHUB_TOKEN)
 	.hide('token')
 	.check(({ token }) => {
 		if (token) {
 			return true;
 		}
-		throw `${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN not found. Refer to #Installation in README.md on how to set an env variable`;
+		throw colors.red(`${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN not found. Refer to #Installation in README.md on how to set an env variable`);
 	})
 	.command(
 		'list',

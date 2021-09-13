@@ -29,6 +29,5 @@
   "repositories": {
     "focus": [],
     "ignore": []
-  },
-  "defaultView": "tabular"
+  }
 }

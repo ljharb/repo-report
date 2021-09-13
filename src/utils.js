@@ -8,9 +8,40 @@ const fs = require('fs');
 const { graphql } = require('@octokit/graphql');
 const Table = require('cli-table');
 const minimatch = require('minimatch');
+const colors = require('colors/safe');
 
 const symbols = require('./symbols');
-const config = require('../config/config.json');
+const defaultConfig = require('../config/defaults.json');
+const validateConfig = require('../config/validate');
+
+let config = {
+	...defaultConfig,
+};
+
+const isConfigValid = (configPaths) => {
+	let userConfig;
+	for (const currPath of configPaths) {
+		try {
+			userConfig = JSON.parse(fs.readFileSync(currPath, 'utf8'));
+			console.log(`${symbols.info} Config file found at ${currPath}`);
+			// eslint-disable-next-line no-restricted-syntax
+			break;
+		} catch (e) {
+			if (e instanceof SyntaxError) {
+				return { error: `${symbols.error} Invalid JSON syntax at ${currPath}`, valid: false };
+			}
+		}
+	}
+	if (userConfig) {
+		config = { ...config, ...userConfig };
+	} else {
+		console.log(colors.red(`${symbols.error} No config file found`));
+		console.log('Using defaults instead...');
+	}
+
+	const { valid, error } = validateConfig(config);
+	return { error, valid };
+};
 
 const dumpCache = (date, filename, content) => {
 	const cacheDir = `${__dirname}/../cache`;
@@ -394,6 +425,7 @@ module.exports = {
 	getItemMetrics,
 	getRepositories,
 	getSymbol,
+	isConfigValid,
 	listMetrics,
 	printAPIPoints,
 	sortRows,
