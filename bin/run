@@ -10,10 +10,6 @@ const homedir = require('os').homedir();
 const path = require('path');
 
 const symbols = require('../src/symbols');
-const list = require('../src/commands/list');
-const options = require('../src/commands/options');
-const branchProtections = require('../src/commands/branchProtections');
-const prStatus = require('../src/commands/pr-status');
 const detail = require('../src/commands/detail');
 const { isConfigValid } = require('../src/utils');
 
@@ -30,7 +26,73 @@ const defaultConfigPaths = [].concat(
 	path.join(homedir, '.repo-report.json'),
 );
 
+const getCommandMeta = (yargs) => yargs
+	.usage('Usage: $0 [options]')
+
+	.option('unactionable', {
+		describe: `Shows values of metrics you lack permissions to change, with a ${symbols.unactionable} next to it`,
+	})
+	.option('actual', {
+		describe: 'Show metrics’ true values',
+	})
+	.option('all', {
+		describe: 'Show all metrics',
+	})
+	.option('goodness', {
+		describe: 'Prefix actual values with goodness values',
+	})
+	.option('f', {
+		choices: [
+			'sources',
+			'forks',
+			'templates',
+			'private',
+			'public',
+		],
+		describe: 'Focus repo types',
+	})
+	.option('p', {
+		alias: 'pick',
+		choices: [
+			'Access',
+			'IssuesEnabled',
+			'ProjectsEnabled',
+			'WikiEnabled',
+			'Archived',
+			'BlankIssuesEnabled',
+			'SecurityPolicyEnabled',
+			'License',
+			'MergeStrategies',
+			'DeleteOnMerge',
+			'HasStarred',
+			'Subscription',
+			'DefBranch',
+			'AllowsForcePushes',
+			'AllowsDeletions',
+			'DismissesStaleReviews',
+			'ReqApprovingReviewCount',
+			'ReqApprovingReviews',
+			'ReqCodeOwnerReviews',
+			'ReqConversationResolution',
+		],
+		describe: 'Pick metrics',
+
+	})
+	.option('cache', {
+		describe: 'Dump API requests and cleaned up data in cache/',
+	})
+	.alias('s', 'sort')
+	.boolean('s')
+	.describe('s', 'Sort repos alphabetically')
+	.alias('m', 'metrics')
+	.boolean('m')
+	.describe('m', 'Show available metrics')
+	.help('h')
+	.alias('h', 'help')
+	.strict();
+
 Yargs.usage('Usage: $0 <command> [options]')
+	.default('config', null)
 	.check(({ config }) => {
 		if (configValidated) {
 			return true;
@@ -55,151 +117,25 @@ Yargs.usage('Usage: $0 <command> [options]')
 		throw colors.red(`${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN not found. Refer to #Installation in README.md on how to set an env variable`);
 	})
 	.command(
-		'list',
-		'lists all repositories',
-		(yargs) => {
-			const { argv } = yargs
-				.usage('Usage: $0 list [options]')
-
-				.alias('g', 'group-by')
-				.nargs('g', 1)
-				.describe('g', 'Field to be grouped by')
-				.alias('m', 'metrics')
-				.boolean('m')
-				.describe('m', 'Show available metrics')
-				.alias('s', 'sort')
-				.describe('s', 'Sort repos alphabetically')
-				.help('h')
-				.alias('h', 'help');
-
-			list(argv);
-		},
-	)
-	.command(
-		'options',
-		'lists option settings',
-		(yargs) => {
-			const { argv } = yargs
-				.usage('Usage: $0 options [options]')
-
-				.alias('g', 'group-by')
-				.nargs('g', 1)
-				.describe('g', 'Field to be grouped by')
-				.alias('m', 'metrics')
-				.boolean('m')
-				.describe('m', 'Show available metrics')
-				.alias('s', 'sort')
-				.describe('s', 'Sort repos alphabetically')
-				.help('h')
-				.alias('h', 'help');
-
-			options(argv);
-		},
-	)
-	.command(
-		'branchProtections',
-		'list branch protections for default branch for all repositories',
-		(yargs) => {
-			const { argv } = yargs
-				.usage('Usage: $0 branchProtections [options]')
-
-				.alias('g', 'group-by')
-				.nargs('g', 1)
-				.describe('g', 'Field to be grouped by')
-				.alias('m', 'metrics')
-				.boolean('m')
-				.describe('m', 'Show available metrics')
-				.help('h')
-				.alias('h', 'help');
-
-			branchProtections(argv);
-		},
-	)
-	.command(
-		'pr-status',
-		'fetch status checks for a particular repository and a given pull request number',
-		(yargs) => {
-			const { argv } = yargs
-				.usage('Usage: $0 pr-status --repo <owner/repo> --id <pr-id> [options]')
-
-				.option('repo', {
-					describe: 'the owner\'s name and the repository\'s name separated by /',
-				})
-				.option('id', {
-					describe: 'the pull request\'s unique identifier',
-				})
-				.demandOption(['repo', 'id'])
-				.help('h')
-				.alias('h', 'help');
-
-			prStatus(argv);
-		},
-	)
-	.command(
-		'detail',
+		'$0',
 		`Fetch actionable details about your public, source (non-fork, non-template) repositories. Unactionable metrics are converted to ${symbols.success} by default.`,
 		(yargs) => {
-			const { argv } = yargs
-				.usage('Usage: $0 detail [options]')
-
-				.option('unactionable', {
-					describe: `Shows values of metrics you lack permissions to change, with a ${symbols.unactionable} next to it`,
-				})
-				.option('actual', {
-					describe: 'Show metrics’ true values',
-				})
-				.option('all', {
-					describe: 'Show all metrics',
-				})
-				.option('goodness', {
-					describe: 'Prefix actual values with goodness values',
-				})
-				.option('f', {
-					choices: [
-						'sources',
-						'forks',
-						'templates',
-						'private',
-						'public',
-					],
-					describe: 'Focus repo types',
-				})
-				.option('p', {
-					alias: 'pick',
-					choices: [
-						'Access',
-						'IssuesEnabled',
-						'ProjectsEnabled',
-						'WikiEnabled',
-						'Archived',
-						'BlankIssuesEnabled',
-						'SecurityPolicyEnabled',
-						'License',
-						'MergeStrategies',
-						'DeleteOnMerge',
-						'HasStarred',
-						'Subscription',
-						'DefBranch',
-						'AllowsForcePushes',
-						'AllowsDeletions',
-						'DismissesStaleReviews',
-						'ReqApprovingReviewCount',
-						'ReqApprovingReviews',
-						'ReqCodeOwnerReviews',
-						'ReqConversationResolution',
-					],
-					describe: 'Pick metrics',
-
-				})
-				.option('cache', {
-					describe: 'Dump API requests and cleaned up data in cache/',
-				})
-				.alias('s', 'sort')
-				.describe('s', 'Sort repos alphabetically')
-				.help('h')
-				.alias('h', 'help');
-
+			const { argv } = getCommandMeta(yargs);
 			detail(argv);
+		},
+	)
+	.command(
+		'ls',
+		'Lists all repositories. Includes sources, forks, templates, private and public repos by default. Shows DefBranch and Access metrics by default.',
+		(yargs) => {
+			const { argv } = getCommandMeta(yargs);
+			detail({
+				actual: true,
+				f: ['sources', 'forks', 'templates', 'private', 'public'],
+				p: ['DefBranch', 'Access'],
+				pick: ['DefBranch', 'Access'],
+				...argv,
+			});
 		},
 	)
 	.help('h')

@@ -57,8 +57,6 @@ const dumpCache = (date, filename, content) => {
 
 const listMetrics = (metrics) => metrics.map((metric) => console.log(`- ${metric.name}`));
 
-const getSymbol = (value) => value || false;
-
 const sanitizeGlob = (glob) => [].concat(glob).map((el) => (el === '*' ? '**' : el));
 
 const everyGlobMatch = (test, glob) => [].concat(glob).every((pattern) => minimatch(test, pattern));
@@ -103,49 +101,10 @@ const getDiffSymbol = (item, allMetrics, value, metric, { unactionable }) => {
 	return `${out || !hasEditPermission ? symbols.success : symbols.error}${hasEditPermission || out || !unactionable ? '' : ` ${symbols.unactionable}`}`;
 };
 
-const checkNull = (value) => value || '---';
-
-const getGroupByMetric = (group, metrics) => {
-	const groupByIndex = metrics.findIndex((metric) => metric.name.toLowerCase() === group.toLowerCase());
-	if (groupByIndex === -1) {
-		console.log(`${symbols.error} Invalid Metric`);
-		return null;
-	}
-	return metrics[groupByIndex];
-
-};
-
 const printAPIPoints = (points) => {
 	console.log(`API Points:
   \tused\t\t-\t${points.cost}
   \tremaining\t-\t${points.remaining}`);
-};
-
-const getItemMetrics = (item) => {
-	const { nameWithOwner } = item;
-	const { branchProtectionRule } = item.defaultBranchRef || {};
-	const {
-		allowsForcePushes,
-		allowsDeletions,
-		dismissesStaleReviews,
-		requiredApprovingReviewCount,
-		requiresApprovingReviews,
-		requiresCodeOwnerReviews,
-		requiresConversationResolution,
-		pattern,
-	} = branchProtectionRule || {};
-
-	return {
-		allowsDeletions,
-		allowsForcePushes,
-		dismissesStaleReviews,
-		nameWithOwner,
-		pattern,
-		requiredApprovingReviewCount,
-		requiresApprovingReviews,
-		requiresCodeOwnerReviews,
-		requiresConversationResolution,
-	};
 };
 
 const getRepositories = async (generateQuery, flags = {}, filter = undefined) => {
@@ -167,9 +126,6 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 				},
 			},
 		);
-		if (cache) {
-			dumpCache(`Response_${(new Date()).toISOString()}.json`, JSON.stringify(response, null, '\t'));
-		}
 		const {
 			viewer: {
 				repositories: { nodes, pageInfo },
@@ -204,62 +160,6 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 	}
 
 	return { points, repositories };
-};
-
-const sortRows = (rows) => rows.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
-
-// eslint-disable-next-line max-params
-const generateTableData = (metrics, rows, groupBy, sort) => {
-	let repositories = rows;
-	const tableData = { body: [], head: [] };
-	if (sort) {
-		repositories = sortRows(rows);
-	}
-	if (groupBy) {
-		const otherMetrics = metrics.filter((metric) => metric.name !== groupBy.name);
-
-		tableData.head = [
-			...groupBy.dontPrint ? [] : [groupBy.name],
-			...otherMetrics.filter((metric) => !metric.dontPrint).map((metric) => metric.name),
-		];
-
-		const groupedObj = {};
-		repositories.forEach((item) => {
-			const key = groupBy.extract(item);
-			const value = otherMetrics.filter((metric) => !metric.dontPrint).map((metric) => metric.extract(item));
-			if (key in groupedObj) {
-				groupedObj[key] = groupedObj[key].map((v, i) => `${v}\n${value[i]}`);
-			} else { groupedObj[key] = value; }
-		});
-
-		Object.entries(groupedObj).forEach((item) => {
-			const [key, value] = item;
-			tableData.body.push([
-				...groupBy.dontPrint ? [] : [key],
-				...value,
-			]);
-		});
-	} else {
-		tableData.head = metrics.filter((metric) => !metric.dontPrint).map((metric) => metric.name);
-		repositories.forEach((item) => {
-			tableData.body.push(metrics.filter((metric) => !metric.dontPrint).map((metric) => metric.extract(item)));
-		});
-	}
-	return tableData;
-
-};
-
-const createTable = (tableData) => {
-	const table = new Table({ head: tableData.head });
-	tableData.body.forEach((item) => {
-		table.push(item);
-	});
-	return table;
-};
-
-const generateTable = (metrics, rows, { groupBy, sort } = {}) => {
-	const data = generateTableData(metrics, rows, groupBy, sort);
-	return createTable(data);
 };
 
 const getMetricOut = (value, diffValue, { actual, goodness }) => {
@@ -414,19 +314,11 @@ const generateDetailTable = (metrics, rowData, {
 };
 
 module.exports = {
-	checkNull,
-	createTable,
 	dumpCache,
 	generateDetailTable,
-	generateTable,
-	generateTableData,
 	getDiffSymbol,
-	getGroupByMetric,
-	getItemMetrics,
 	getRepositories,
-	getSymbol,
 	isConfigValid,
 	listMetrics,
 	printAPIPoints,
-	sortRows,
 };

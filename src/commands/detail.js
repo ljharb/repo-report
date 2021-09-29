@@ -3,10 +3,10 @@
 'use strict';
 
 const {
+	listMetrics,
 	printAPIPoints,
 	getRepositories,
 	generateDetailTable,
-	getGroupByMetric,
 } = require('../utils');
 
 const { getMetrics } = require('../metrics');
@@ -119,6 +119,9 @@ const generateQuery = (endCursor, {
 };
 
 const detail = async (flags) => {
+	if (flags.m) {
+		return listMetrics(getMetrics(metricNames));
+	}
 	let metrics;
 	if (flags.p?.length > 0) {
 		metrics = getMetrics([
@@ -130,18 +133,10 @@ const detail = async (flags) => {
 	} else {
 		metrics = getMetrics(metricNames);
 	}
-	// Get index of metric to be grouped by
-	let groupBy;
-	if (flags.g) {
-		groupBy = getGroupByMetric(flags.g, metrics);
-		if (groupBy === null) {
-			return null;
-		}
-	}
 
 	// Additional Filter on repos
 	let filter;
-	if (flags.f?.includes('templates')) {
+	if (flags.f?.length === 1 && flags.f[0] === 'templates') {
 		filter = (repo) => repo.isTemplate;
 	}
 

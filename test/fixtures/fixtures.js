@@ -1,5 +1,7 @@
 'use strict';
 
+const symbols = require('../../src/symbols');
+
 // const fixtures = require("@octokit/fixtures");
 const mockRepositoriesData = {
 	data: {
@@ -76,16 +78,42 @@ const mockRepositoriesData = {
 };
 
 const tableOutput = {
-	0: ['name/project-eraser', 'ADMIN', 'master'],
-	1: ['name/guidelines-questionnaire', 'ADMIN', 'master'],
-	2: ['name/challenges-book', 'ADMIN', 'master'],
-	3: ['🔒 name/microservice', 'ADMIN', 'master'],
-	4: ['name/responsive-design', 'ADMIN', 'master'],
-	5: ['name/media-upload-app', 'ADMIN', 'develop'],
-	options: { chars:
-    { top: '─', 'top-mid': '┬', 'top-left': '┌', 'top-right': '┐', bottom: '─', 'bottom-mid': '┴', 'bottom-left': '└', 'bottom-right': '┘', left: '│', 'left-mid': '├', mid: '─', 'mid-mid': '┼', right: '│', 'right-mid': '┤', middle: '│' },
-	truncate: '…', colWidths: [], colAligns: [], style: { 'padding-left': 1, 'padding-right': 1, head: ['red'], border: ['grey'], compact: false }, head: ['Repository', 'Access', 'DefBranch'] },
-	length: 6 };
+	0: [
+		'name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design\nname/media-upload-app',
+		symbols.error,
+	],
+	options: {
+		chars: {
+			top: '─',
+			'top-mid': '┬',
+			'top-left': '┌',
+			'top-right': '┐',
+			bottom: '─',
+			'bottom-mid': '┴',
+			'bottom-left': '└',
+			'bottom-right': '┘',
+			left: '│',
+			'left-mid': '├',
+			mid: '─',
+			'mid-mid': '┼',
+			right: '│',
+			'right-mid': '┤',
+			middle: '│',
+		},
+		truncate: '…',
+		colWidths: [],
+		colAligns: [],
+		style: {
+			'padding-left': 1,
+			'padding-right': 1,
+			head: ['red'],
+			border: ['grey'],
+			compact: false,
+		},
+		head: ['Repository', 'Access\nDefBranch'],
+	},
+	length: 1,
+};
 
 const DetailTableColumns = [
 	'Repository',

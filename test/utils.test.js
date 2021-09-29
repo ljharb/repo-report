@@ -3,27 +3,16 @@
 'use strict';
 
 const test = require('tape');
-const Table = require('cli-table');
-const symbols = require('../src/symbols');
 const { stdout } = require('../test/test-utils');
 
 const { mockRepositoriesData: { data: { viewer: { repositories } } },
 	tableOutput,
-	sortedRepositories,
-	tableData,
-	sortedTableData,
 } = require('./fixtures/fixtures');
 
 const {
 	listMetrics,
-	getGroupByMetric,
-	checkNull,
 	printAPIPoints,
-	generateTable,
-	getSymbol,
-	createTable,
-	generateTableData,
-	sortRows,
+	generateDetailTable,
 } = require('../src/utils');
 
 const metrics = [
@@ -54,84 +43,7 @@ test('listMetrics', (t) => {
 	});
 });
 
-test('getGroupByMetric', (t) => {
-	t.plan(2);
-	t.test('return the correct metric', (t) => {
-		const actualMetric = getGroupByMetric('Access', metrics);
-		const expectedResults = { name: 'Access', extract: (item) => item.viewerPermission };
-		t.equal(expectedResults.toString(), actualMetric.toString());
-		t.end();
-	});
-
-	t.test('return null when the metric is not present', (t) => {
-		const output = stdout();
-		const actualMetric = getGroupByMetric('newAccess', metrics);
-		const expectedResults = null;
-		output.restore();
-		t.deepEqual(output.loggedData, [`${symbols.error} Invalid Metric\n`]);
-		t.deepEqual(expectedResults, actualMetric);
-		t.end();
-	});
-});
-
-test('checkNull', (t) => {
-	t.plan(2);
-	t.test('return value when it is not null', (t) => {
-		const valueToBeChecked = 'access';
-		const actualResult = checkNull(valueToBeChecked);
-		const expectedResults = valueToBeChecked;
-		t.equal(expectedResults, actualResult);
-		t.end();
-	});
-
-	t.test('return --- when value is null', (t) => {
-		let valueToBeChecked;
-		const actualResult = checkNull(valueToBeChecked);
-		const expectedResults = '---';
-		t.equal(expectedResults, actualResult);
-		t.end();
-	});
-});
-
-test('generateTable,', (t) => {
-	t.plan(2);
-	t.test('return a generated table', (t) => {
-		const actualResult = generateTable(metrics, repositories.nodes);
-		t.deepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutput));
-		t.end();
-	});
-
-	const columns = [
-		{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
-		{ name: 'Access', extract: (item) => item.viewerPermission },
-		{ name: 'branch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
-	];
-	t.test('return invalid output', (t) => {
-		const actualResult = generateTable(columns, repositories.nodes);
-		t.notDeepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutput));
-		t.end();
-	});
-});
-
-// get symbols
-test('getSymbol,', (t) => {
-	t.plan(2);
-	t.test('return success symbol if value is true', (t) => {
-		const expectedResults = true;
-		const actualResult = getSymbol(true);
-		t.equal(expectedResults, actualResult);
-		t.end();
-	});
-
-	t.test('return error symbol if value is false', (t) => {
-		const expectedResults = false;
-		const actualResult = getSymbol('');
-		t.equal(expectedResults, actualResult);
-		t.end();
-	});
-});
-
-test('printAPIPoints,', (t) => {
+test('printAPIPoints', (t) => {
 	t.plan(2);
 	t.test('returns the API points correctly', (t) => {
 		const output = stdout();
@@ -153,69 +65,22 @@ test('printAPIPoints,', (t) => {
 	});
 });
 
-test('sortRows', (t) => {
-	const repositoriesData = [...repositories.nodes];
-	t.test('return the repositories correctly sorted', (t) => {
-		const actualResult = sortRows(repositories.nodes);
-		t.deepEqual(actualResult, sortedRepositories);
+test('generateDetailTable,', (t) => {
+	t.plan(2);
+	t.test('return a generated detail table', (t) => {
+		const actualResult = generateDetailTable(metrics, repositories.nodes);
+		t.deepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutput));
 		t.end();
 	});
 
-	t.test('return the repositories correctly sorted', (t) => {
-		const result = sortRows(repositories.nodes);
-		t.notDeepEqual(result, repositoriesData);
-		t.end();
-	});
-});
-
-test('generateTableData', (t) => {
-	t.test(' generateTableData returns the correct table data required to generate a table', (t) => {
-		const actualResult = generateTableData(metrics, [...repositories.nodes]);
-		t.deepEqual(actualResult, tableData);
-		t.end();
-	});
-
-	t.test('generateTableData returns the correct sorted table data required to generate a table', (t) => {
-		const actualResult = generateTableData(metrics, [...repositories.nodes], '', true);
-		t.deepEqual(actualResult, sortedTableData);
-		t.end();
-	});
-
-	t.test('generateTableData returns the correct table data grouped as by access', (t) => {
-		const groupByAccess = { name: 'Access', extract: (item) => item.viewerPermission };
-		const actualResult = generateTableData(metrics, [...repositories.nodes], groupByAccess, true);
-		t.deepEqual(actualResult.head, ['Access', 'Repository', 'DefBranch']);
-		t.end();
-	});
-
-	t.test('generateTableData returns the wrong table data when grouped as by access', (t) => {
-		const groupByDefBranch = { name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' };
-		const actualResult = generateTableData(metrics, [...repositories.nodes], groupByDefBranch, true);
-		t.notDeepEqual(actualResult.head, ['Repository', 'Access', 'DefBranch']);
-		t.end();
-	});
-
-});
-
-test('createTable', (t) => {
-
-	t.test('return correctly generated values for table row 0 given the right data is passed', (t) => {
-		const table = createTable(tableData);
-		t.ok(table instanceof Table);
-		t.deepEqual(table[0], ['name/challenges-book', 'ADMIN', 'master']);
-		t.end();
-	});
-
-	t.test('return correctly generated values for table header given the right data is passed', (t) => {
-		const table = createTable(tableData);
-		t.ok(table instanceof Table);
-		t.deepEqual(table.options.head, ['Repository', 'Access', 'DefBranch']);
-		t.end();
-	});
-
-	t.test('returns correctlength of table given the right data is passed', (t) => {
-		const table = createTable(tableData);
-		t.equal(table.length, 6);
+	const columns = [
+		{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
+		{ name: 'Access', extract: (item) => item.viewerPermission },
+		{ name: 'branch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
+	];
+	t.test('return invalid output', (t) => {
+		const actualResult = generateDetailTable(columns, repositories.nodes);
+		t.notDeepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutput));
 		t.end();
 	});
 });
