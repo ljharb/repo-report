@@ -20,12 +20,13 @@ const { isConfigValid } = require('../src/utils');
 const {
 	GH_TOKEN,
 	GITHUB_TOKEN,
+	XDG_CONFIG_HOME,
 } = process.env;
 
 // Variable to prevent calling isConfigValid twice
 let configValidated;
 const defaultConfigPaths = [].concat(
-	process.env.XDG_CONFIG_HOME ? path.join(process.env.XDG_CONFIG_HOME, 'repo-report.json') : [],
+	XDG_CONFIG_HOME ? path.join(XDG_CONFIG_HOME, 'repo-report.json') : [],
 	path.join(homedir, '.repo-report.json'),
 );
 
