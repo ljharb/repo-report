@@ -11,9 +11,7 @@ const metricSchema = {
 	id: '/metrics',
 	properties: {
 		Access: {
-			items: {
-				type: 'string',
-			},
+			items: { type: 'string' },
 			maxItems: 5,
 			minItems: 1,
 			type: 'array',
@@ -25,13 +23,13 @@ const metricSchema = {
 		BlankIssuesEnabled: { type: 'boolean' },
 		DefBranch: {
 			oneOf: [
-				{ type: 'string' }, {
-					items: {
-						type: ['string', 'null'],
-					},
+				{ type: 'string' },
+				{ type: 'null' },
+				{
+					items: { type: ['string', 'null'] },
 					type: 'array',
 					uniqueItems: true,
-				}, { type: 'null' },
+				},
 			],
 		},
 		DeleteOnMerge: { type: 'boolean' },
@@ -40,13 +38,13 @@ const metricSchema = {
 		IssuesEnabled: { type: 'boolean' },
 		License: {
 			oneOf: [
-				{ type: 'string' }, {
-					items: {
-						type: ['string', 'null'],
-					},
+				{ type: 'string' },
+				{ type: 'null' },
+				{
+					items: { type: ['string', 'null'] },
 					type: 'array',
 					uniqueItems: true,
-				}, { type: 'null' },
+				},
 			],
 		},
 		MergeStrategies: {
@@ -56,7 +54,9 @@ const metricSchema = {
 		},
 		ProjectsEnabled: { type: 'boolean' },
 		ReqApprovingReviewCount: {
-			maximum: 6, minimum: 1, type: 'integer',
+			maximum: 6,
+			minimum: 1,
+			type: 'integer',
 		},
 		ReqApprovingReviews: { type: 'boolean' },
 		ReqCodeOwnerReviews: { type: 'boolean' },
@@ -65,19 +65,26 @@ const metricSchema = {
 		Subscription: {
 			oneOf: [
 				{
-					'enum': [
-						'IGNORED', 'SUBSCRIBED', 'UNSUBSCRIBED', null,
+					enum: [
+						'IGNORED',
+						'SUBSCRIBED',
+						'UNSUBSCRIBED',
+						null,
 					],
 					type: ['string', 'null'],
 				},
 				{
 					items: {
-						'enum': [
-							'IGNORED', 'SUBSCRIBED', 'UNSUBSCRIBED', null,
+						enum: [
+							'IGNORED',
+							'SUBSCRIBED',
+							'UNSUBSCRIBED',
+							null,
 						],
 						type: ['string', 'null'],
 					},
 					type: 'array',
+					uniqueItems: true,
 				},
 			],
 		},
@@ -94,9 +101,7 @@ const repoSchema = {
 		focus: {
 			oneOf: [
 				{ type: 'string' }, {
-					items: {
-						type: 'string',
-					},
+					items: { type: 'string' },
 					type: 'array',
 					uniqueItems: true,
 				},
@@ -105,9 +110,7 @@ const repoSchema = {
 		ignore: {
 			oneOf: [
 				{ type: 'string' }, {
-					items: {
-						type: 'string',
-					},
+					items: { type: 'string' },
 					type: 'array',
 					uniqueItems: true,
 				},
@@ -123,10 +126,9 @@ const overridesSchema = {
 		metrics: { $ref: '/metrics' },
 		repos: {
 			oneOf: [
-				{ type: 'string' }, {
-					items: {
-						type: 'string',
-					},
+				{ type: 'string' },
+				{
+					items: { type: 'string' },
 					type: 'array',
 					uniqueItems: true,
 				},
