@@ -9,6 +9,8 @@ const { graphql } = require('@octokit/graphql');
 const Table = require('cli-table');
 const minimatch = require('minimatch');
 const colors = require('colors/safe');
+const path = require('path');
+const mkdirp = require('mkdirp');
 
 const symbols = require('./symbols');
 const defaultConfig = require('../config/defaults.json');
@@ -47,15 +49,10 @@ const isConfigValid = (configPaths) => {
 	return { error, valid };
 };
 
-const dumpCache = (date, filename, content) => {
-	const cacheDir = `${__dirname}/../cache`;
-	if (!fs.existsSync(cacheDir)) {
-		fs.mkdirSync(cacheDir);
-	}
-	const dateDir = `${__dirname}/../cache/${date}`;
-	if (!fs.existsSync(dateDir)) {
-		fs.mkdirSync(dateDir);
-	}
+// eslint-disable-next-line max-params
+const dumpCache = (cacheDir, date, filename, content) => {
+	const dateDir = path.join(cacheDir, date);
+	mkdirp.sync(dateDir);
 	fs.writeFileSync(`${dateDir}/${filename}`, content);
 };
 
@@ -112,7 +109,11 @@ const printAPIPoints = (points) => {
 };
 
 const getRepositories = async (generateQuery, flags = {}, filter = undefined) => {
-	const { cache, token } = flags;
+	const {
+		cache,
+		cacheDir,
+		token,
+	} = flags;
 
 	const date = new Date();
 	let endCursor;
@@ -142,7 +143,12 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 		points.remaining = rateLimit.remaining;
 		repositories = repositories.concat(nodes);
 		if (cache) {
-			dumpCache(date.toISOString(), `response${requestCount > 1 || hasNextPage ? `-${requestCount}` : ''}.json`, JSON.stringify(response, null, '\t'));
+			dumpCache(
+				cacheDir,
+				date.toISOString(),
+				`response${requestCount > 1 || hasNextPage ? `-${requestCount}` : ''}.json`,
+				JSON.stringify(response, null, '\t'),
+			);
 		}
 		requestCount += 1;
 	} while (hasNextPage);
@@ -152,7 +158,12 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 	}
 
 	if (cache) {
-		dumpCache(date.toISOString(), 'repos.json', JSON.stringify(repositories, null, '\t'));
+		dumpCache(
+			cacheDir,
+			date.toISOString(),
+			'repos.json',
+			JSON.stringify(repositories, null, '\t'),
+		);
 	}
 
 	const { repositories: { focus = [], ignore = [] } } = config;

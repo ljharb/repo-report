@@ -17,6 +17,7 @@ const {
 	GH_TOKEN,
 	GITHUB_TOKEN,
 	XDG_CONFIG_HOME,
+	XDG_CACHE_DIR,
 } = process.env;
 
 // Variable to prevent calling isConfigValid twice
@@ -25,6 +26,7 @@ const defaultConfigPaths = [].concat(
 	XDG_CONFIG_HOME ? path.join(XDG_CONFIG_HOME, 'repo-report.json') : [],
 	path.join(homedir, '.repo-report.json'),
 );
+const cachePath = XDG_CACHE_DIR ? path.join(XDG_CACHE_DIR, '.repo-report') : path.join(homedir, '.repo-report', 'cache');
 
 const getCommandMeta = (yargs) => yargs
 	.usage('Usage: $0 [options]')
@@ -79,8 +81,14 @@ const getCommandMeta = (yargs) => yargs
 
 	})
 	.option('cache', {
-		describe: 'Dump API requests and cleaned up data in cache/',
+		default: false,
+		describe: 'Dump API requests and cleaned up data in `--cacheDir` path',
 	})
+	.option('cacheDir', {
+		default: cachePath,
+		normalize: true,
+	})
+	.hide('cacheDir')
 	.alias('s', 'sort')
 	.boolean('s')
 	.describe('s', 'Sort repos alphabetically')
