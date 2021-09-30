@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 /* eslint-disable no-throw-literal */
-/* eslint-disable no-magic-numbers */
 
 'use strict';
 
