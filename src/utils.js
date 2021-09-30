@@ -28,12 +28,16 @@ const isConfigValid = (configPaths) => {
 			break;
 		} catch (e) {
 			if (e instanceof SyntaxError) {
-				return { error: `${symbols.error} Invalid JSON syntax at ${currPath}`, valid: false };
+				return { error: `Invalid JSON syntax at ${currPath}`, valid: false };
 			}
 		}
 	}
 	if (userConfig) {
-		config = { ...config, ...userConfig };
+		config = {
+			metrics: { ...config.metrics, ...userConfig.metrics },
+			overrides: userConfig.overrides || [],
+			repositories: { ...config.repositories, ...userConfig.repositories },
+		};
 	} else {
 		console.log(colors.red(`${symbols.error} No config file found`));
 		console.log('Using defaults instead...');

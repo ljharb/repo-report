@@ -14,17 +14,16 @@ const metricSchema = {
 			items: { type: 'string' },
 			maxItems: 5,
 			minItems: 1,
-			type: 'array',
+			type: ['array', 'null'],
 			uniqueItems: true,
 		},
-		AllowsDeletions: { type: 'boolean' },
-		AllowsForcePushes: { type: 'boolean' },
-		Archived: { type: 'boolean' },
-		BlankIssuesEnabled: { type: 'boolean' },
+		AllowsDeletions: { type: ['boolean', 'null'] },
+		AllowsForcePushes: { type: ['boolean', 'null'] },
+		Archived: { type: ['boolean', 'null'] },
+		BlankIssuesEnabled: { type: ['boolean', 'null'] },
 		DefBranch: {
 			oneOf: [
-				{ type: 'string' },
-				{ type: 'null' },
+				{ type: ['string', 'null'] },
 				{
 					items: { type: ['string', 'null'] },
 					type: 'array',
@@ -32,14 +31,13 @@ const metricSchema = {
 				},
 			],
 		},
-		DeleteOnMerge: { type: 'boolean' },
-		DismissesStaleReviews: { type: 'boolean' },
-		HasStarred: { type: 'boolean' },
-		IssuesEnabled: { type: 'boolean' },
+		DeleteOnMerge: { type: ['boolean', 'null'] },
+		DismissesStaleReviews: { type: ['boolean', 'null'] },
+		HasStarred: { type: ['boolean', 'null'] },
+		IssuesEnabled: { type: ['boolean', 'null'] },
 		License: {
 			oneOf: [
-				{ type: 'string' },
-				{ type: 'null' },
+				{ type: ['string', 'null'] },
 				{
 					items: { type: ['string', 'null'] },
 					type: 'array',
@@ -48,20 +46,25 @@ const metricSchema = {
 			],
 		},
 		MergeStrategies: {
-			MERGE: { type: 'boolean' },
-			REBASE: { type: 'boolean' },
-			SQUASH: { type: 'boolean' },
+			additionalProperties: false,
+			properties: {
+				MERGE: { type: ['boolean', 'null'] },
+				REBASE: { type: ['boolean', 'null'] },
+				SQUASH: { type: ['boolean', 'null'] },
+			},
+			type: ['object', 'null'],
+
 		},
-		ProjectsEnabled: { type: 'boolean' },
+		ProjectsEnabled: { type: ['boolean', 'null'] },
 		ReqApprovingReviewCount: {
 			maximum: 6,
 			minimum: 1,
-			type: 'integer',
+			type: ['integer', 'null'],
 		},
-		ReqApprovingReviews: { type: 'boolean' },
-		ReqCodeOwnerReviews: { type: 'boolean' },
-		ReqConversationResolution: { type: 'boolean' },
-		SecurityPolicyEnabled: { type: 'boolean' },
+		ReqApprovingReviews: { type: ['boolean', 'null'] },
+		ReqCodeOwnerReviews: { type: ['boolean', 'null'] },
+		ReqConversationResolution: { type: ['boolean', 'null'] },
+		SecurityPolicyEnabled: { type: ['boolean', 'null'] },
 		Subscription: {
 			oneOf: [
 				{
@@ -88,9 +91,8 @@ const metricSchema = {
 				},
 			],
 		},
-		WikiEnabled: { type: 'boolean' },
+		WikiEnabled: { type: ['boolean', 'null'] },
 	},
-	required: ['DefBranch'],
 	type: 'object',
 };
 
@@ -100,7 +102,8 @@ const repoSchema = {
 	properties: {
 		focus: {
 			oneOf: [
-				{ type: 'string' }, {
+				{ type: 'string' },
+				{
 					items: { type: 'string' },
 					type: 'array',
 					uniqueItems: true,
@@ -109,7 +112,8 @@ const repoSchema = {
 		},
 		ignore: {
 			oneOf: [
-				{ type: 'string' }, {
+				{ type: 'string' },
+				{
 					items: { type: 'string' },
 					type: 'array',
 					uniqueItems: true,
