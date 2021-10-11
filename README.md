@@ -14,11 +14,17 @@ CLI to list all repos a user has access to, and report on their configuration in
 # Installation
 
 - `npm install` to install all dependencies
-- create .env file and initialize GH\_TOKEN or GITHUB\_TOKEN (in order of precedence) with your Github token
+- create `.env` file and initialize `GH_TOKEN` or `GITHUB_TOKEN` (in order of precedence) with your Github token
 
-# Usage
+# Usage (for public)
 
- - `node ./src/index.js list` to have a list of repos with different fields: access, default branch, etc.
+- generate a personal access token using github [here](https://github.com/settings/tokens) and add the `repo` scope to it.
+- on the terminal run `export GH_TOKEN=<the personal access token generated>`
+- run `npx repo-report`
+
+# Usage (for Contributors)
+
+- execute `./bin/run` to get a report of all your repositories in the terminal
 
 [package-url]: https://npmjs.org/package/repo-report
 [npm-version-svg]: https://versionbadg.es/ljharb/repo-report.svg
