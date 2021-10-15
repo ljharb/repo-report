@@ -5,8 +5,10 @@
 const test = require('tape');
 const { stdout } = require('../test/test-utils');
 
-const { mockRepositoriesData: { data: { viewer: { repositories } } },
+const {
+	mockRepositoriesData: { data: { viewer: { repositories } } },
 	tableOutput,
+	tableOutputActual,
 } = require('./fixtures/fixtures');
 
 const {
@@ -24,6 +26,7 @@ const metrics = [
 
 test('listMetrics', (t) => {
 	t.plan(2);
+
 	t.test('output each metric name', (t) => {
 		const output = stdout();
 		const expectedResults = ['- Repository\n', '- Access\n', '- DefBranch\n', '- isPrivate\n'];
@@ -45,6 +48,7 @@ test('listMetrics', (t) => {
 
 test('printAPIPoints', (t) => {
 	t.plan(2);
+
 	t.test('returns the API points correctly', (t) => {
 		const output = stdout();
 		const expectedResults = ['API Points:\n  \tused\t\t-\t2\n  \tremaining\t-\t4997\n'];
@@ -66,10 +70,17 @@ test('printAPIPoints', (t) => {
 });
 
 test('generateDetailTable,', (t) => {
-	t.plan(2);
+	t.plan(3);
+
 	t.test('return a generated detail table', (t) => {
 		const actualResult = generateDetailTable(metrics, repositories.nodes);
 		t.deepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutput));
+		t.end();
+	});
+
+	t.test('return a generated detail table with --actual option', (t) => {
+		const actualResult = generateDetailTable(metrics, repositories.nodes, { actual: true });
+		t.deepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutputActual));
 		t.end();
 	});
 
@@ -78,6 +89,7 @@ test('generateDetailTable,', (t) => {
 		{ name: 'Access', extract: (item) => item.viewerPermission },
 		{ name: 'branch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
 	];
+
 	t.test('return invalid output', (t) => {
 		const actualResult = generateDetailTable(columns, repositories.nodes);
 		t.notDeepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutput));

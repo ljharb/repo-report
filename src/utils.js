@@ -278,6 +278,16 @@ const sortRowsByErrors = (a, b) => {
 	return bErrCount - aErrCount;
 };
 
+const generateStatsRow = (rows) => {
+
+	const totalRows = rows.length;
+
+	return rows[0].map((col, i) => {
+		const goodRows = totalRows - rows.filter((row) => row[i] === symbols.error).length;
+		return i === 0 ? 'Stats' : `${Math.round(100 * goodRows / totalRows)}% (${goodRows}/${totalRows})`;
+	});
+};
+
 const generateDetailTable = (metrics, rowData, {
 	unactionable,
 	sort,
@@ -308,10 +318,16 @@ const generateDetailTable = (metrics, rowData, {
 	rows.sort(sortRowsByErrors);
 
 	let table;
+
 	if (all) {
 		table = new Table({
 			head: filteredMetrics.map((metric) => metric.name),
 		});
+
+		if (!actual) {
+			table.push(generateStatsRow(rows));
+		}
+
 		rows.forEach((row) => {
 			table.push(row);
 		});
@@ -320,7 +336,11 @@ const generateDetailTable = (metrics, rowData, {
 		table = new Table({
 			head,
 		});
-		collapseRows(tableRows, 0).forEach((row) => {
+		const collapsedRows = collapseRows(tableRows, 0);
+		if (!actual) {
+			table.push(generateStatsRow(collapsedRows));
+		}
+		collapsedRows.forEach((row) => {
 			table.push(row);
 		});
 

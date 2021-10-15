@@ -78,7 +78,9 @@ const mockRepositoriesData = {
 };
 
 const tableOutput = {
-	0: [
+
+	0: ['Stats', '0% (0/1)'],
+	1: [
 		'name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design\nname/media-upload-app',
 		symbols.error,
 	],
@@ -112,7 +114,43 @@ const tableOutput = {
 		},
 		head: ['Repository', 'Access\nDefBranch'],
 	},
-	length: 1,
+	length: 2,
+};
+
+const tableOutputActual = {
+	0: ['name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design', 'ADMIN', 'master'],
+	1: ['name/media-upload-app', 'ADMIN', 'develop'],
+	options: {
+		chars: {
+			top: '─',
+			'top-mid': '┬',
+			'top-left': '┌',
+			'top-right': '┐',
+			bottom: '─',
+			'bottom-mid': '┴',
+			'bottom-left': '└',
+			'bottom-right': '┘',
+			left: '│',
+			'left-mid': '├',
+			mid: '─',
+			'mid-mid': '┼',
+			right: '│',
+			'right-mid': '┤',
+			middle: '│',
+		},
+		truncate: '…',
+		colWidths: [],
+		colAligns: [],
+		style: {
+			'padding-left': 1,
+			'padding-right': 1,
+			head: ['red'],
+			border: ['grey'],
+			compact: false,
+		},
+		head: ['Repository', 'Access', 'DefBranch'],
+	},
+	length: 2,
 };
 
 const DetailTableColumns = [
@@ -140,35 +178,47 @@ const DetailTableColumns = [
 ];
 
 const sortedRepositories = [
-	{ name: 'challenges-book',
+	{
+		name: 'challenges-book',
 		nameWithOwner: 'name/challenges-book',
 		isPrivate: false,
 		defaultBranchRef: { name: 'master' },
-		viewerPermission: 'ADMIN' },
-	{ name: 'guidelines-questionnaire',
+		viewerPermission: 'ADMIN',
+	},
+	{
+		name: 'guidelines-questionnaire',
 		nameWithOwner: 'name/guidelines-questionnaire',
 		isPrivate: false,
 		defaultBranchRef: { name: 'master' },
-		viewerPermission: 'ADMIN' },
-	{ name: 'media-upload-app',
+		viewerPermission: 'ADMIN',
+	},
+	{
+		name: 'media-upload-app',
 		nameWithOwner: 'name/media-upload-app',
 		isPrivate: false,
 		defaultBranchRef: { name: 'develop' },
-		viewerPermission: 'ADMIN' },
-	{ name: 'microservice',
+		viewerPermission: 'ADMIN',
+	},
+	{
+		name: 'microservice',
 		nameWithOwner: 'name/microservice',
 		isPrivate: true, defaultBranchRef: { name: 'master' },
-		viewerPermission: 'ADMIN' },
-	{ name: 'project-eraser',
+		viewerPermission: 'ADMIN',
+	},
+	{
+		name: 'project-eraser',
 		nameWithOwner: 'name/project-eraser',
 		isPrivate: false,
 		defaultBranchRef: { name: 'master' },
-		viewerPermission: 'ADMIN' },
-	{ name: 'responsive-design',
+		viewerPermission: 'ADMIN',
+	},
+	{
+		name: 'responsive-design',
 		nameWithOwner: 'name/responsive-design',
 		isPrivate: false,
 		defaultBranchRef: { name: 'master' },
-		viewerPermission: 'ADMIN' },
+		viewerPermission: 'ADMIN',
+	},
 ];
 
 const tableData = {
@@ -197,6 +247,7 @@ const sortedTableData = {
 module.exports = {
 	mockRepositoriesData,
 	tableOutput,
+	tableOutputActual,
 	DetailTableColumns,
 	sortedRepositories,
 	tableData,
