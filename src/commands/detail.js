@@ -19,6 +19,7 @@ const metricNames = [
 	'IssuesEnabled',
 	'ProjectsEnabled',
 	'WikiEnabled',
+	'AllowsForking',
 	'Archived',
 	'AutoMergeAllowed',
 	'BlankIssuesEnabled',
@@ -87,6 +88,7 @@ const generateQuery = (endCursor, {
 		hasIssuesEnabled
 		hasProjectsEnabled
 		hasWikiEnabled
+		forkingAllowed
 		isArchived
 		autoMergeAllowed
 		isBlankIssuesEnabled

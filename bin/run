@@ -60,6 +60,7 @@ const getCommandMeta = (yargs) => yargs
 			'IssuesEnabled',
 			'ProjectsEnabled',
 			'WikiEnabled',
+			'AllowsForking',
 			'Archived',
 			'AutoMergeAllowed',
 			'BlankIssuesEnabled',

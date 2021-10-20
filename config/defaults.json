@@ -4,6 +4,7 @@
     "IssuesEnabled": true,
     "ProjectsEnabled": true,
     "WikiEnabled": false,
+    "AllowsForking": false,
     "Archived": false,
     "AutoMergeAllowed": false,
     "BlankIssuesEnabled": false,

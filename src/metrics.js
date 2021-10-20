@@ -16,6 +16,7 @@ const extractMethods = {
 	Access: (item) => item.viewerPermission,
 	AllowsDeletions: (item) => !!getBPRules(item)?.allowsDeletions,
 	AllowsForcePushes: (item) => !!getBPRules(item)?.allowsForcePushes,
+	AllowsForking: (item) => !item.forkingAllowed,
 	Archived: (item) => item.isArchived,
 	AutoMergeAllowed: (item) => !item.autoMergeAllowed,
 	BlankIssuesEnabled: (item) => item.isBlankIssuesEnabled,
@@ -42,6 +43,7 @@ const extractMethods = {
 const permissions = {
 	AllowsDeletions: ['ADMIN'],
 	AllowsForcePushes: ['ADMIN'],
+	AllowsForking: ['ADMIN'],
 	Archived: ['ADMIN'],
 	AutoMergeAllowed: ['ADMIN', 'MAINTAIN'],
 	BlankIssuesEnabled: ['ADMIN', 'MAINTAIN', 'WRITE'],

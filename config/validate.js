@@ -19,6 +19,7 @@ const metricSchema = {
 		},
 		AllowsDeletions: { type: ['boolean', 'null'] },
 		AllowsForcePushes: { type: ['boolean', 'null'] },
+		AllowsForking: { type: ['boolean', 'null'] },
 		Archived: { type: ['boolean', 'null'] },
 		AutoMergeAllowed: { type: ['boolean', 'null'] },
 		BlankIssuesEnabled: { type: ['boolean', 'null'] },
