@@ -20,6 +20,7 @@ const metricNames = [
 	'ProjectsEnabled',
 	'WikiEnabled',
 	'Archived',
+	'AutoMergeAllowed',
 	'BlankIssuesEnabled',
 	'SecurityPolicyEnabled',
 	'License',
@@ -87,6 +88,7 @@ const generateQuery = (endCursor, {
 		hasProjectsEnabled
 		hasWikiEnabled
 		isArchived
+		autoMergeAllowed
 		isBlankIssuesEnabled
 		isFork
 		isPrivate

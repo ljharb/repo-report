@@ -5,6 +5,7 @@
     "ProjectsEnabled": true,
     "WikiEnabled": false,
     "Archived": false,
+    "AutoMergeAllowed": false,
     "BlankIssuesEnabled": false,
     "SecurityPolicyEnabled": false,
     "License": ["MIT License", null],
