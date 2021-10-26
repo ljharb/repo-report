@@ -4,6 +4,7 @@
 'use strict';
 
 require('dotenv').config();
+const Metrics = require('../config/metrics.js');
 const Yargs = require('yargs');
 const colors = require('colors/safe');
 const homedir = require('os').homedir();
@@ -55,30 +56,7 @@ const getCommandMeta = (yargs) => yargs
 	})
 	.option('p', {
 		alias: 'pick',
-		choices: [
-			'Access',
-			'IssuesEnabled',
-			'ProjectsEnabled',
-			'WikiEnabled',
-			'AllowsForking',
-			'Archived',
-			'AutoMergeAllowed',
-			'BlankIssuesEnabled',
-			'SecurityPolicyEnabled',
-			'License',
-			'MergeStrategies',
-			'DeleteOnMerge',
-			'HasStarred',
-			'Subscription',
-			'DefBranch',
-			'AllowsForcePushes',
-			'AllowsDeletions',
-			'DismissesStaleReviews',
-			'ReqApprovingReviewCount',
-			'ReqApprovingReviews',
-			'ReqCodeOwnerReviews',
-			'ReqConversationResolution',
-		],
+		choices: Object.keys(Metrics),
 		describe: 'Pick metrics',
 
 	})

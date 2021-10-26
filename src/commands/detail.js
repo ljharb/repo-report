@@ -10,35 +10,10 @@ const {
 } = require('../utils');
 
 const { getMetrics } = require('../metrics');
+const Metrics = require('../../config/metrics.js');
 
 // Metric names and their extraction method to be used on the query result (Order is preserved)
-const metricNames = [
-	'Repository',
-	'isFork',
-	'Access',
-	'IssuesEnabled',
-	'ProjectsEnabled',
-	'WikiEnabled',
-	'AllowsForking',
-	'Archived',
-	'AutoMergeAllowed',
-	'BlankIssuesEnabled',
-	'SecurityPolicyEnabled',
-	'License',
-	'MergeStrategies',
-	'DeleteOnMerge',
-	'HasStarred',
-	'Subscription',
-	'DefBranch',
-	'AllowsForcePushes',
-	'AllowsDeletions',
-	'DismissesStaleReviews',
-	'ReqApprovingReviewCount',
-	'ReqApprovingReviews',
-	'ReqCodeOwnerReviews',
-	'ReqConversationResolution',
-	'isPrivate',
-];
+const metricNames = Object.keys(Metrics);
 
 const generateQuery = (endCursor, {
 	f,

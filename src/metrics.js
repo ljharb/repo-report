@@ -1,68 +1,10 @@
 'use strict';
 
-const symbols = require('./symbols');
-
-const getMergeStrategies = (item) => `${item.mergeCommitAllowed ? 'MERGE' : ''} ${item.squashMergeAllowed ? 'SQUASH' : ''} ${item.rebaseMergeAllowed ? 'REBASE' : ''}`.split(' ').filter((strat) => strat).join(',');
-
-/* eslint-disable no-magic-numbers */
-/* eslint-disable sort-keys */
+const Metrics = require('../config/metrics.js');
 
 const cmpAccess = (item, config) => config.includes(item.viewerPermission);
 const cmpLicense = (item, config) => config.includes(item.licenseInfo?.name || null);
 const cmpSubscription = (item, config) => config.includes(item.viewerSubscription);
-const getBPRules = (item) => item.defaultBranchRef?.branchProtectionRule;
-
-const extractMethods = {
-	Access: (item) => item.viewerPermission,
-	AllowsDeletions: (item) => !!getBPRules(item)?.allowsDeletions,
-	AllowsForcePushes: (item) => !!getBPRules(item)?.allowsForcePushes,
-	AllowsForking: (item) => !item.forkingAllowed,
-	Archived: (item) => item.isArchived,
-	AutoMergeAllowed: (item) => !item.autoMergeAllowed,
-	BlankIssuesEnabled: (item) => item.isBlankIssuesEnabled,
-	DefBranch: (item) => item.defaultBranchRef?.name || '---',
-	DeleteOnMerge: (item) => item.deleteBranchOnMerge,
-	DismissesStaleReviews: (item) => !!getBPRules(item)?.dismissesStaleReviews,
-	HasStarred: (item) => item.viewerHasStarred,
-	IssuesEnabled: (item) => item.hasIssuesEnabled,
-	License: (item) => item.licenseInfo?.name || '---',
-	MergeStrategies: getMergeStrategies,
-	ProjectsEnabled: (item) => item.hasProjectsEnabled,
-	Repository: (item) => `${item.isPrivate ? `${symbols.isPrivate} ` : ''}${item.isFork ? `${symbols.fork} ` : item.isPrivate ? ' ' : ''}${item.nameWithOwner}`,
-	ReqApprovingReviewCount: (item) => getBPRules(item)?.requiredApprovingReviewCount || 0,
-	ReqApprovingReviews: (item) => !!getBPRules(item)?.requiresApprovingReviews,
-	ReqCodeOwnerReviews: (item) => !!getBPRules(item)?.requiresCodeOwnerReviews,
-	ReqConversationResolution: (item) => !!getBPRules(item)?.requiresConversationResolution,
-	SecurityPolicyEnabled: (item) => item.isSecurityPolicyEnabled,
-	Subscription: (item) => item.viewerSubscription,
-	WikiEnabled: (item) => item.hasWikiEnabled,
-	isFork: (item) => item.isFork,
-	isPrivate: (item) => item.isPrivate,
-};
-
-const permissions = {
-	AllowsDeletions: ['ADMIN'],
-	AllowsForcePushes: ['ADMIN'],
-	AllowsForking: ['ADMIN'],
-	Archived: ['ADMIN'],
-	AutoMergeAllowed: ['ADMIN', 'MAINTAIN'],
-	BlankIssuesEnabled: ['ADMIN', 'MAINTAIN', 'WRITE'],
-	DefBranch: ['ADMIN'],
-	DeleteOnMerge: ['ADMIN'],
-	DismissesStaleReviews: ['ADMIN'],
-	HasStarred: ['ADMIN', 'MAINTAIN', 'WRITE', 'TRIAGE', 'READ'],
-	IssuesEnabled: ['ADMIN', 'MAINTAIN', 'WRITE'],
-	License: ['ADMIN', 'MAINTAIN', 'WRITE'],
-	MergeStrategies: ['ADMIN', 'MAINTAIN'],
-	ProjectsEnabled: ['ADMIN', 'MAINTAIN'],
-	ReqApprovingReviewCount: ['ADMIN'],
-	ReqApprovingReviews: ['ADMIN'],
-	ReqCodeOwnerReviews: ['ADMIN'],
-	ReqConversationResolution: ['ADMIN'],
-	SecurityPolicyEnabled: ['ADMIN', 'MAINTAIN', 'WRITE'],
-	Subscription: ['WRITE', 'ADMIN', 'MAINTAIN', 'WRITE', 'TRIAGE', 'READ'],
-	WikiEnabled: ['ADMIN', 'MAINTAIN'],
-};
 
 /* eslint-disable */
 const cmpMergeStrategies = (item, config) => {
@@ -85,15 +27,15 @@ const dontPrint = {
 };
 
 const getMetrics = (metrics) => {
-	const out = [];
-	metrics.forEach((name) => {
-		out.push({
+	const out = metrics.map((name) => {
+		const { permissions, extract } = Metrics[name];
+		return {
 			compare: compareMethods[name],
 			dontPrint: dontPrint[name],
-			extract: extractMethods[name],
+			extract,
 			name,
-			permissions: permissions[name],
-		});
+			permissions: permissions?.[name],
+		};
 	});
 	return out;
 };
