@@ -31,6 +31,9 @@ const cachePath = XDG_CACHE_DIR ? path.join(XDG_CACHE_DIR, '.repo-report') : pat
 const getCommandMeta = (yargs) => yargs
 	.usage('Usage: $0 [options]')
 
+	.option('gui', {
+		describe: 'Show output in the form of a webpage',
+	})
 	.option('unactionable', {
 		describe: `Shows values of metrics you lack permissions to change, with a ${symbols.unactionable} next to it`,
 	})

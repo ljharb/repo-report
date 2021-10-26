@@ -328,9 +328,31 @@ const generateDetailTable = (metrics, rowData, {
 	return table;
 };
 
+const generateGui = (table) => {
+
+	const output = {
+		metrics: [],
+		repos: [],
+		rows: [],
+	};
+
+	for (let i = 0; i < table.length; i++) {
+		output.rows.push(table[i.toString()]
+			.filter((e, j) => j !== 0)
+			.map((e) => (e === symbols.error ? 0 : 1)));
+		output.repos.push(table[i.toString()]
+			.filter((e, j) => j === 0));
+	}
+
+	table.options.head.forEach((element) => output.metrics.push(element));
+	output.metrics.shift();
+	return output;
+};
+
 module.exports = {
 	dumpCache,
 	generateDetailTable,
+	generateGui,
 	getDiffSymbol,
 	getRepositories,
 	isConfigValid,

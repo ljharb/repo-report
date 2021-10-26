@@ -1,0 +1,65 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="/public/style.css">
+</head>
+
+<body>
+
+    <div class="flex flex-col w-screen h-screen ">
+        <div id="commands" clas=""></div>
+        <div id="table" class="flex pt-40 px-20">
+            <div id="repositories" class="flex flex-col ">
+                <!-- This div must remain sticky and not scroll -->
+                <div
+                    class="border flex items-center bg-gray-300 font-black h-9 w-80 overflow-x-scroll overflow-y-hidden whitespace-nowrap">
+                    Repositories
+                </div>
+                <% table.repos.forEach(repo=> { %>
+                    <div
+                        class="border flex items-center bg-gray-100 font-normal h-9 w-80 overflow-x-scroll overflow-y-hidden whitespace-nowrap">
+                        <%= repo %>
+                    </div>
+                    <% }) %>
+            </div>
+
+            <div class="flex flex-col">
+                <div id="metrics" class="flex">
+                    <!-- This div must remain sticky and not scroll -->
+                    <% table.metrics.forEach(heading=> { %>
+                        <div
+                            class="border bg-gray-300 flex items-center font-black h-9 w-40 overflow-x-scroll overflow-y-hidden whitespace-nowrap px-auto">
+                            <%= heading %>
+                        </div>
+                        <% }) %>
+                </div>
+
+                <div id="values" class="flex flex-col">
+                    <!-- This div must scroll -->
+                    <% table.rows.forEach(row=> { %>
+                        <div class="flex">
+                            <% row.forEach(data=> { %>
+                                <div class="border flex items-center justify-center font-normal h-9 w-40">
+                                    <% if(data===1){ %>
+                                        <img width="24px" height="24px"
+                                            src="https://img.icons8.com/color/48/000000/checkmark--v1.png" />
+                                        <% } else{ %>
+                                            <img width="24px" height="24px"
+                                                src="https://img.icons8.com/emoji/48/000000/cross-mark-emoji.png" />
+                                            <% } %>
+                                </div>
+                                <% }) %>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

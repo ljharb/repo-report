@@ -7,9 +7,11 @@ const {
 	printAPIPoints,
 	getRepositories,
 	generateDetailTable,
+	generateGui,
 } = require('../utils');
 
 const { getMetrics } = require('../metrics');
+const { server } = require('../app.js');
 
 // Metric names and their extraction method to be used on the query result (Order is preserved)
 const metricNames = [
@@ -157,7 +159,11 @@ const detail = async (flags) => {
 	});
 
 	if (table) {
-		console.log(table.toString());
+		if (flags.gui) {
+			server(generateGui(table));
+		} else {
+			console.log(table.toString());
+		}
 	}
 
 	printAPIPoints(points);
