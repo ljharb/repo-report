@@ -3,7 +3,7 @@
 module.exports = {
 	darkMode: false,
 	plugins: [],
-	purge: [],
+	purge: ['./views/**/*.{ejs}'],
 	theme: {
 		extend: {},
 	},
