@@ -2,23 +2,22 @@
 
 const Metrics = require('../config/metrics.js');
 
-const getMetrics = (metrics) => {
-	const out = metrics.map((name) => {
-		const {
-			compare,
-			dontPrint,
-			extract,
-			permissions,
-		} = Metrics[name];
-		return {
-			compare,
-			dontPrint,
-			extract,
-			name,
-			permissions,
-		};
-	});
-	return out;
-};
+function mapper(name) {
+	const {
+		compare,
+		dontPrint,
+		extract,
+		permissions,
+	} = Metrics[name];
+	return {
+		compare,
+		dontPrint,
+		extract,
+		name,
+		permissions,
+	};
+}
 
-module.exports = { getMetrics };
+module.exports = function getMetrics(metrics) {
+	return metrics.map(mapper);
+};

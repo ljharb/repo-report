@@ -9,7 +9,7 @@ const {
 	generateDetailTable,
 } = require('../utils');
 
-const { getMetrics } = require('../metrics');
+const getMetrics = require('../metrics');
 const Metrics = require('../../config/metrics.js');
 
 // Metric names and their extraction method to be used on the query result (Order is preserved)
