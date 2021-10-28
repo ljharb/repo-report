@@ -4,21 +4,18 @@
 'use strict';
 
 require('dotenv').config();
-const Metrics = require('../config/metrics.js');
 const Yargs = require('yargs');
 const colors = require('colors/safe');
 const homedir = require('os').homedir();
 const path = require('path');
 
 const symbols = require('../src/symbols');
-const detail = require('../src/commands/detail');
 const { isConfigValid } = require('../src/utils');
 
 const {
 	GH_TOKEN,
 	GITHUB_TOKEN,
 	XDG_CONFIG_HOME,
-	XDG_CACHE_DIR,
 } = process.env;
 
 // Variable to prevent calling isConfigValid twice
@@ -27,72 +24,6 @@ const defaultConfigPaths = [].concat(
 	XDG_CONFIG_HOME ? path.join(XDG_CONFIG_HOME, 'repo-report.json') : [],
 	path.join(homedir, '.repo-report.json'),
 );
-const cachePath = XDG_CACHE_DIR ? path.join(XDG_CACHE_DIR, '.repo-report') : path.join(homedir, '.repo-report', 'cache');
-
-const getCommandMeta = (yargs) => yargs
-	.usage('Usage: $0 [options]')
-
-	.option('unactionable', {
-		default: false,
-		describe: `Shows values of metrics you lack permissions to change, with a ${symbols.unactionable} next to it`,
-		type: 'boolean',
-	})
-	.option('actual', {
-		default: false,
-		describe: 'Show metrics’ true values',
-		type: 'boolean',
-	})
-	.option('all', {
-		default: false,
-		describe: 'Show all metrics - do not collapse into groups.',
-		type: 'boolean',
-	})
-	.option('goodness', {
-		default: true,
-		describe: 'Prefix actual values with goodness values',
-		type: 'boolean',
-	})
-	.check(({ goodness, actual }) => goodness || actual || 'At least one of `--goodness` and `--actual` must be set.')
-	.option('focus', {
-		alias: 'f',
-		choices: [
-			'sources',
-			'forks',
-			'templates',
-			'private',
-			'public',
-		],
-		describe: 'Focus repo types',
-	})
-	.option('cache', {
-		default: false,
-		describe: 'Dump API requests and cleaned up data in `--cacheDir` path',
-		type: 'boolean',
-	})
-	.option('cacheDir', {
-		default: cachePath,
-		normalize: true,
-	})
-	.hide('cacheDir')
-	.option('sort', {
-		alias: 's',
-		describe: 'Sort repos alphabetically',
-		type: 'boolean',
-	})
-	.option('metrics', {
-		alias: 'm',
-		default: false,
-		describe: 'Show available metrics',
-		type: 'boolean',
-	})
-	.option('pick', {
-		alias: 'p',
-		choices: Object.keys(Metrics),
-		describe: 'Pick metrics',
-	})
-	.check(({ all, pick }) => !all || !(pick?.length > 0) || '`--all` and `--pick` are mutually exclusive')
-	.help('help')
-	.strict();
 
 Yargs.usage('Usage: $0 <command> [options]')
 	.config('config')
@@ -115,26 +46,6 @@ Yargs.usage('Usage: $0 <command> [options]')
 	.default('token', GH_TOKEN || GITHUB_TOKEN)
 	.hide('token')
 	.check(({ token }) => !!token || colors.red(`${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN, or \`--token\` argument, not found.\n\nRefer to #Installation in README.md on how to set an env variable`))
-	.command(
-		'$0',
-		`Fetch actionable details about your public, source (non-fork, non-template) repositories. Unactionable metrics are converted to ${symbols.success} by default.`,
-		(yargs) => {
-			const { argv } = getCommandMeta(yargs);
-			detail(argv);
-		},
-	)
-	.command(
-		'ls',
-		'Lists all repositories. Includes sources, forks, templates, private, and public repos by default. Shows DefBranch and Access metrics by default.',
-		(yargs) => {
-			const { argv } = getCommandMeta(yargs);
-			detail({
-				actual: true,
-				focus: ['sources', 'forks', 'templates', 'private', 'public'],
-				pick: ['DefBranch', 'Access'],
-				...argv,
-			});
-		},
-	)
+	.commandDir(path.join(__dirname, './commands'))
 	.help('help')
 	.parse();
