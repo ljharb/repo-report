@@ -3,7 +3,6 @@
 'use strict';
 
 const {
-	listMetrics,
 	printAPIPoints,
 	getRepositories,
 	generateDetailTable,
@@ -95,9 +94,6 @@ const generateQuery = (endCursor, { f }) => {
 };
 
 module.exports = async function detail(flags) {
-	if (flags.metrics) {
-		return listMetrics(getMetrics(metricNames));
-	}
 	const metrics = getMetrics(flags.pick?.length > 0 ? [...new Set([
 		'Repository',
 		'isFork',
