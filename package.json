@@ -7,6 +7,8 @@
 		"repo-report": "./bin/run"
 	},
 	"scripts": {
+		"prepublishOnly": "safe-publish-latest",
+		"prepublish": "not-in-publish || npm run prepublishOnly",
 		"test": "npm run tests-only",
 		"tests-only": "nyc tape 'test/**/*.js'| tap-spec",
 		"lint": "eslint ./bin/* .",
@@ -35,8 +37,10 @@
 		"aud": "^1.1.5",
 		"eslint": "^7.32.0",
 		"fetch-mock": "^9.11.0",
+		"in-publish": "^2.0.1",
 		"isomorphic-fetch": "^3.0.0",
 		"nyc": "^15.1.0",
+		"safe-publish-latest": "^2.0.0",
 		"tap-spec": "^5.0.0",
 		"tape": "^5.3.1"
 	}
