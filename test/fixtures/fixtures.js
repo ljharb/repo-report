@@ -80,7 +80,7 @@ const mockRepositoriesData = {
 
 const tableOutput = {
 	__proto__: Table.prototype,
-	0: ['Stats', '0% (0/1)'],
+	0: ['Stats', '0% (0/6)'],
 	1: [
 		'name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design\nname/media-upload-app',
 		symbols.error,

@@ -278,13 +278,14 @@ const sortRowsByErrors = (a, b) => {
 	return bErrCount - aErrCount;
 };
 
-const generateStatsRow = (rows) => {
+const lineCountReducer = (count, row) => count + row[0].split('\n').length;
 
-	const totalRows = rows.length;
+const generateStatsRow = (rows) => {
+	const totalRows = rows.reduce(lineCountReducer, 0);
 
 	return rows[0].map((col, i) => {
-		const goodRows = totalRows - rows.filter((row) => row[i] === symbols.error).length;
-		return i === 0 ? 'Stats' : `${Math.round(100 * goodRows / totalRows)}% (${goodRows}/${totalRows})`;
+		const goodRows = totalRows - rows.filter((row) => row[i] === symbols.error).reduce(lineCountReducer, 0);
+		return i === 0 ? 'Stats' : `${Math.round(100 * goodRows / totalRows, 1)}% (${goodRows}/${totalRows})`;
 	});
 };
 
