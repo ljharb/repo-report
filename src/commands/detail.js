@@ -95,26 +95,26 @@ const generateQuery = (endCursor, { f }) => {
 };
 
 const detail = async (flags) => {
-	if (flags.m) {
+	if (flags.metrics) {
 		return listMetrics(getMetrics(metricNames));
 	}
-	const metrics = getMetrics(flags.p?.length > 0 ? [...new Set([
+	const metrics = getMetrics(flags.pick?.length > 0 ? [...new Set([
 		'Repository',
 		'isFork',
 		'isPrivate',
-		...metricNames.filter((name) => flags.p.includes(name)),
+		...metricNames.filter((name) => flags.pick.includes(name)),
 	])] : metricNames);
 
 	// Additional Filter on repos
 	let filter;
-	if (flags.f?.length === 1 && flags.f[0] === 'templates') {
+	if (flags.focus?.length === 1 && flags.focus[0] === 'templates') {
 		filter = (repo) => repo.isTemplate;
 	}
 
 	// Get all repositories
 	const { points, repositories } = await getRepositories(generateQuery, flags, filter);
 
-	if (!flags.s) {
+	if (!flags.sort) {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 	}
 
@@ -123,7 +123,7 @@ const detail = async (flags) => {
 		actual: flags.actual,
 		all: flags.all,
 		goodness: flags.goodness,
-		sort: flags.s,
+		sort: flags.sort,
 		unactionable: flags.unactionable,
 	});
 

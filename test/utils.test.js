@@ -73,7 +73,7 @@ test('generateDetailTable,', (t) => {
 	t.plan(3);
 
 	t.test('return a generated detail table', (t) => {
-		const actualResult = generateDetailTable(metrics, repositories.nodes);
+		const actualResult = generateDetailTable(metrics, repositories.nodes, { goodness: true });
 		t.deepEqual(actualResult, tableOutput);
 		t.end();
 	});

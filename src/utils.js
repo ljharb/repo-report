@@ -309,7 +309,7 @@ const generateDetailTable = (metrics, rowData, {
 		const currMetrics = getCurrMetrics(item);
 		return filteredMetrics.map((metric) => {
 			const value = metric.extract(item);
-			const diffValue = getDiffSymbol(item, currMetrics, value, metric, { unactionable });
+			const diffValue = goodness && getDiffSymbol(item, currMetrics, value, metric, { unactionable });
 
 			return getMetricOut(value, diffValue, { actual, goodness });
 		});
