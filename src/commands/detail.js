@@ -101,17 +101,12 @@ const detail = async (flags) => {
 	if (flags.m) {
 		return listMetrics(getMetrics(metricNames));
 	}
-	let metrics;
-	if (flags.p?.length > 0) {
-		metrics = getMetrics([
-			'Repository',
-			'isFork',
-			'isPrivate',
-			...metricNames.filter((name) => flags.p.includes(name)),
-		]);
-	} else {
-		metrics = getMetrics(metricNames);
-	}
+	const metrics = getMetrics(flags.p?.length > 0 ? [...new Set([
+		'Repository',
+		'isFork',
+		'isPrivate',
+		...metricNames.filter((name) => flags.p.includes(name)),
+	])] : metricNames);
 
 	// Additional Filter on repos
 	let filter;
