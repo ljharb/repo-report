@@ -39,7 +39,7 @@ const Metrics = {
 		permissions: ['ADMIN', 'MAINTAIN'],
 	},
 	AllowsForking: {
-		extract: (item) => !item.forkingAllowed,
+		extract: (item) => item.forkingAllowed,
 		permissions: ['ADMIN'],
 	},
 	Archived: {
@@ -47,7 +47,7 @@ const Metrics = {
 		permissions: ['ADMIN'],
 	},
 	AutoMergeAllowed: {
-		extract: (item) => !item.autoMergeAllowed,
+		extract: (item) => item.autoMergeAllowed,
 		permissions: ['ADMIN', 'MAINTAIN'],
 	},
 	BlankIssuesEnabled: {
