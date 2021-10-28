@@ -82,23 +82,23 @@ const Metrics = {
 	},
 	DismissesStaleReviews: {
 		extract: (item) => !!getBPRules(item)?.dismissesStaleReviews,
-		permisions: ['ADMIN'],
+		permissions: ['ADMIN'],
 	},
 	ReqApprovingReviewCount: {
 		extract: (item) => getBPRules(item)?.requiredApprovingReviewCount || 0,
-		permisions: ['ADMIN'],
+		permissions: ['ADMIN'],
 	},
 	ReqApprovingReviews: {
 		extract: (item) => !!getBPRules(item)?.requiresApprovingReviews,
-		permisions: ['ADMIN'],
+		permissions: ['ADMIN'],
 	},
 	ReqCodeOwnerReviews: {
 		extract: (item) => !!getBPRules(item)?.requiresCodeOwnerReview,
-		permisions: ['ADMIN'],
+		permissions: ['ADMIN'],
 	},
 	ReqConversationResolution: {
 		extract: (item) => !!getBPRules(item)?.requiresConversationResolution,
-		permisions: ['ADMIN'],
+		permissions: ['ADMIN'],
 	},
 	isPrivate: {
 		extract: (item) => item.isPrivate,

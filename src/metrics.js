@@ -34,7 +34,7 @@ const getMetrics = (metrics) => {
 			dontPrint: dontPrint[name],
 			extract,
 			name,
-			permissions: permissions?.[name],
+			permissions,
 		};
 	});
 	return out;
