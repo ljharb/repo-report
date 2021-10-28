@@ -8,12 +8,22 @@ const getBPRules = (item) => item.defaultBranchRef?.branchProtectionRule;
 
 const Metrics = {
 	Repository: {
-		extract: (item) => `${item.isPrivate ? `${symbols.isPrivate} ` : ''}${item.isFork ? `${symbols.fork} ` : item.isPrivate ? ' ' : ''}${item.nameWithOwner}`,
+		extract: ({
+			isPrivate,
+			isFork,
+			nameWithOwner,
+		}) => [].concat(
+			isPrivate ? symbols.isPrivate : [],
+			isFork ? symbols.fork : [],
+			nameWithOwner,
+		).join(' '),
 	},
 	isFork: {
+		dontPrint: true,
 		extract: (item) => item.isFork,
 	},
 	Access: {
+		compare: (item, config) => config.includes(item.viewerPermission),
 		extract: (item) => item.viewerPermission,
 	},
 	IssuesEnabled: {
@@ -49,11 +59,33 @@ const Metrics = {
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE'],
 	},
 	License: {
+		compare: (item, config) => config.includes(item.licenseInfo?.name || null),
 		extract: (item) => item.licenseInfo?.name || '---',
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE'],
 	},
 	MergeStrategies: {
-		extract: (item) => `${item.mergeCommitAllowed ? 'MERGE' : ''} ${item.squashMergeAllowed ? 'SQUASH' : ''} ${item.rebaseMergeAllowed ? 'REBASE' : ''}`.split(' ').filter((strat) => strat).join(','),
+		compare({
+			mergeCommitAllowed,
+			squashMergeAllowed,
+			rebaseMergeAllowed,
+		}, {
+			MERGE = mergeCommitAllowed,
+			SQUASH = squashMergeAllowed,
+			REBASE = rebaseMergeAllowed,
+		}) {
+			return MERGE === mergeCommitAllowed
+				&& SQUASH === squashMergeAllowed
+				&& REBASE === rebaseMergeAllowed;
+		},
+		extract: ({
+			mergeCommitAllowed,
+			squashMergeAllowed,
+			rebaseMergeAllowed,
+		}) => [].concat(
+			mergeCommitAllowed ? 'MERGE' : [],
+			squashMergeAllowed ? 'SQUASH' : [],
+			rebaseMergeAllowed ? 'REBASE' : [],
+		).join(','),
 		permissions: ['ADMIN', 'MAINTAIN'],
 	},
 	DeleteOnMerge: {
@@ -66,6 +98,7 @@ const Metrics = {
 	},
 	Subscription: {
 		extract: (item) => item.viewerSubscription,
+		compare: (item, config) => config.includes(item.viewerSubscription),
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE', 'TRIAGE', 'READ'],
 	},
 	DefBranch: {
@@ -101,6 +134,7 @@ const Metrics = {
 		permissions: ['ADMIN'],
 	},
 	isPrivate: {
+		dontPrint: true,
 		extract: (item) => item.isPrivate,
 	},
 };

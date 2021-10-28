@@ -10,5 +10,6 @@
 			"skipComments": true,
 			"skipBlankLines": true,
 		}],
+		"operator-linebreak": ["error", "before"],
 	},
 }
