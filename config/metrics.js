@@ -6,7 +6,7 @@
 const symbols = require('../src/symbols');
 const getBPRules = (item) => item.defaultBranchRef?.branchProtectionRule;
 
-const Metrics = {
+module.exports = {
 	Repository: {
 		extract: ({
 			isPrivate,
@@ -138,5 +138,3 @@ const Metrics = {
 		extract: (item) => item.isPrivate,
 	},
 };
-
-module.exports = Metrics;

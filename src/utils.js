@@ -56,7 +56,7 @@ const dumpCache = (cacheDir, date, filename, content) => {
 	fs.writeFileSync(`${dateDir}/${filename}`, content);
 };
 
-const listMetrics = (metrics) => metrics.map((metric) => console.log(`- ${metric.name}`));
+const listMetrics = (metrics) => metrics.forEach((metric) => console.log(`- ${metric.name}`));
 
 const sanitizeGlob = (glob) => [].concat(glob).map((el) => (el === '*' ? '**' : el));
 

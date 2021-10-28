@@ -94,7 +94,7 @@ const generateQuery = (endCursor, { f }) => {
 `);
 };
 
-const detail = async (flags) => {
+module.exports = async function detail(flags) {
 	if (flags.metrics) {
 		return listMetrics(getMetrics(metricNames));
 	}
@@ -134,5 +134,3 @@ const detail = async (flags) => {
 	printAPIPoints(points);
 	return null;
 };
-
-module.exports = detail;
