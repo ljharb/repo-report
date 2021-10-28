@@ -2,6 +2,7 @@
 	"extends": ["@ljharb/eslint-config/node/latest"],
 	"rules": {
 		"array-bracket-newline": "off",
+		"func-style": "off",
 		"quote-props": [2, "as-needed", { "keywords": false }],
 		"max-lines": "off",
 		"max-lines-per-function": ["error", {

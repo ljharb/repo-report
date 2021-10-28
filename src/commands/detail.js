@@ -15,19 +15,16 @@ const Metrics = require('../../config/metrics.js');
 // Metric names and their extraction method to be used on the query result (Order is preserved)
 const metricNames = Object.keys(Metrics);
 
-const generateQuery = (endCursor, {
-	f,
-}) => {
-	let showForks = false;
-	let showSources = true;
-	let showPrivate = false;
-	let showPublic = true;
-	if (f && f.length) {
-		showForks = f.includes('forks');
-		showSources = f.includes('sources');
-		showPrivate = f.includes('private');
-		showPublic = f.includes('public');
-	}
+function hasFlag(flag, flags, defaultValue = false) {
+	return !!(flags?.length > 0 ? flags?.includes(flag) : defaultValue);
+}
+
+const generateQuery = (endCursor, { f }) => {
+	const showForks = hasFlag('forks', f);
+	const showSources = hasFlag('sources', f, true);
+	const showPrivate = hasFlag('private', f);
+	const showPublic = hasFlag('public', f, true);
+
 	return (
 		`query {
   viewer {
@@ -123,11 +120,15 @@ const detail = async (flags) => {
 
 	// Generate output table
 	const table = generateDetailTable(metrics, repositories, {
-		actual: flags.actual, all: flags.all, goodness: flags.goodness, sort: flags.s, unactionable: flags.unactionable,
+		actual: flags.actual,
+		all: flags.all,
+		goodness: flags.goodness,
+		sort: flags.s,
+		unactionable: flags.unactionable,
 	});
 
 	if (table) {
-		console.log(table.toString());
+		console.log(String(table));
 	}
 
 	printAPIPoints(points);
