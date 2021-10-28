@@ -74,13 +74,13 @@ test('generateDetailTable,', (t) => {
 
 	t.test('return a generated detail table', (t) => {
 		const actualResult = generateDetailTable(metrics, repositories.nodes);
-		t.deepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutput));
+		t.deepEqual(actualResult, tableOutput);
 		t.end();
 	});
 
 	t.test('return a generated detail table with --actual option', (t) => {
 		const actualResult = generateDetailTable(metrics, repositories.nodes, { actual: true });
-		t.deepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutputActual));
+		t.deepEqual(actualResult, tableOutputActual);
 		t.end();
 	});
 
@@ -92,7 +92,7 @@ test('generateDetailTable,', (t) => {
 
 	t.test('return invalid output', (t) => {
 		const actualResult = generateDetailTable(columns, repositories.nodes);
-		t.notDeepEqual(JSON.stringify(actualResult), JSON.stringify(tableOutput));
+		t.notDeepEqual(actualResult, tableOutput);
 		t.end();
 	});
 });

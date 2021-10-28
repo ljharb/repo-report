@@ -1,5 +1,6 @@
 'use strict';
 
+const Table = require('cli-table');
 const symbols = require('../../src/symbols');
 
 // const fixtures = require("@octokit/fixtures");
@@ -78,7 +79,7 @@ const mockRepositoriesData = {
 };
 
 const tableOutput = {
-
+	__proto__: Table.prototype,
 	0: ['Stats', '0% (0/1)'],
 	1: [
 		'name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design\nname/media-upload-app',
@@ -118,6 +119,7 @@ const tableOutput = {
 };
 
 const tableOutputActual = {
+	__proto__: Table.prototype,
 	0: ['name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design', 'ADMIN', 'master'],
 	1: ['name/media-upload-app', 'ADMIN', 'develop'],
 	options: {
