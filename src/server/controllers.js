@@ -1,17 +1,14 @@
-/* eslint-disable no-magic-numbers */
-
 'use strict';
 
+const SUCCESS_RES_CODE = 200;
+const parse = require('yargs-parser');
 const {
 	listMetrics,
-	printAPIPoints,
 	getRepositories,
 	generateDetailTable,
-	generateGui,
 } = require('../utils');
 
 const { getMetrics } = require('../metrics');
-const { server } = require('../server/app.js');
 
 // Metric names and their extraction method to be used on the query result (Order is preserved)
 const metricNames = [
@@ -145,14 +142,11 @@ const detail = async (flags) => {
 	if (flags.f?.length === 1 && flags.f[0] === 'templates') {
 		filter = (repo) => repo.isTemplate;
 	}
-
 	// Get all repositories
-	const { points, repositories } = await getRepositories(generateQuery, flags, filter);
-
+	const { repositories } = await getRepositories(generateQuery, flags, filter);
 	if (!flags.s) {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 	}
-
 	// Generate output table
 	const table = generateDetailTable(metrics, repositories, {
 		actual: flags.actual, all: flags.all, goodness: flags.goodness, sort: flags.s, unactionable: flags.unactionable,
@@ -161,15 +155,23 @@ const detail = async (flags) => {
 	if (table) {
 		if (flags.serve) {
 			return table;
-		} else if (flags.gui) {
-			server(generateGui(table));
-		} else {
-			console.log(table.toString());
 		}
 	}
-
-	printAPIPoints(points);
 	return null;
 };
 
-module.exports = detail;
+const executeCommand = async (req, res) => {
+	const { command } = req.body;
+	const argv = parse(command);
+	argv.serve = true;
+	argv.token = process.env.GH_TOKEN; // Is there perhaps a better way or a better place to fetch the token?
+	const output = await detail(argv);
+
+	return res.status(SUCCESS_RES_CODE).json({
+		output,
+	});
+};
+
+module.exports = {
+	executeCommand,
+};

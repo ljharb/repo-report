@@ -37,7 +37,8 @@
 		"open": "^8.3.0",
 		"postcss": "^8.1.2",
 		"postcss-cli": "^8.1.0",
-		"yargs": "^17.2.1"
+		"yargs": "^17.2.1",
+		"yargs-parser": "^20.2.9"
 	},
 	"devDependencies": {
 		"@ljharb/eslint-config": "^18.0.0",
