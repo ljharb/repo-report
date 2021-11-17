@@ -1,0 +1,30 @@
+{
+    "metrics": {
+    "Access": ["ADMIN", "MAINTAIN", "WRITE", "TRIAGE", "READ"],
+    "IssuesEnabled": true,
+    "ProjectsEnabled": true,
+    "WikiEnabled": false,
+    "AllowsForking": false,
+    "Archived": false,
+    "AutoMergeAllowed": false,
+    "BlankIssuesEnabled": false,
+    "SecurityPolicyEnabled": false,
+    "License": ["MIT License", null],
+    "MergeStrategies": {
+        "MERGE": true,
+        "SQUASH": true,
+        "REBASE": true
+    },
+    "DeleteOnMerge": false,
+    "HasStarred": false,
+    "Subscription": ["IGNORED", "SUBSCRIBED", "UNSUBSCRIBED"],
+    "DefBranch": "main",
+    "AllowsForcePushes": false,
+    "AllowsDeletions": false,
+    "DismissesStaleReviews": false,
+    "ReqApprovingReviewCount": 1,
+    "ReqApprovingReviews": false,
+    "ReqCodeOwnerReviews": false,
+    "ReqConversationResolution": false
+    }
+}
