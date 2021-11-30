@@ -285,7 +285,7 @@ const generateStatsRow = (rows) => {
 
 	return rows[0].map((col, i) => {
 		const goodRows = totalRows - rows.filter((row) => row[i] === symbols.error).reduce(lineCountReducer, 0);
-		return i === 0 ? 'Stats' : `${Math.round(100 * goodRows / totalRows, 1)}% (${goodRows}/${totalRows})`;
+		return i === 0 ? 'Stats' : `${Math.round(1e3 * goodRows / totalRows) / 1e1}% (${goodRows}/${totalRows})`;
 	});
 };
 
