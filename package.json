@@ -29,13 +29,13 @@
 	"private": false,
 	"dependencies": {
 		"@octokit/graphql": "^4.8.0",
-		"cli-table": "^0.3.6",
+		"cli-table": "^0.3.9",
 		"colors": "^1.4.0",
 		"dotenv": "^10.0.0",
 		"jsonschema": "^1.4.0",
 		"minimatch": "^3.0.4",
 		"mkdirp": "^1.0.4",
-		"yargs": "^17.2.1"
+		"yargs": "^17.3.0"
 	},
 	"devDependencies": {
 		"@ljharb/eslint-config": "^19.0.1",
