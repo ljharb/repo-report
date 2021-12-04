@@ -38,10 +38,10 @@
 		"yargs": "^17.3.0"
 	},
 	"devDependencies": {
-		"@ljharb/eslint-config": "^19.0.1",
+		"@ljharb/eslint-config": "^19.1.0",
 		"aud": "^1.1.5",
 		"auto-changelog": "^2.3.0",
-		"eslint": "^8.3.0",
+		"eslint": "^8.4.0",
 		"fetch-mock": "^9.11.0",
 		"in-publish": "^2.0.1",
 		"isomorphic-fetch": "^3.0.0",

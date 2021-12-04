@@ -1,15 +1,13 @@
 {
-	"extends": ["@ljharb/eslint-config/node/latest"],
+	"extends": ["@ljharb/eslint-config/node/14"],
 	"rules": {
 		"array-bracket-newline": "off",
 		"func-style": "off",
-		"quote-props": [2, "as-needed", { "keywords": false }],
 		"max-lines": "off",
 		"max-lines-per-function": ["error", {
 			"max": 100,
 			"skipComments": true,
 			"skipBlankLines": true,
 		}],
-		"operator-linebreak": ["error", "before"],
 	},
 }
