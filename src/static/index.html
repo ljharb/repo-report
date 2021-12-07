@@ -1,0 +1,57 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="flex flex-col h-screen">
+        <div class="flex justify-center items-center h-10 font-bold text-4xl pt-6">Repo Report!</div>
+        <div class="flex flex-col px-20">
+            <div class="flex justify-start items-center text-base">Enter Command and press Enter!</div>
+            <input type="text" name="command" id="command"
+                class="w-80 h-12 text-base text-green border rounded-lg bg-gray mt-3 pl-4">
+        </div>
+
+    </div>
+    <style>
+        .command {
+            width: 500px;
+            height: 100px;
+            font-size: 40px;
+            border: 1px solid black;
+        }
+    </style>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        const executeCommand = async (command) => {
+            const res = await axios.post('http://localhost:3000/command', {
+                "command": command,
+            });
+            return res.data.output;
+        }
+
+        const handleInput = async (event) => {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                console.log('command: ', input.value);
+                const response = await executeCommand(input.value);
+                console.log('response: ', response);
+            }
+        }
+
+        let input = document.getElementById("command");
+        input.addEventListener("keyup", handleInput);
+    </script>
+</body>
+
+</html>

@@ -3,7 +3,7 @@
 const express = require('express');
 const { executeCommand } = require('./controllers');
 const path = require('path');
-// const open = require('open');
+const open = require('open');
 
 const server = (table) => {
 	const app = express();
@@ -14,11 +14,12 @@ const server = (table) => {
 	app.get('/', (req, res) => {
 		res.render('index', { table });
 	});
-	app.use('/public', express.static(path.join(__dirname, 'static')));
+	app.use('/static', express.static(path.join(__dirname, '../static')));
 	app.post('/command', executeCommand);
 	app.listen(port, () => {
 		console.log(`app is listening on port ${port}`);
 	});
+	open('http://localhost:3000/');
 };
 
 module.exports = {

@@ -12,7 +12,7 @@ module.exports = {
 			preset: 'default',
 		}),
 		purgecss({
-			content: ['./views/**/*.ejs'],
+			content: ['./views/**/*.ejs', './src/static/index.html'],
 			defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
 		}),
 	],
