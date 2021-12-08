@@ -6,6 +6,7 @@ const {
 	listMetrics,
 	getRepositories,
 	generateDetailTable,
+	generateGui,
 } = require('../utils');
 
 const { getMetrics } = require('../metrics');
@@ -165,7 +166,8 @@ const executeCommand = async (req, res) => {
 	const argv = parse(command);
 	argv.serve = true;
 	argv.token = process.env.GH_TOKEN; // Is there perhaps a better way or a better place to fetch the token?
-	const output = await detail(argv);
+	let output = await detail(argv);
+	output = generateGui(output);
 
 	return res.status(SUCCESS_RES_CODE).json({
 		output,

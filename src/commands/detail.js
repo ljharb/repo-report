@@ -7,7 +7,6 @@ const {
 	printAPIPoints,
 	getRepositories,
 	generateDetailTable,
-	generateGui,
 } = require('../utils');
 
 const { getMetrics } = require('../metrics');
@@ -162,7 +161,7 @@ const detail = async (flags) => {
 		if (flags.serve) {
 			return table;
 		} else if (flags.gui) {
-			server(generateGui(table));
+			server();
 		} else {
 			console.log(table.toString());
 		}
