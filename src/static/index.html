@@ -14,7 +14,19 @@
 <body>
     <div class="container">
         <div class="title">Repo Report!</div>
-        <div class="instructions">Enter Command and press Enter!</div>
+        <div class="instructions">
+            <div>Enter Command and press Enter!</div>
+            <div id='status' class="status-hide">
+                <div class="loader">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="status-text">Getting Data from Github...</div>
+            </div>
+        </div>
+
         <input class="command" type="text" name="command" id="command">
         <div class="table-container">
             <table class="table" cellspacing="0" cellpadding="0">
@@ -32,6 +44,59 @@
 
         * {
             font-family: 'Inter', sans-serif;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-hide {
+            display: none;
+        }
+
+        .loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 40px;
+            height: 40px;
+        }
+
+        .loader div {
+            box-sizing: border-box;
+            display: block;
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            margin: 0px;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            animation: loader 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            border-color: #FF4E3D transparent transparent transparent;
+        }
+
+        .loader div:nth-child(1) {
+            animation-delay: -0.45s;
+        }
+
+        .loader div:nth-child(2) {
+            animation-delay: -0.3s;
+        }
+
+        .loader div:nth-child(3) {
+            animation-delay: -0.15s;
+        }
+
+        @keyframes loader {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .container {
@@ -58,9 +123,10 @@
 
         .instructions {
             display: flex;
-            justify-content: flex-start;
+            justify-content: space-between;
             align-items: center;
             font-size: 16px;
+            width: 100%;
             height: 5vh;
         }
 
@@ -173,11 +239,23 @@
         const handleInput = async (event) => {
             if (event.keyCode === 13) {
                 event.preventDefault();
+                showStatus();
                 const response = await executeCommand(input.value);
-                console.log(response)
+                hidestatus();
                 renderHead(response.metrics)
                 renderBody(response.repos, response.rows)
             }
+        }
+
+        const showStatus = () => {
+            let status = document.getElementById('status');
+            status.classList.remove('status-hide');
+            status.classList.add('status');
+        }
+        const hidestatus = () => {
+            let status = document.getElementById('status');
+            status.classList.remove('status');
+            status.classList.add('status-hide');
         }
 
         const renderBody = (repos, rows) => {
