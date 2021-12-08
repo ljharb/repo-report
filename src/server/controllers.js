@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 'use strict';
 
 const SUCCESS_RES_CODE = 200;
