@@ -122,6 +122,10 @@ const generateQuery = (endCursor, {
 `);
 };
 
+/*
+ * DOUBT: Copy-Pasted this function here as I was having issues with importing the function
+ * from src/commands/detail.js
+ */
 const detail = async (flags) => {
 	if (flags.m) {
 		return listMetrics(getMetrics(metricNames));
@@ -165,7 +169,8 @@ const executeCommand = async (req, res) => {
 	const { command } = req.body;
 	const argv = parse(command);
 	argv.serve = true;
-	argv.token = process.env.GH_TOKEN; // Is there perhaps a better way or a better place to fetch the token?
+	// DOUBT: Is there perhaps a better way or a better place to fetch the token?
+	argv.token = process.env.GH_TOKEN;
 	let output = await detail(argv);
 	output = generateGui(output);
 
