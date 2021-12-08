@@ -110,3 +110,6 @@ dist
 npm-shrinkwrap.json
 package-lock.json
 yarn.lock
+
+# Misc
+.DS_Store
