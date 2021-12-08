@@ -41,6 +41,11 @@
             padding: 0 5vw 0 5vw;
         }
 
+        .td-container {
+            display: flex;
+            justify-content: center;
+        }
+
         .title {
             display: flex;
             justify-content: center;
@@ -98,6 +103,9 @@
             height: 10px;
             border-radius: 50%;
             background-color: #4CD964;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .circle-red {
@@ -105,9 +113,11 @@
             height: 10px;
             border-radius: 50%;
             background-color: #FF4E3D;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        td,
         th {
             padding: 24px;
             text-align: center;
@@ -121,31 +131,34 @@
             background-color: #F7F7FA;
         }
 
-        tr:hover {
+        td:hover {
             background-color: #E0E0E0;
         }
 
         th {
+            /* Top Row */
             background-color: #D1CFD7;
             position: sticky;
             top: 0px;
-            max-height: 50px !important;
-            z-index: 2;
+            z-index: 9;
         }
 
         th:first-of-type {
+            /* Top Left Cell */
             left: 0;
-            z-index: 3;
+            z-index: 10;
         }
 
         tbody tr td:first-of-type {
+            /* Left Column */
             background-color: #D1CFD7;
             position: sticky;
             max-width: 20vw;
             overflow-wrap: break-word;
             left: 0px;
             text-align: left;
-            border: 0px solid black;
+            padding: 16px;
+            z-index: 5;
         }
     </style>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -179,13 +192,17 @@
 
                 row.forEach((elem => {
                     let td = document.createElement('td');
+                    let tdContainer = document.createElement('div');
+                    tdContainer.classList.add('td-container');
+
                     let div = document.createElement('div');
                     if (elem === 1) {
                         div.classList.add('circle-green');
                     } else {
                         div.classList.add('circle-red');
                     }
-                    td.appendChild(div);
+                    tdContainer.appendChild(div)
+                    td.appendChild(tdContainer);
                     tr.appendChild(td)
                 }))
                 tableBody.appendChild(tr)
