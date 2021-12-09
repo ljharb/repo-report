@@ -350,6 +350,7 @@ const generateDetailTable = (metrics, rowData, {
 };
 
 const generateGui = (table) => {
+	console.log("generate GUI");
 
 	const output = {
 		metrics: [],
