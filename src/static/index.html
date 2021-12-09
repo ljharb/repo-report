@@ -240,10 +240,23 @@
             if (event.keyCode === 13) {
                 event.preventDefault();
                 showStatus();
+                clearTable();
                 const response = await executeCommand(input.value);
                 hidestatus();
                 renderHead(response.metrics)
                 renderBody(response.repos, response.rows)
+            }
+        }
+
+        const clearTable = () => {
+            const tableHead = document.getElementById('table-head');
+            const tableBody = document.getElementById('table-body');
+
+            while (tableHead.firstChild) {
+                tableHead.firstChild.remove()
+            }
+            while (tableBody.firstChild) {
+                tableBody.firstChild.remove()
             }
         }
 
