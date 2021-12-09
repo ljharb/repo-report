@@ -14,7 +14,7 @@
 		"prepublish": "not-in-publish || npm run prepublishOnly",
 		"test": "npm run tests-only",
 		"tests-only": "nyc tape 'test/**/*.js'| tap-spec",
-		"lint": "eslint ./bin/* .",
+		"lint": "eslint --ext=js,mjs ./bin/* .",
 		"pretest": "npm run lint",
 		"posttest": "aud --production",
 		"version": "auto-changelog && git add CHANGELOG.md",
@@ -38,10 +38,10 @@
 		"yargs": "^17.3.0"
 	},
 	"devDependencies": {
-		"@ljharb/eslint-config": "^19.1.0",
+		"@ljharb/eslint-config": "^20.0.0",
 		"aud": "^1.1.5",
 		"auto-changelog": "^2.3.0",
-		"eslint": "^8.4.0",
+		"eslint": "^8.4.1",
 		"fetch-mock": "^9.11.0",
 		"in-publish": "^2.0.1",
 		"isomorphic-fetch": "^3.0.0",
