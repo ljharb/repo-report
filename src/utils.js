@@ -56,7 +56,7 @@ const dumpCache = (cacheDir, date, filename, content) => {
 	fs.writeFileSync(`${dateDir}/${filename}`, content);
 };
 
-const listMetrics = (metrics) => metrics.map((metric) => console.log(`- ${metric.name}`));
+const listMetrics = (metrics) => metrics.forEach((metric) => console.log(`- ${metric.name}`));
 
 const sanitizeGlob = (glob) => [].concat(glob).map((el) => (el === '*' ? '**' : el));
 
@@ -278,6 +278,17 @@ const sortRowsByErrors = (a, b) => {
 	return bErrCount - aErrCount;
 };
 
+const lineCountReducer = (count, row) => count + row[0].split('\n').length;
+
+const generateStatsRow = (rows) => {
+	const totalRows = rows.reduce(lineCountReducer, 0);
+
+	return rows[0].map((col, i) => {
+		const goodRows = totalRows - rows.filter((row) => row[i] === symbols.error).reduce(lineCountReducer, 0);
+		return i === 0 ? 'Stats' : `${Math.round(1e3 * goodRows / totalRows) / 1e1}% (${goodRows}/${totalRows})`;
+	});
+};
+
 const generateDetailTable = (metrics, rowData, {
 	unactionable,
 	sort,
@@ -299,7 +310,7 @@ const generateDetailTable = (metrics, rowData, {
 		const currMetrics = getCurrMetrics(item);
 		return filteredMetrics.map((metric) => {
 			const value = metric.extract(item);
-			const diffValue = getDiffSymbol(item, currMetrics, value, metric, { unactionable });
+			const diffValue = goodness && getDiffSymbol(item, currMetrics, value, metric, { unactionable });
 
 			return getMetricOut(value, diffValue, { actual, goodness });
 		});
@@ -308,10 +319,16 @@ const generateDetailTable = (metrics, rowData, {
 	rows.sort(sortRowsByErrors);
 
 	let table;
+
 	if (all) {
 		table = new Table({
 			head: filteredMetrics.map((metric) => metric.name),
 		});
+
+		if (!actual) {
+			table.push(generateStatsRow(rows));
+		}
+
 		rows.forEach((row) => {
 			table.push(row);
 		});
@@ -320,7 +337,11 @@ const generateDetailTable = (metrics, rowData, {
 		table = new Table({
 			head,
 		});
-		collapseRows(tableRows, 0).forEach((row) => {
+		const collapsedRows = collapseRows(tableRows, 0);
+		if (!actual) {
+			table.push(generateStatsRow(collapsedRows));
+		}
+		collapsedRows.forEach((row) => {
 			table.push(row);
 		});
 

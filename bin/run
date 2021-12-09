@@ -10,14 +10,12 @@ const homedir = require('os').homedir();
 const path = require('path');
 
 const symbols = require('../src/symbols');
-const detail = require('../src/commands/detail');
 const { isConfigValid } = require('../src/utils');
 
 const {
 	GH_TOKEN,
 	GITHUB_TOKEN,
 	XDG_CONFIG_HOME,
-	XDG_CACHE_DIR,
 } = process.env;
 
 // Variable to prevent calling isConfigValid twice
@@ -26,6 +24,7 @@ const defaultConfigPaths = [].concat(
 	XDG_CONFIG_HOME ? path.join(XDG_CONFIG_HOME, 'repo-report.json') : [],
 	path.join(homedir, '.repo-report.json'),
 );
+
 const cachePath = XDG_CACHE_DIR ? path.join(XDG_CACHE_DIR, '.repo-report') : path.join(homedir, '.repo-report', 'cache');
 
 const getCommandMeta = (yargs) => yargs
@@ -104,8 +103,10 @@ const getCommandMeta = (yargs) => yargs
 	.alias('h', 'help')
 	.strict();
 
+
 Yargs.usage('Usage: $0 <command> [options]')
-	.default('config', null)
+	.config('config')
+	// .default('config', `${process.env.HOME}/.repo-report.json`)
 	.check(({ config }) => {
 		if (configValidated) {
 			return true;
@@ -123,34 +124,7 @@ Yargs.usage('Usage: $0 <command> [options]')
 	})
 	.default('token', GH_TOKEN || GITHUB_TOKEN)
 	.hide('token')
-	.check(({ token }) => {
-		if (token) {
-			return true;
-		}
-		throw colors.red(`${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN not found. Refer to #Installation in README.md on how to set an env variable`);
-	})
-	.command(
-		'$0',
-		`Fetch actionable details about your public, source (non-fork, non-template) repositories. Unactionable metrics are converted to ${symbols.success} by default.`,
-		(yargs) => {
-			const { argv } = getCommandMeta(yargs);
-			detail(argv);
-		},
-	)
-	.command(
-		'ls',
-		'Lists all repositories. Includes sources, forks, templates, private and public repos by default. Shows DefBranch and Access metrics by default.',
-		(yargs) => {
-			const { argv } = getCommandMeta(yargs);
-			detail({
-				actual: true,
-				f: ['sources', 'forks', 'templates', 'private', 'public'],
-				p: ['DefBranch', 'Access'],
-				pick: ['DefBranch', 'Access'],
-				...argv,
-			});
-		},
-	)
-	.help('h')
-	.alias('h', 'help')
+	.check(({ token }) => !!token || colors.red(`${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN, or \`--token\` argument, not found.\n\nRefer to #Installation in README.md on how to set an env variable`))
+	.commandDir(path.join(__dirname, './commands'))
+	.help('help')
 	.parse();

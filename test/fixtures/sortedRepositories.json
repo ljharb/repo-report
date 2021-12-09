@@ -1,0 +1,44 @@
+[
+	{
+		"name": "challenges-book",
+		"nameWithOwner": "name/challenges-book",
+		"isPrivate": false,
+		"defaultBranchRef": { "name": "master" },
+		"viewerPermission": "ADMIN"
+	},
+	{
+		"name": "guidelines-questionnaire",
+		"nameWithOwner": "name/guidelines-questionnaire",
+		"isPrivate": false,
+		"defaultBranchRef": { "name": "master" },
+		"viewerPermission": "ADMIN"
+	},
+	{
+		"name": "media-upload-app",
+		"nameWithOwner": "name/media-upload-app",
+		"isPrivate": false,
+		"defaultBranchRef": { "name": "develop" },
+		"viewerPermission": "ADMIN"
+	},
+	{
+		"name": "microservice",
+		"nameWithOwner": "name/microservice",
+		"isPrivate": true,
+        "defaultBranchRef": { "name": "master" },
+		"viewerPermission": "ADMIN"
+	},
+	{
+		"name": "project-eraser",
+		"nameWithOwner": "name/project-eraser",
+		"isPrivate": false,
+		"defaultBranchRef": { "name": "master" },
+		"viewerPermission": "ADMIN"
+	},
+	{
+		"name": "responsive-design",
+		"nameWithOwner": "name/responsive-design",
+		"isPrivate": false,
+		"defaultBranchRef": { "name": "master" },
+		"viewerPermission": "ADMIN"
+	}
+]

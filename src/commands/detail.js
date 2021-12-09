@@ -3,57 +3,28 @@
 'use strict';
 
 const {
-	listMetrics,
 	printAPIPoints,
 	getRepositories,
 	generateDetailTable,
 } = require('../utils');
 
-const { getMetrics } = require('../metrics');
 const { server } = require('../server/app.js');
+const getMetrics = require('../metrics');
+const Metrics = require('../../config/metrics.js');
 
 // Metric names and their extraction method to be used on the query result (Order is preserved)
-const metricNames = [
-	'Repository',
-	'isFork',
-	'Access',
-	'IssuesEnabled',
-	'ProjectsEnabled',
-	'WikiEnabled',
-	'AllowsForking',
-	'Archived',
-	'AutoMergeAllowed',
-	'BlankIssuesEnabled',
-	'SecurityPolicyEnabled',
-	'License',
-	'MergeStrategies',
-	'DeleteOnMerge',
-	'HasStarred',
-	'Subscription',
-	'DefBranch',
-	'AllowsForcePushes',
-	'AllowsDeletions',
-	'DismissesStaleReviews',
-	'ReqApprovingReviewCount',
-	'ReqApprovingReviews',
-	'ReqCodeOwnerReviews',
-	'ReqConversationResolution',
-	'isPrivate',
-];
+const metricNames = Object.keys(Metrics);
 
-const generateQuery = (endCursor, {
-	f,
-}) => {
-	let showForks = false;
-	let showSources = true;
-	let showPrivate = false;
-	let showPublic = true;
-	if (f && f.length) {
-		showForks = f.includes('forks');
-		showSources = f.includes('sources');
-		showPrivate = f.includes('private');
-		showPublic = f.includes('public');
-	}
+function hasFlag(flag, flags, defaultValue = false) {
+	return !!(flags?.length > 0 ? flags?.includes(flag) : defaultValue);
+}
+
+const generateQuery = (endCursor, { f }) => {
+	const showForks = hasFlag('forks', f);
+	const showSources = hasFlag('sources', f, true);
+	const showPrivate = hasFlag('private', f);
+	const showPublic = hasFlag('public', f, true);
+
 	return (
 		`query {
   viewer {
@@ -123,38 +94,34 @@ const generateQuery = (endCursor, {
 `);
 };
 
-const detail = async (flags) => {
-	if (flags.m) {
-		return listMetrics(getMetrics(metricNames));
-	}
-	let metrics;
-	if (flags.p?.length > 0) {
-		metrics = getMetrics([
-			'Repository',
-			'isFork',
-			'isPrivate',
-			...metricNames.filter((name) => flags.p.includes(name)),
-		]);
-	} else {
-		metrics = getMetrics(metricNames);
-	}
+module.exports = async function detail(flags) {
+	const metrics = getMetrics(flags.pick?.length > 0 ? [...new Set([
+		'Repository',
+		'isFork',
+		'isPrivate',
+		...metricNames.filter((name) => flags.pick.includes(name)),
+	])] : metricNames);
 
 	// Additional Filter on repos
 	let filter;
-	if (flags.f?.length === 1 && flags.f[0] === 'templates') {
+	if (flags.focus?.length === 1 && flags.focus[0] === 'templates') {
 		filter = (repo) => repo.isTemplate;
 	}
 
 	// Get all repositories
 	const { points, repositories } = await getRepositories(generateQuery, flags, filter);
 
-	if (!flags.s) {
+	if (!flags.sort) {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 	}
 
 	// Generate output table
 	const table = generateDetailTable(metrics, repositories, {
-		actual: flags.actual, all: flags.all, goodness: flags.goodness, sort: flags.s, unactionable: flags.unactionable,
+		actual: flags.actual,
+		all: flags.all,
+		goodness: flags.goodness,
+		sort: flags.sort,
+		unactionable: flags.unactionable,
 	});
 
 	if (table) {
@@ -165,10 +132,9 @@ const detail = async (flags) => {
 		} else {
 			console.log(table.toString());
 		}
+
 	}
 
 	printAPIPoints(points);
 	return null;
 };
-
-module.exports = detail;

@@ -1,84 +1,14 @@
 'use strict';
 
+const Table = require('cli-table');
 const symbols = require('../../src/symbols');
 
-// const fixtures = require("@octokit/fixtures");
-const mockRepositoriesData = {
-	data: {
-		viewer: {
-			repositories: {
-				totalCount: 10,
-				pageInfo: {
-					endCursor: 'Y3Vtttttc2345642OnYyqrrrrrjhgdg==',
-					hasNextPage: false,
-				},
-				nodes: [
-					{
-						name: 'project-eraser',
-						nameWithOwner: 'name/project-eraser',
-						isPrivate: false,
-						defaultBranchRef: {
-							name: 'master',
-						},
-						viewerPermission: 'ADMIN',
-					},
-					{
-						name: 'guidelines-questionnaire',
-						nameWithOwner: 'name/guidelines-questionnaire',
-						isPrivate: false,
-						defaultBranchRef: {
-							name: 'master',
-						},
-						viewerPermission: 'ADMIN',
-					},
-					{
-						name: 'challenges-book',
-						nameWithOwner: 'name/challenges-book',
-						isPrivate: false,
-						defaultBranchRef: {
-							name: 'master',
-						},
-						viewerPermission: 'ADMIN',
-					},
-					{
-						name: 'microservice',
-						nameWithOwner: 'name/microservice',
-						isPrivate: true,
-						defaultBranchRef: {
-							name: 'master',
-						},
-						viewerPermission: 'ADMIN',
-					},
-					{
-						name: 'responsive-design',
-						nameWithOwner: 'name/responsive-design',
-						isPrivate: false,
-						defaultBranchRef: {
-							name: 'master',
-						},
-						viewerPermission: 'ADMIN',
-					},
-					{
-						name: 'media-upload-app',
-						nameWithOwner: 'name/media-upload-app',
-						isPrivate: false,
-						defaultBranchRef: {
-							name: 'develop',
-						},
-						viewerPermission: 'ADMIN',
-					},
-				],
-			},
-		},
-		rateLimit: {
-			cost: 1,
-			remaining: 4997,
-		},
-	},
-};
+const mockRepositoriesData = require('./mockRepositoriesData.json');
 
 const tableOutput = {
-	0: [
+	__proto__: Table.prototype,
+	0: ['Stats', '0% (0/6)'],
+	1: [
 		'name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design\nname/media-upload-app',
 		symbols.error,
 	],
@@ -112,7 +42,44 @@ const tableOutput = {
 		},
 		head: ['Repository', 'Access\nDefBranch'],
 	},
-	length: 1,
+	length: 2,
+};
+
+const tableOutputActual = {
+	__proto__: Table.prototype,
+	0: ['name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design', 'ADMIN', 'master'],
+	1: ['name/media-upload-app', 'ADMIN', 'develop'],
+	options: {
+		chars: {
+			top: '─',
+			'top-mid': '┬',
+			'top-left': '┌',
+			'top-right': '┐',
+			bottom: '─',
+			'bottom-mid': '┴',
+			'bottom-left': '└',
+			'bottom-right': '┘',
+			left: '│',
+			'left-mid': '├',
+			mid: '─',
+			'mid-mid': '┼',
+			right: '│',
+			'right-mid': '┤',
+			middle: '│',
+		},
+		truncate: '…',
+		colWidths: [],
+		colAligns: [],
+		style: {
+			'padding-left': 1,
+			'padding-right': 1,
+			head: ['red'],
+			border: ['grey'],
+			compact: false,
+		},
+		head: ['Repository', 'Access', 'DefBranch'],
+	},
+	length: 2,
 };
 
 const DetailTableColumns = [
@@ -139,37 +106,7 @@ const DetailTableColumns = [
 	'ReqConversationResolution',
 ];
 
-const sortedRepositories = [
-	{ name: 'challenges-book',
-		nameWithOwner: 'name/challenges-book',
-		isPrivate: false,
-		defaultBranchRef: { name: 'master' },
-		viewerPermission: 'ADMIN' },
-	{ name: 'guidelines-questionnaire',
-		nameWithOwner: 'name/guidelines-questionnaire',
-		isPrivate: false,
-		defaultBranchRef: { name: 'master' },
-		viewerPermission: 'ADMIN' },
-	{ name: 'media-upload-app',
-		nameWithOwner: 'name/media-upload-app',
-		isPrivate: false,
-		defaultBranchRef: { name: 'develop' },
-		viewerPermission: 'ADMIN' },
-	{ name: 'microservice',
-		nameWithOwner: 'name/microservice',
-		isPrivate: true, defaultBranchRef: { name: 'master' },
-		viewerPermission: 'ADMIN' },
-	{ name: 'project-eraser',
-		nameWithOwner: 'name/project-eraser',
-		isPrivate: false,
-		defaultBranchRef: { name: 'master' },
-		viewerPermission: 'ADMIN' },
-	{ name: 'responsive-design',
-		nameWithOwner: 'name/responsive-design',
-		isPrivate: false,
-		defaultBranchRef: { name: 'master' },
-		viewerPermission: 'ADMIN' },
-];
+const sortedRepositories = require('./sortedRepositories.json');
 
 const tableData = {
 	body: [
@@ -197,6 +134,7 @@ const sortedTableData = {
 module.exports = {
 	mockRepositoriesData,
 	tableOutput,
+	tableOutputActual,
 	DetailTableColumns,
 	sortedRepositories,
 	tableData,
