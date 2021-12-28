@@ -360,7 +360,7 @@ const generateGui = (table) => {
 		output.rows.push(table[i]
 			.filter((e, j) => j !== 0)
 			.map((e) => (e === symbols.error ? 0 : 1)));
-		output.repos.push(table[i.toString()]
+		output.repos.push(table[i]
 			.filter((e, j) => j === 0));
 	}
 
