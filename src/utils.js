@@ -357,7 +357,7 @@ const generateGui = (table) => {
 	};
 
 	for (let i = 0; i < table.length; i++) {
-		output.rows.push(table[i.toString()]
+		output.rows.push(table[i]
 			.filter((e, j) => j !== 0)
 			.map((e) => (e === symbols.error ? 0 : 1)));
 		output.repos.push(table[i.toString()]
