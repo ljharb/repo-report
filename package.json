@@ -14,7 +14,7 @@
 		"prepublish": "not-in-publish || npm run prepublishOnly",
 		"test": "npm run tests-only",
 		"tests-only": "nyc tape 'test/**/*.js'| tap-spec",
-		"lint": "eslint ./bin/* .",
+		"lint": "eslint --ext=js,mjs ./bin/* .",
 		"pretest": "npm run lint",
 		"posttest": "aud --production",
 		"version": "auto-changelog && git add CHANGELOG.md",
@@ -30,7 +30,7 @@
 	"dependencies": {
 		"@octokit/graphql": "^4.8.0",
 		"axios": "^0.24.0",
-		"cli-table": "^0.3.9",
+		"cli-table": "^0.3.11",
 		"colors": "^1.4.0",
 		"dotenv": "^10.0.0",
 		"express": "^4.17.1",
@@ -43,10 +43,10 @@
 		"yargs-parser": "^20.2.9"
 	},
 	"devDependencies": {
-		"@ljharb/eslint-config": "^19.1.0",
+		"@ljharb/eslint-config": "^20.0.0",
 		"aud": "^1.1.5",
 		"auto-changelog": "^2.3.0",
-		"eslint": "^8.4.0",
+		"eslint": "^8.4.1",
 		"fetch-mock": "^9.11.0",
 		"in-publish": "^2.0.1",
 		"isomorphic-fetch": "^3.0.0",
