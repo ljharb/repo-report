@@ -1,135 +1,133 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css">
-</head>
-
-<body>
+  <body>
     <div class="container">
-        <div class="title">Repo Report!</div>
-        <div class="instructions">
-            <div>Enter Command and press Enter!</div>
-            <div id='status' class="status-hide">
-                <div class="loader">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-                <div class="status-text">Getting Data from Github...</div>
-            </div>
+      <div class="title">Repo Report!</div>
+      <div class="instructions">
+        <div>Enter Command and press Enter!</div>
+        <div id="status" class="status-hide">
+          <div class="loader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <div class="status-text">Getting Data from Github...</div>
         </div>
+      </div>
 
-        <input class="command" type="text" name="command" id="command">
-        <div class="table-container">
-            <table class="table" cellspacing="0" cellpadding="0">
-                <thead id="table-head" class="table-head">
-                </thead>
-                <tbody id='table-body'>
-                </tbody>
-            </table>
-        </div>
+      <input class="command" type="text" name="command" id="command" />
+      <div class="table-container">
+        <table class="table" cellspacing="0" cellpadding="0">
+          <thead id="table-head" class="table-head"></thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
     </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        const executeCommand = async (command) => {
-            const res = await axios.post('http://localhost:3000/command', {
-                "command": command,
-            });
-            return res.data.output;
-        }
+      const executeCommand = async (command) => {
+        const res = await axios.post("http://localhost:3000/command", {
+          command: command,
+        })
+        return res.data.output
+      }
 
-        const handleInput = async (event) => {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                showStatus();
-                clearTable();
-                const response = await executeCommand(input.value);
-                hidestatus();
-                renderHead(response.metrics)
-                renderBody(response.repos, response.rows)
+      const handleInput = async (event) => {
+        if (event.keyCode === 13) {
+          event.preventDefault()
+          showStatus()
+          clearTable()
+          const response = await executeCommand(input.value)
+          hidestatus()
+          renderHead(response.metrics)
+          renderBody(response.repos, response.rows)
+        }
+      }
+
+      const clearTable = () => {
+        const tableHead = document.getElementById("table-head")
+        const tableBody = document.getElementById("table-body")
+
+        while (tableHead.firstChild) {
+          tableHead.firstChild.remove()
+        }
+        while (tableBody.firstChild) {
+          tableBody.firstChild.remove()
+        }
+      }
+
+      const showStatus = () => {
+        let status = document.getElementById("status")
+        status.classList.remove("status-hide")
+        status.classList.add("status")
+      }
+      const hidestatus = () => {
+        let status = document.getElementById("status")
+        status.classList.remove("status")
+        status.classList.add("status-hide")
+      }
+
+      const renderBody = (repos, rows) => {
+        let tableBody = document.getElementById("table-body")
+        repos.forEach((repo, i) => {
+          const row = rows[i]
+          let tr = document.createElement("tr")
+
+          let left = document.createElement("td")
+          left.innerHTML = repo
+          tr.appendChild(left)
+
+          row.forEach((elem) => {
+            let td = document.createElement("td")
+            let tdContainer = document.createElement("div")
+            tdContainer.classList.add("td-container")
+
+            let div = document.createElement("div")
+            if (elem === 1) {
+              div.classList.add("circle-green")
+            } else {
+              div.classList.add("circle-red")
             }
-        }
+            tdContainer.appendChild(div)
+            td.appendChild(tdContainer)
+            tr.appendChild(td)
+          })
+          tableBody.appendChild(tr)
+        })
+      }
+      const renderHead = (head) => {
+        let headTable = document.getElementById("table-head")
+        let tr = document.createElement("tr")
+        headTable.appendChild(tr)
 
-        const clearTable = () => {
-            const tableHead = document.getElementById('table-head');
-            const tableBody = document.getElementById('table-body');
+        let th = document.createElement("th")
+        th.textContent = "Repositories/Metrics"
+        tr.appendChild(th)
 
-            while (tableHead.firstChild) {
-                tableHead.firstChild.remove()
-            }
-            while (tableBody.firstChild) {
-                tableBody.firstChild.remove()
-            }
-        }
+        head.forEach((element) => {
+          let th = document.createElement("th")
+          th.textContent = element
+          tr.appendChild(th)
+        })
+      }
 
-        const showStatus = () => {
-            let status = document.getElementById('status');
-            status.classList.remove('status-hide');
-            status.classList.add('status');
-        }
-        const hidestatus = () => {
-            let status = document.getElementById('status');
-            status.classList.remove('status');
-            status.classList.add('status-hide');
-        }
-
-        const renderBody = (repos, rows) => {
-            let tableBody = document.getElementById('table-body');
-            repos.forEach((repo, i) => {
-                const row = rows[i];
-                let tr = document.createElement('tr');
-
-                let left = document.createElement('td');
-                left.innerHTML = repo;
-                tr.appendChild(left);
-
-                row.forEach((elem => {
-                    let td = document.createElement('td');
-                    let tdContainer = document.createElement('div');
-                    tdContainer.classList.add('td-container');
-
-                    let div = document.createElement('div');
-                    if (elem === 1) {
-                        div.classList.add('circle-green');
-                    } else {
-                        div.classList.add('circle-red');
-                    }
-                    tdContainer.appendChild(div)
-                    td.appendChild(tdContainer);
-                    tr.appendChild(td)
-                }))
-                tableBody.appendChild(tr)
-            });
-        }
-        const renderHead = (head) => {
-            let headTable = document.getElementById('table-head');
-            let tr = document.createElement('tr');
-            headTable.appendChild(tr);
-
-
-            let th = document.createElement("th");
-            th.textContent = 'Repositories/Metrics';
-            tr.appendChild(th);
-
-            head.forEach(element => {
-                let th = document.createElement("th");
-                th.textContent = element;
-                tr.appendChild(th);
-            });
-        }
-
-        let input = document.getElementById("command");
-        input.addEventListener("keyup", handleInput);
+      let input = document.getElementById("command")
+      input.addEventListener("keyup", handleInput)
     </script>
-</body>
-
+  </body>
 </html>
