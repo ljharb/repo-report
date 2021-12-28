@@ -350,23 +350,22 @@ const generateDetailTable = (metrics, rowData, {
 };
 
 const generateGui = (table) => {
-	const output = {
-		metrics: [],
-		repos: [],
-		rows: [],
-	};
+	const metrics = table.options.head;
+	const repos = [];
+	const rows = [];
 
 	for (let i = 0; i < table.length; i++) {
-		output.rows.push(table[i]
+		rows.push(table[i]
 			.filter((e, j) => j !== 0)
 			.map((e) => (e === symbols.error ? 0 : 1)));
-		output.repos.push(table[i]
+		repos.push(table[i]
 			.filter((e, j) => j === 0));
 	}
 
-	output.metrics = table.options.head;
-	output.metrics.shift();
-	return output;
+	metrics.shift();
+	return {
+		metrics, repos, rows,
+	};
 };
 
 module.exports = {
