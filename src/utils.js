@@ -364,7 +364,7 @@ const generateGui = (table) => {
 			.filter((e, j) => j === 0));
 	}
 
-	table.options.head.forEach((element) => output.metrics.push(element));
+	output.metrics = table.options.head;
 	output.metrics.shift();
 	return output;
 };
