@@ -12,6 +12,10 @@ const {
 } = require('../utils');
 
 const getMetrics = require('../metrics');
+const {
+	GH_TOKEN,
+	GITHUB_TOKEN,
+} = process.env;
 
 // Metric names and their extraction method to be used on the query result (Order is preserved)
 const metricNames = [
@@ -160,9 +164,7 @@ const detail = async (flags) => {
 	});
 
 	if (table) {
-		if (flags.serve) {
-			return table;
-		}
+		return table;
 	}
 	return null;
 };
@@ -170,14 +172,10 @@ const detail = async (flags) => {
 const executeCommand = async (req, res) => {
 	const { command } = req.body;
 	const argv = parse(command);
-	argv.serve = true;
 	argv.goodness = true;
-	// DOUBT: Is there perhaps a better way or a better place to fetch the token?
-	argv.token = process.env.GH_TOKEN;
+	argv.token = GH_TOKEN || GITHUB_TOKEN;
 	let output = await detail(argv);
 	output = generateGui(output);
-	// console.log(output)
-
 	return res.status(SUCCESS_RES_CODE).json({
 		output,
 	});
