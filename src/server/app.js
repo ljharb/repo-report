@@ -5,7 +5,7 @@ const { executeCommand } = require('./controllers');
 const path = require('path');
 const open = require('open');
 
-const server = () => {
+module.exports = function server() {
 	const app = express();
 	const { port } = process.env;
 	app.use(express.json());
@@ -18,5 +18,3 @@ const server = () => {
 	});
 	open(`http://localhost:${port}/`);
 };
-
-module.exports = server;

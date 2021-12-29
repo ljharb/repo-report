@@ -8,7 +8,7 @@ const {
 	generateDetailTable,
 } = require('../utils');
 
-const { server } = require('../server/app.js');
+const server = require('../server/app.js');
 const getMetrics = require('../metrics');
 const Metrics = require('../../config/metrics.js');
 

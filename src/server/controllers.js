@@ -53,7 +53,7 @@ const generateQuery = (endCursor, {
 	let showSources = true;
 	let showPrivate = false;
 	let showPublic = true;
-	if (f && f.length) {
+	if (Array.isArray(f)) {
 		showForks = f.includes('forks');
 		showSources = f.includes('sources');
 		showPrivate = f.includes('private');
