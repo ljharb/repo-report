@@ -130,7 +130,7 @@ module.exports = async function detail(flags) {
 		} else if (flags.gui) {
 			server();
 		} else {
-			console.log(table.toString());
+			console.log(String(table));
 		}
 
 	}
