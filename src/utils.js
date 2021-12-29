@@ -364,7 +364,9 @@ const generateGui = (table) => {
 
 	metrics.shift();
 	return {
-		metrics, repos, rows,
+		metrics,
+		repos,
+		rows,
 	};
 };
 
