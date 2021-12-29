@@ -19,6 +19,4 @@ const server = () => {
 	open(`http://localhost:${port}/`);
 };
 
-module.exports = {
-	server,
-};
+module.exports = server;
