@@ -125,9 +125,7 @@ module.exports = async function detail(flags) {
 	});
 
 	if (table) {
-		if (flags.serve) {
-			return table;
-		} else if (flags.gui) {
+		if (flags.gui) {
 			server();
 		} else {
 			console.log(String(table));
