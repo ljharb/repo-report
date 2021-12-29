@@ -163,10 +163,7 @@ const detail = async (flags) => {
 		actual: flags.actual, all: flags.all, goodness: flags.goodness, sort: flags.s, unactionable: flags.unactionable,
 	});
 
-	if (table) {
-		return table;
-	}
-	return null;
+	return table || null;
 };
 
 const executeCommand = async (req, res) => {
