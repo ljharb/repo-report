@@ -9,12 +9,13 @@
 
 [![npm badge][npm-badge-png]][package-url]
 
+
 CLI to list all repos a user has access to, and report on their configuration in aggregate.
 
 # Installation
 
 - `npm install` to install all dependencies
-- create `.env` file and initialize `GH_TOKEN` or `GITHUB_TOKEN` (in order of precedence) with your Github token
+- run `cp .env.sample .env` and initialize GH_TOKEN or GITHUB_TOKEN (in order of precedence) with your Github token, set the port on which the gui will be served (default=3000) in the newly generated `.env` file.
 
 # Usage (for public)
 

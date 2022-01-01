@@ -37,6 +37,9 @@ module.exports.builder = (yargs) => {
 			describe: 'Show available metrics',
 			type: 'boolean',
 		})
+		.option('gui', {
+			describe: 'Show output in the form of a webpage',
+		})
 		.help('help')
 		.strict();
 

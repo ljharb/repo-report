@@ -8,6 +8,7 @@ const {
 	generateDetailTable,
 } = require('../utils');
 
+const server = require('../server/app.js');
 const getMetrics = require('../metrics');
 const Metrics = require('../../config/metrics.js');
 
@@ -124,7 +125,12 @@ module.exports = async function detail(flags) {
 	});
 
 	if (table) {
-		console.log(String(table));
+		if (flags.gui) {
+			server();
+		} else {
+			console.log(String(table));
+		}
+
 	}
 
 	printAPIPoints(points);

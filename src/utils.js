@@ -349,9 +349,31 @@ const generateDetailTable = (metrics, rowData, {
 	return table;
 };
 
+const generateGui = (table) => {
+	const metrics = table.options.head;
+	const repos = [];
+	const rows = [];
+
+	for (let i = 0; i < table.length; i++) {
+		rows.push(table[i]
+			.filter((e, j) => j !== 0)
+			.map((e) => (e === symbols.error ? 0 : 1)));
+		repos.push(table[i]
+			.filter((e, j) => j === 0));
+	}
+
+	metrics.shift();
+	return {
+		metrics,
+		repos,
+		rows,
+	};
+};
+
 module.exports = {
 	dumpCache,
 	generateDetailTable,
+	generateGui,
 	getDiffSymbol,
 	getRepositories,
 	isConfigValid,
