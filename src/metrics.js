@@ -1,6 +1,6 @@
 'use strict';
 
-const Metrics = require('../config/metrics.js');
+const Metrics = require('../config/metrics');
 
 function mapper(name) {
 	const {

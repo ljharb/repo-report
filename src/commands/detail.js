@@ -9,7 +9,7 @@ const {
 } = require('../utils');
 
 const getMetrics = require('../metrics');
-const Metrics = require('../../config/metrics.js');
+const Metrics = require('../../config/metrics');
 
 // Metric names and their extraction method to be used on the query result (Order is preserved)
 const metricNames = Object.keys(Metrics);
