@@ -18,15 +18,15 @@
     <div class="container">
       <div class="title">Repo Report!</div>
       <div class="instructions">
-        <div>Enter Command and press Enter!</div>
+        <div class="instructions-content">Enter Command and press Enter!</div>
         <div id="status" class="status-hide">
-          <div class="loader">
+          <div class="loader" id="status-loader">
             <div></div>
             <div></div>
             <div></div>
             <div></div>
           </div>
-          <div class="status-text">Getting Data from Github...</div>
+          <div class="status-text" id="status-text"></div>
         </div>
       </div>
 
@@ -41,10 +41,14 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
       const executeCommand = async (command) => {
-        const res = await axios.post("/command", {
-          command: command,
-        })
-        return res.data.output
+        try {
+          const res = await axios.post("/command", {
+            command: command,
+          })
+          return res.data.output
+        } catch (e) {
+          return e.response.data
+        }
       }
 
       const handleInput = async (event) => {
@@ -54,8 +58,12 @@
           clearTable()
           const response = await executeCommand(input.value)
           hidestatus()
-          renderHead(response.metrics)
-          renderBody(response.repos, response.rows)
+          if (response.success === 0) {
+            showError(response.msg)
+          } else {
+            renderHead(response.metrics)
+            renderBody(response.repos, response.rows)
+          }
         }
       }
 
@@ -71,14 +79,39 @@
         }
       }
 
+      const showError = (error) => {
+        let status = document.getElementById("status")
+        let statusLoader = document.getElementById("status-loader")
+        let statusText = document.getElementById("status-text")
+        // set the error text
+        statusText.innerText = error
+        // hide the loader
+        statusLoader.classList.remove("loader")
+        statusLoader.classList.add("status-hide")
+        // make status visible
+        status.classList.remove("status-hide")
+        status.classList.add("status-error")
+      }
+
       const showStatus = () => {
         let status = document.getElementById("status")
+        let statusLoader = document.getElementById("status-loader")
+        let statusText = document.getElementById("status-text")
+        // set the status text
+        statusText.innerText = "Getting Data from Github..."
+        // make the loader visible
+        statusLoader.classList.remove("status-hide")
+        statusLoader.classList.add("loader")
+        // make status visible
         status.classList.remove("status-hide")
+        status.classList.remove("status-error")
         status.classList.add("status")
       }
+
       const hidestatus = () => {
         let status = document.getElementById("status")
         status.classList.remove("status")
+        status.classList.remove("status-error")
         status.classList.add("status-hide")
       }
 

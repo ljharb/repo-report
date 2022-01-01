@@ -2,7 +2,8 @@
 
 'use strict';
 
-const SUCCESS_RES_CODE = 200;
+const { StatusCodes } = require('http-status-codes');
+
 const parse = require('yargs-parser');
 const {
 	listMetrics,
@@ -12,10 +13,6 @@ const {
 } = require('../utils');
 
 const getMetrics = require('../metrics');
-const {
-	GH_TOKEN,
-	GITHUB_TOKEN,
-} = process.env;
 
 // Metric names and their extraction method to be used on the query result (Order is preserved)
 const metricNames = [
@@ -170,12 +167,26 @@ const executeCommand = async (req, res) => {
 	const { command } = req.body;
 	const argv = parse(command);
 	argv.goodness = true;
-	argv.token = GH_TOKEN || GITHUB_TOKEN;
+
+	if (!argv.token) {
+		// token not present, so check positional argument to check if GH_TOKEN or GITHUB_TOKEN is present
+		argv._.forEach((element) => {
+			const [key, val] = element.split('=');
+			if (key === 'GH_TOKEN' || key === 'GITHUB_TOKEN') {
+				argv.token = val;
+			}
+		});
+		if (!argv.token) {
+			// no token provided in frontend, hence return 403
+			return res.status(StatusCodes.FORBIDDEN).json({
+				msg: 'env variable GH_TOKEN or GITHUB_TOKEN, or `--token` argument, not found.',
+				success: 0,
+			});
+		}
+	}
 	let output = await detail(argv);
 	output = generateGui(output);
-	return res.status(SUCCESS_RES_CODE).json({
-		output,
-	});
+	return res.status(StatusCodes.OK).json({ output });
 };
 
 module.exports = {
