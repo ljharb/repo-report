@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.1.1](https://github.com/ljharb/repo-report/compare/v0.1.0...v0.1.1) - 2022-01-01
+
+### Commits
+
+- [Tests] refactor tests into separate files [`84be13a`](https://github.com/ljharb/repo-report/commit/84be13afc9770b94d7d8a83f736818f156f3918d)
+- [Tests] validate metric configs [`84f141e`](https://github.com/ljharb/repo-report/commit/84f141e3d0b3aba9d5fea79bda6b2a9bf5d20e17)
+- [actions] reuse common workflows [`3671010`](https://github.com/ljharb/repo-report/commit/3671010ec5d6e8834efef4d366783edee8415c2c)
+- [readme] update instructions [`ed1cf9a`](https://github.com/ljharb/repo-report/commit/ed1cf9a474c198cf502b2cfb39ab513b2714b3fc)
+- [Dev Deps] update `eslint`, `@ljharb/eslint-config` [`5d708fd`](https://github.com/ljharb/repo-report/commit/5d708fd76cc65b460f4ef6c9177129a8bd15922c)
+- [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `tape` [`84252f7`](https://github.com/ljharb/repo-report/commit/84252f7096c4d10a564545f4e07c05ba88d0157c)
+- [Dev Deps] update `eslint`, `@ljharb/eslint-config` [`06ed1ec`](https://github.com/ljharb/repo-report/commit/06ed1ece6b451b2b5aff1422468009dd7082126b)
+- [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `tape` [`2eb2ce2`](https://github.com/ljharb/repo-report/commit/2eb2ce21acfe562f6764b4e23a0139ed8026ce4b)
+- [Refactor] omit `.js` from requires [`b2be8e3`](https://github.com/ljharb/repo-report/commit/b2be8e336c04bd06737655890f1f64b38f5875ac)
+- [Deps] update `cli-table`, `yargs` [`3af5e9c`](https://github.com/ljharb/repo-report/commit/3af5e9c4fed75c22bd2f84ebc555c41a4ef2ab66)
+- [Deps] update `yargs` [`98a087d`](https://github.com/ljharb/repo-report/commit/98a087de48d9dd27e0620424490c1b047a3a63bd)
+- [Deps] update `cli-table` [`49e2d4b`](https://github.com/ljharb/repo-report/commit/49e2d4bce2e66358ebfd7faa041fcab6ca5f9086)
+- [Fix] fix percentage calculations [`e401a84`](https://github.com/ljharb/repo-report/commit/e401a840bba071cce7c7fa289ae0a1c84af97c64)
+
 ## v0.1.0 - 2021-10-28
 
 ### Merged
