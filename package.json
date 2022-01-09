@@ -30,7 +30,7 @@
 	"dependencies": {
 		"@octokit/graphql": "^4.8.0",
 		"cli-table": "^0.3.11",
-		"colors": "^1.4.0",
+		"colors": "=1.4.0",
 		"dotenv": "^10.0.0",
 		"jsonschema": "^1.4.0",
 		"minimatch": "^3.0.4",
