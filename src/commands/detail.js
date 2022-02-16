@@ -2,12 +2,15 @@
 
 'use strict';
 
+const fs = require('fs');
+
 const {
 	printAPIPoints,
 	getRepositories,
 	generateDetailTable,
 } = require('../utils');
 
+const { execSync } = require('child_process');
 const getMetrics = require('../metrics');
 const Metrics = require('../../config/metrics');
 
@@ -114,6 +117,22 @@ module.exports = async function detail(flags) {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 	}
 
+	const repoOSSF = {};
+	repositories.forEach((repository) => {
+		const cmd = `scorecard --repo=github.com/${repository.nameWithOwner}| grep Aggregate`;
+		const output = execSync(cmd, { encoding: 'utf-8' });
+		repoOSSF[repository.nameWithOwner] = output.substring(17).replace('\n', '');
+		console.log('Aggregate score for', repository.nameWithOwner, ': ', output.substring(17));
+	});
+
+	const json = JSON.stringify(repoOSSF, null, 4);
+	fs.writeFile('repoOSSF.json', json, 'utf8', (err) => {
+		if (err) {
+			return console.error(err);
+		}
+		return console.log(err);
+	});
+
 	// Generate output table
 	const table = generateDetailTable(metrics, repositories, {
 		actual: flags.actual,
@@ -126,7 +145,7 @@ module.exports = async function detail(flags) {
 	if (table) {
 		console.log(String(table));
 	}
-
+	// const output = execSync('scorecard --repo=github.com/${repoURL} | grep Aggregate', { encoding: 'utf-8' });
 	printAPIPoints(points);
 	return null;
 };
