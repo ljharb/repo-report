@@ -24,13 +24,6 @@ module.exports = async function detail(flags) {
 	// Get all repositories
 	const { points, repositories } = await getRepositories(flags, filter);
 
-	if (flags.names) {
-		repositories.forEach((repository) => {
-			console.log(repository.nameWithOwner);
-		});
-		return null;
-	}
-
 	const metrics = getMetrics(flags.pick?.length > 0 ? [...new Set([
 		'Repository',
 		'isFork',
