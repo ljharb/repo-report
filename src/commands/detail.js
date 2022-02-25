@@ -94,13 +94,6 @@ const generateQuery = (endCursor, { f }) => {
 };
 
 module.exports = async function detail(flags) {
-	const metrics = getMetrics(flags.pick?.length > 0 ? [...new Set([
-		'Repository',
-		'isFork',
-		'isPrivate',
-		...metricNames.filter((name) => flags.pick.includes(name)),
-	])] : metricNames);
-
 	// Additional Filter on repos
 	let filter;
 	if (flags.focus?.length === 1 && flags.focus[0] === 'templates') {
@@ -121,6 +114,12 @@ module.exports = async function detail(flags) {
 		return null;
 	}
 
+	const metrics = getMetrics(flags.pick?.length > 0 ? [...new Set([
+		'Repository',
+		'isFork',
+		'isPrivate',
+		...metricNames.filter((name) => flags.pick.includes(name)),
+	])] : metricNames);
 	// Generate output table
 	const table = generateDetailTable(metrics, repositories, {
 		actual: flags.actual,

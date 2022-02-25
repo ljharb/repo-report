@@ -25,7 +25,7 @@ const isConfigValid = (configPaths) => {
 	for (const currPath of configPaths) {
 		try {
 			userConfig = JSON.parse(fs.readFileSync(currPath, 'utf8'));
-			console.log(`${symbols.info} Config file found at ${currPath}`);
+			console.error(`${symbols.info} config file found at ${currPath}...`);
 			// eslint-disable-next-line no-restricted-syntax
 			break;
 		} catch (e) {
@@ -41,8 +41,7 @@ const isConfigValid = (configPaths) => {
 			repositories: { ...config.repositories, ...userConfig.repositories },
 		};
 	} else {
-		console.log(colors.red(`${symbols.error} No config file found`));
-		console.log('Using defaults instead...');
+		console.error(colors.red(`${symbols.error} no config file found, using defaults...`));
 	}
 
 	const { valid, error } = validateConfig(config);
@@ -103,7 +102,7 @@ const getDiffSymbol = (item, allMetrics, value, metric, { unactionable }) => {
 };
 
 const printAPIPoints = (points) => {
-	console.log(`API Points:
+	console.error(`API Points:
   \tused\t\t-\t${points.cost}
   \tremaining\t-\t${points.remaining}`);
 };

@@ -25,7 +25,25 @@ const stdout = () => {
 
 };
 
+const stderr = () => {
+	const previousWrite = process.stderr.write;
+	const loggedData = [];
+
+	process.stderr.write = function (string) {
+		loggedData.push(string);
+	};
+
+	return {
+		loggedData,
+		restore() {
+			process.stderr.write = previousWrite;
+		},
+	};
+
+};
+
 module.exports = {
 	cliWrapper,
 	stdout,
+	stderr,
 };
