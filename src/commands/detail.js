@@ -114,6 +114,13 @@ module.exports = async function detail(flags) {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 	}
 
+	if (flags.names) {
+		repositories.forEach((repository) => {
+			console.log(repository.nameWithOwner);
+		});
+		return null;
+	}
+
 	// Generate output table
 	const table = generateDetailTable(metrics, repositories, {
 		actual: flags.actual,

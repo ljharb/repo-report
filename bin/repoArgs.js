@@ -13,6 +13,11 @@ module.exports = function repoArgs(yargs) {
 			],
 			describe: 'Focus repo types',
 		})
+		.option('names', {
+			default: false,
+			describe: 'Shows the list of repo names with their owner',
+			type: 'boolean',
+		})
 		.option('sort', {
 			alias: 's',
 			default: false,
