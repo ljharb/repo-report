@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.1.3](https://github.com/ljharb/repo-report/compare/v0.1.2...v0.1.3) - 2022-02-25
+
+### Commits
+
+- [Refactor] extract `getRepositories` function to its own file [`b2ff28a`](https://github.com/ljharb/repo-report/commit/b2ff28a97e1f3c505590da9126286cbd57d2d11c)
+- [Fix] send config file logging to stderr [`991465b`](https://github.com/ljharb/repo-report/commit/991465b27a54057dba59db3ee26699ac5d26e483)
+- [Fix] move `--names` into `repo-report ls`, which was broken [`344d8f7`](https://github.com/ljharb/repo-report/commit/344d8f7184cf2e4b64de2c1bbc81b7b09aa2cee0)
+- [New] add `--names` option to only output the list of repositories-with-their-owner [`8d97bd6`](https://github.com/ljharb/repo-report/commit/8d97bd60433a057eeef0da1e5c9fb54bbe0e7984)
+- [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `aud`, `auto-changelog`, `tape` [`1b5eb6c`](https://github.com/ljharb/repo-report/commit/1b5eb6c7d9a238dca0b665437ad3adab674b1db7)
+- [Deps] update `minimatch` [`01158a2`](https://github.com/ljharb/repo-report/commit/01158a2e9ce1db3081075b5f40f6d3b4af9de110)
+
 ## [v0.1.2](https://github.com/ljharb/repo-report/compare/v0.1.1...v0.1.2) - 2022-01-09
 
 ### Commits
@@ -196,7 +207,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - change config path [`3f54745`](https://github.com/ljharb/repo-report/commit/3f547457ecc131b40bdbaca7f23c78e0a7ceaeb0)
 - update file location of the config file in the folder [`43e330d`](https://github.com/ljharb/repo-report/commit/43e330d08aa70bd7134dfa4daa8af3cc6ad37f29)
 - add config file [`23d96a5`](https://github.com/ljharb/repo-report/commit/23d96a5e05d1b457da7662fc01ce0a4b7a0d040b)
-- Apply suggestions from code review [`5ea4363`](https://github.com/ljharb/repo-report/commit/5ea4363c9f16c9bef39d55c0c869006ef14a021f)
+- Apply suggestions from code review [`5ea4363`](https://github.com/ljharb/repo-report/commit/5ea4363c9f16c9bef39d55c0c869006ef14a021f)
 - Update README.md [`77ca5b4`](https://github.com/ljharb/repo-report/commit/77ca5b4bd0c2c230013c2fd4bcd17cbdef601480)
 - update  run test [`5c086c2`](https://github.com/ljharb/repo-report/commit/5c086c25ae67083cc8a58364348138094766f286)
 - add name with owner [`33a2583`](https://github.com/ljharb/repo-report/commit/33a258393f5453afcfd9410db6f918e1cf70c489)
@@ -222,7 +233,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix linting errors [`d92f851`](https://github.com/ljharb/repo-report/commit/d92f8519f8bca5079d1dbae915448d5529a8e271)
 - Fix argv uninitialised error [`13ddf8a`](https://github.com/ljharb/repo-report/commit/13ddf8ae6095af4a40e2af92bea8f450fa2e7d21)
 - Lint code [`8c88418`](https://github.com/ljharb/repo-report/commit/8c88418c7fd56ab956776bde305ae564f00713c5)
-- Update package.json [`073d522`](https://github.com/ljharb/repo-report/commit/073d52218c583d2952c1f534f927e430bb14b741)
+- Update package.json [`073d522`](https://github.com/ljharb/repo-report/commit/073d52218c583d2952c1f534f927e430bb14b741)
 - update package.json with joi [`50cac54`](https://github.com/ljharb/repo-report/commit/50cac54d9f4f97d22efa17a6eb86dd66ccdb05a0)
 - Lint code [`432abeb`](https://github.com/ljharb/repo-report/commit/432abeb91789921bcaddc22a1d56a729ccf4e5db)
 - throw a string instead of an error instance [`f10f43d`](https://github.com/ljharb/repo-report/commit/f10f43d283fd8d2ca27281f59283f000df8fe915)
