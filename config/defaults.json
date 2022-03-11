@@ -29,7 +29,8 @@
     "ReqCodeOwnerReviews": false,
     "ReqConversationResolution": false,
     "RequiredBranchProtectionSourcePercentage": 100,
-    "WebCommitSignoffRequired": false
+    "WebCommitSignoffRequired": false,
+    "CodeOfConduct": [null, "Contributor Covenant"]
   },
   "overrides": [],
   "repositories": {

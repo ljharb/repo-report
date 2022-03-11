@@ -82,6 +82,9 @@
 						"name": "responsive-design",
 						"nameWithOwner": "name/responsive-design",
 						"isPrivate": false,
+						"codeOfConduct" : {
+							"name" : "Contributor Covenant"
+						},
 						"defaultBranchRef": {
 							"name": "master",
 							"branchProtectionRule": {
@@ -143,6 +146,9 @@
 						"name": "ecma262",
 						"nameWithOwner": "name/ecma262",
 						"isPrivate": false,
+						"codeOfConduct" : {
+							"name" : "Contributor Covenant"
+						},
 						"defaultBranchRef": {
 							"name": "main",
 							"branchProtectionRule": {
@@ -160,6 +166,18 @@
 						},
 						"viewerPermission": "ADMIN",
 						"isSecurityPolicyEnabled": true
+					},
+					{
+						"name": "agendas",
+						"nameWithOwner": "name/agendas",
+						"isPrivate": false,
+						"codeOfConduct" : {
+							"name": "---"
+						},
+						"defaultBranchRef": {
+							"name": "main"
+						},
+						"viewerPermission": "ADMIN"
 					}
 				]
 			}

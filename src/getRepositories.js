@@ -62,6 +62,9 @@ function generateQuery(endCursor, { f }) {
 						isFork
 						isPrivate
 						isSecurityPolicyEnabled
+						codeOfConduct {
+							name
+						}
 						isTemplate
 						licenseInfo {
 							name

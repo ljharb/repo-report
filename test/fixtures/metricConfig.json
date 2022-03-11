@@ -27,6 +27,7 @@
 		"ReqApprovingReviewCount": 1,
 		"ReqApprovingReviews": false,
 		"ReqCodeOwnerReviews": false,
-		"ReqConversationResolution": false
+		"ReqConversationResolution": false,
+		"CodeOfConduct": [null, "Contributor Covenant"]
 	}
 }

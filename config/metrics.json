@@ -10,6 +10,16 @@
 			"uniqueItems": true
 		},
 		"AllowsDeletions": { "type": ["boolean", "null"] },
+		"CodeOfConduct": {
+			"oneOf": [
+				{ "type": ["boolean", "string", "null"] },
+				{
+					"items": { "type": ["string", "null"] },
+					"type": "array",
+					"uniqueItems": true
+				}
+			]
+		},
 		"AllowsForcePushes": { "type": ["boolean", "null"] },
 		"RequiredBranchProtectionSourcePercentage": { "type": ["number", "null"] },
 		"AllowsForking": { "type": ["boolean", "null"] },

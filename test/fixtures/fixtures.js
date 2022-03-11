@@ -38,10 +38,10 @@ const expectedOptions = {
 const tableOutput = Object.setPrototypeOf(Object.assign([
 	[
 		'Stats',
-		'100% (8/8)',
-		'25% (2/8)',
-		'12.5% (1/8)',
-		'50% (4/8)',
+		'100% (9/9)',
+		'33.3% (3/9)',
+		'11.1% (1/9)',
+		'55.6% (5/9)',
 	],
 	[
 		'name/challenges-book\nname/responsive-design',
@@ -71,10 +71,17 @@ const tableOutput = Object.setPrototypeOf(Object.assign([
 		`${symbols.success}`,
 		`${symbols.error}`,
 	],
+	[
+		'name/agendas',
+		`${symbols.success}`,
+		`${symbols.success}`,
+		`${symbols.error}`,
+		`${symbols.success}`,
+	],
 ], {
 	options: {
 		...expectedOptions,
-		head: ['Repository', 'Access', 'DefBranch', 'SecurityPolicyEnabled', 'RequiredBranchProtectionSourcePercentage'],
+		head: ['Repository', 'Access\nCodeOfConduct', 'DefBranch', 'SecurityPolicyEnabled', 'RequiredBranchProtectionSourcePercentage'],
 	},
 }), Table.prototype);
 
@@ -84,6 +91,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'ADMIN',
 		'master',
 		'false',
+		'---',
 		'100',
 	],
 	[
@@ -91,6 +99,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'ADMIN',
 		'master',
 		'false',
+		'---',
 		'40',
 	],
 	[
@@ -98,6 +107,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'ADMIN',
 		'master',
 		'false',
+		'Contributor Covenant',
 		'0',
 	],
 	[
@@ -105,6 +115,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'ADMIN',
 		'develop',
 		'false',
+		'---',
 		'100',
 	],
 	[
@@ -112,6 +123,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'ADMIN',
 		'main',
 		'false',
+		'---',
 		'60',
 	],
 	[
@@ -119,12 +131,21 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'ADMIN',
 		'main',
 		'true',
+		'Contributor Covenant',
 		'50',
+	],
+	[
+		'name/agendas',
+		'ADMIN',
+		'main',
+		'false',
+		'---',
+		'100',
 	],
 ], {
 	options: {
 		...expectedOptions,
-		head: ['Repository', 'Access', 'DefBranch', 'SecurityPolicyEnabled', 'RequiredBranchProtectionSourcePercentage'],
+		head: ['Repository', 'Access', 'DefBranch', 'SecurityPolicyEnabled', 'CodeOfConduct', 'RequiredBranchProtectionSourcePercentage'],
 	},
 }), Table.prototype);
 
@@ -134,6 +155,7 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.success} ADMIN`,
 		`${symbols.error} master`,
 		`${symbols.error} false`,
+		`${symbols.ignore} ---`,
 		`${symbols.error} 40`,
 	],
 	[
@@ -141,6 +163,7 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.success} ADMIN`,
 		`${symbols.error} master`,
 		`${symbols.error} false`,
+		`${symbols.success} Contributor Covenant`,
 		`${symbols.error} 0`,
 	],
 	[
@@ -148,6 +171,7 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.success} ADMIN`,
 		`${symbols.error} master`,
 		`${symbols.error} false`,
+		`${symbols.ignore} ---`,
 		`${symbols.success} 100`,
 	],
 	[
@@ -155,6 +179,7 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.success} ADMIN`,
 		`${symbols.error} develop`,
 		`${symbols.error} false`,
+		`${symbols.ignore} ---`,
 		`${symbols.success} 100`,
 	],
 	[
@@ -162,6 +187,7 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.success} ADMIN`,
 		`${symbols.success} main`,
 		`${symbols.error} false`,
+		`${symbols.ignore} ---`,
 		`${symbols.error} 60`,
 	],
 	[
@@ -169,12 +195,21 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.success} ADMIN`,
 		`${symbols.success} main`,
 		`${symbols.success} true`,
+		`${symbols.success} Contributor Covenant`,
 		`${symbols.error} 50`,
+	],
+	[
+		'name/agendas',
+		`${symbols.success} ADMIN`,
+		`${symbols.success} main`,
+		`${symbols.error} false`,
+		`${symbols.ignore} ---`,
+		`${symbols.success} 100`,
 	],
 ], {
 	options: {
 		...expectedOptions,
-		head: ['Repository', 'Access', 'DefBranch', 'SecurityPolicyEnabled', 'RequiredBranchProtectionSourcePercentage'],
+		head: ['Repository', 'Access', 'DefBranch', 'SecurityPolicyEnabled', 'CodeOfConduct', 'RequiredBranchProtectionSourcePercentage'],
 	},
 }), Table.prototype);
 

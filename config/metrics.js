@@ -161,6 +161,30 @@ module.exports = {
 		extract: (item) => !!getBPRules(item)?.requiresConversationResolution,
 		permissions: ['ADMIN'],
 	},
+	CodeOfConduct: {
+		compare(item, config) {
+			const value = item?.codeOfConduct?.name;
+
+			if (typeof config === 'boolean') {
+				return config ? value != null : value == null; // eslint-disable-line eqeqeq
+			}
+
+			const cocs = [].concat(config);
+			const ignore = cocs.some((x) => x === null);
+
+			if (value == null) { // eslint-disable-line eqeqeq
+				return ignore ? null : false;
+			}
+
+			if (cocs.some((configItem) => value === configItem)) {
+				return true;
+			}
+
+			return ignore ? null : false;
+		},
+		extract: (item) => item.codeOfConduct?.name || empty,
+		permissions: ['ADMIN', 'MAINTAIN', 'WRITE'],
+	},
 	isPrivate: {
 		dontPrint: true,
 		extract: (item) => item.isPrivate,
