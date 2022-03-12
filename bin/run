@@ -19,22 +19,20 @@ const {
 } = process.env;
 
 // Variable to prevent calling isConfigValid twice
-let configValidated;
 const defaultConfigPaths = [].concat(
 	XDG_CONFIG_HOME ? path.join(XDG_CONFIG_HOME, 'repo-report.json') : [],
 	path.join(homedir, '.repo-report.json'),
 );
 
+// eslint-disable-next-line no-template-curly-in-string
+const defaultConfig = Object('${XDG_CONFIG_HOME:-$HOME}/.repo-report.json');
+
 Yargs.usage('Usage: $0 <command> [options]')
 	.config('config')
-	// .default('config', `${process.env.HOME}/.repo-report.json`)
+	.default('config', defaultConfig)
 	.check(({ config }) => {
-		if (configValidated) {
-			return true;
-		}
-		configValidated = true;
 		const configPaths = [].concat(
-			config || [],
+			config === defaultConfig ? [] : config,
 			defaultConfigPaths,
 		);
 		const { valid, error } = isConfigValid(configPaths);
