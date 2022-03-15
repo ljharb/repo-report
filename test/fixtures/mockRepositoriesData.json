@@ -61,6 +61,26 @@
 							"name": "develop"
 						},
 						"viewerPermission": "ADMIN"
+					},
+					{
+						"name": "tc39-ci",
+						"nameWithOwner": "name/tc39-ci",
+						"isPrivate": false,
+						"defaultBranchRef": {
+							"name": "main"
+						},
+						"viewerPermission": "ADMIN",
+						"isSecurityPolicyEnabled": false
+					},
+					{
+						"name": "ecma262",
+						"nameWithOwner": "name/ecma262",
+						"isPrivate": false,
+						"defaultBranchRef": {
+							"name": "main"
+						},
+						"viewerPermission": "ADMIN",
+						"isSecurityPolicyEnabled": true
 					}
 				]
 			}

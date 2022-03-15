@@ -12,7 +12,7 @@ const {
 
 const getMetrics = require('../../src/metrics');
 
-const metrics = getMetrics(['Repository', 'Access', 'DefBranch', 'isPrivate']);
+const metrics = getMetrics(['Repository', 'Access', 'DefBranch', 'isPrivate', 'SecurityPolicyEnabled']);
 
 function compareTables(t, actual, expected, msg, invalid = false) {
 	const comparator = invalid ? 'notDeepEqual' : 'deepEqual';

@@ -8,7 +8,7 @@
     "Archived": false,
     "AutoMergeAllowed": false,
     "BlankIssuesEnabled": false,
-    "SecurityPolicyEnabled": false,
+    "SecurityPolicyEnabled": true,
     "License": ["MIT License", null],
     "MergeStrategies": {
         "MERGE": true,

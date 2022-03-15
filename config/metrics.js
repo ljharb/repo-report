@@ -55,7 +55,8 @@ module.exports = {
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE'],
 	},
 	SecurityPolicyEnabled: {
-		extract: (item) => item.isSecurityPolicyEnabled,
+		compare: (item, config) => !!config === item.isSecurityPolicyEnabled,
+		extract: (item) => !!item.isSecurityPolicyEnabled,
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE'],
 	},
 	License: {

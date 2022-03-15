@@ -34,16 +34,29 @@ const expectedOptions = {
 			border: ['grey'],
 			compact: false,
 		},
-		head: ['Repository', 'Access', 'DefBranch'],
+		head: ['Repository', 'Access', 'DefBranch', 'SecurityPolicyEnabled'],
 	},
 };
 
 const tableOutput = Object.setPrototypeOf(Object.assign([
-	['Stats', '100% (6/6)', '0% (0/6)'],
+	['Stats', '100% (8/8)', '25% (2/8)', '12.5% (1/8)'],
 	[
 		'name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design\nname/media-upload-app',
 		symbols.success,
 		symbols.error,
+		symbols.error,
+	],
+	[
+		'name/tc39-ci',
+		symbols.success,
+		symbols.success,
+		symbols.error,
+	],
+	[
+		'name/ecma262',
+		symbols.success,
+		symbols.success,
+		symbols.success,
 	],
 ], expectedOptions), Table.prototype);
 
@@ -52,11 +65,25 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design',
 		'ADMIN',
 		'master',
+		'false',
 	],
 	[
 		'name/media-upload-app',
 		'ADMIN',
 		'develop',
+		'false',
+	],
+	[
+		'name/tc39-ci',
+		'ADMIN',
+		'main',
+		'false',
+	],
+	[
+		'name/ecma262',
+		'ADMIN',
+		'main',
+		'true',
 	],
 ], expectedOptions), Table.prototype);
 
