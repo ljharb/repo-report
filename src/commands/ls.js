@@ -1,6 +1,7 @@
 'use strict';
 
 const getRepositories = require('../getRepositories');
+const loadingIndicator = require('../loadingIndicator');
 
 module.exports = async function ls(flags) {
 	let filter;
@@ -9,7 +10,7 @@ module.exports = async function ls(flags) {
 	}
 
 	// Get all repositories
-	const { repositories } = await getRepositories(flags, filter);
+	const { repositories } = await loadingIndicator(() => getRepositories(flags, filter));
 
 	repositories.forEach((repository) => {
 		console.log(repository.nameWithOwner);

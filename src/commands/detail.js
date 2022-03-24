@@ -7,6 +7,7 @@ const {
 	generateDetailTable,
 } = require('../utils');
 const getRepositories = require('../getRepositories');
+const loadingIndicator = require('../loadingIndicator');
 
 const getMetrics = require('../metrics');
 const Metrics = require('../../config/metrics');
@@ -22,7 +23,7 @@ module.exports = async function detail(flags) {
 	}
 
 	// Get all repositories
-	const { points, repositories } = await getRepositories(flags, filter);
+	const { points, repositories } = await loadingIndicator(() => getRepositories(flags, filter));
 
 	const metrics = getMetrics(flags.pick?.length > 0 ? [...new Set([
 		'Repository',
