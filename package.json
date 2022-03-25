@@ -2,10 +2,9 @@
 	"name": "repo-report",
 	"version": "0.1.3",
 	"description": "CLI to list all repos a user has access to, and report on their configuration in aggregate.",
-	"bin": {
-		"repo-report": "./bin/run"
-	},
+	"bin": "./bin/run",
 	"main": false,
+	"sideEffects": false,
 	"exports": {
 		"./package.json": "./package.json"
 	},
@@ -20,13 +19,12 @@
 		"version": "auto-changelog && git add CHANGELOG.md",
 		"postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
 	},
-	"engines": {
-		"node": ">=14"
-	},
 	"repository": "https://github.com/ljharb/repo-report",
-	"author": "ljharb",
+	"author": "Jordan Harband <ljharb@gmail.com>",
+	"funding": {
+		"url": "https://github.com/sponsors/ljharb"
+	},
 	"license": "MIT",
-	"private": false,
 	"dependencies": {
 		"@octokit/graphql": "^4.8.0",
 		"cli-table": "^0.3.11",
@@ -49,6 +47,9 @@
 		"safe-publish-latest": "^2.0.0",
 		"tap-spec": "^5.0.0",
 		"tape": "^5.5.2"
+	},
+	"engines": {
+		"node": ">=14"
 	},
 	"auto-changelog": {
 		"output": "CHANGELOG.md",
