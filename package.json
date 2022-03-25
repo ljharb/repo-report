@@ -33,7 +33,7 @@
 		"jsonschema": "^1.4.0",
 		"minimatch": "^3.1.2",
 		"mkdirp": "^1.0.4",
-		"yargs": "^17.3.1"
+		"yargs": "^17.4.0"
 	},
 	"devDependencies": {
 		"@ljharb/eslint-config": "^20.2.3",
