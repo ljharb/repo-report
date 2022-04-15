@@ -5,6 +5,14 @@
 
 const symbols = require('../src/symbols');
 const getBPRules = (item) => item.defaultBranchRef?.branchProtectionRule;
+const calcRestrictedSourcePercentage = (item = {}) => {
+	if (item?.requiredStatusChecks?.length > 0) {
+		const { requiredStatusChecks } = item;
+		const withSource = requiredStatusChecks.filter((check) => check.app !== null);
+		return (withSource.length / requiredStatusChecks.length) * 100;
+	}
+	return 100;
+};
 
 const empty = Object('---');
 
@@ -39,6 +47,11 @@ module.exports = {
 	WikiEnabled: {
 		extract: (item) => item.hasWikiEnabled,
 		permissions: ['ADMIN', 'MAINTAIN'],
+	},
+	RequiredBranchProtectionSourcePercentage: {
+		compare: (item, config) => calcRestrictedSourcePercentage(getBPRules(item)) >= config,
+		extract: (item) => calcRestrictedSourcePercentage(getBPRules(item)),
+		permissions: ['ADMIN'],
 	},
 	AllowsForking: {
 		extract: (item) => item.forkingAllowed,

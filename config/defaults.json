@@ -25,7 +25,8 @@
     "ReqApprovingReviewCount": 1,
     "ReqApprovingReviews": false,
     "ReqCodeOwnerReviews": false,
-    "ReqConversationResolution": false
+    "ReqConversationResolution": false,
+    "RequiredBranchProtectionSourcePercentage": 100
   },
   "overrides": [],
   "repositories": {

@@ -11,6 +11,7 @@
 		},
 		"AllowsDeletions": { "type": ["boolean", "null"] },
 		"AllowsForcePushes": { "type": ["boolean", "null"] },
+		"RequiredBranchProtectionSourcePercentage": { "type": ["number", "null"] },
 		"AllowsForking": { "type": ["boolean", "null"] },
 		"Archived": { "type": ["boolean", "null"] },
 		"AutoMergeAllowed": { "type": ["boolean", "null"] },
@@ -47,7 +48,6 @@
 				"SQUASH": { "type": ["boolean", "null"] }
 			},
 			"type": ["object", "null"]
-
 		},
 		"ProjectsEnabled": { "type": ["boolean", "null"] },
 		"ReqApprovingReviewCount": {

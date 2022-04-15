@@ -41,6 +41,11 @@ function generateQuery(endCursor, { f }) {
 								requiresCodeOwnerReviews
 								requiresConversationResolution
 								restrictsPushes
+								requiredStatusChecks {
+									app {
+										id
+									}
+								}
 							}
 						}
 						deleteBranchOnMerge

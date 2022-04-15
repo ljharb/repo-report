@@ -13,7 +13,8 @@
 						"nameWithOwner": "name/project-eraser",
 						"isPrivate": false,
 						"defaultBranchRef": {
-							"name": "master"
+							"name": "master",
+							"branchProtectionRule": null
 						},
 						"viewerPermission": "ADMIN"
 					},
@@ -22,7 +23,8 @@
 						"nameWithOwner": "name/guidelines-questionnaire",
 						"isPrivate": false,
 						"defaultBranchRef": {
-							"name": "master"
+							"name": "master",
+							"branchProtectionRule": null
 						},
 						"viewerPermission": "ADMIN"
 					},
@@ -31,7 +33,30 @@
 						"nameWithOwner": "name/challenges-book",
 						"isPrivate": false,
 						"defaultBranchRef": {
-							"name": "master"
+							"name": "master",
+							"branchProtectionRule": {
+								"requiredStatusChecks": [
+									{
+										"app": {
+											"id": "somerandomid"
+										}
+									},
+									{
+										"app": {
+											"id": "somerandomid"
+										}
+									},
+									{
+										"app": null
+									},
+									{
+										"app": null
+									},
+									{
+										"app": null
+									}
+								]
+							}
 						},
 						"viewerPermission": "ADMIN"
 					},
@@ -40,7 +65,16 @@
 						"nameWithOwner": "name/microservice",
 						"isPrivate": true,
 						"defaultBranchRef": {
-							"name": "master"
+							"name": "master",
+							"branchProtectionRule": {
+								"requiredStatusChecks": [
+									{
+										"app": {
+											"id": "somerandomid"
+										}
+									}
+								]
+							}
 						},
 						"viewerPermission": "ADMIN"
 					},
@@ -49,7 +83,14 @@
 						"nameWithOwner": "name/responsive-design",
 						"isPrivate": false,
 						"defaultBranchRef": {
-							"name": "master"
+							"name": "master",
+							"branchProtectionRule": {
+								"requiredStatusChecks": [
+									{
+										"app": null
+									}
+								]
+							}
 						},
 						"viewerPermission": "ADMIN"
 					},
@@ -58,7 +99,8 @@
 						"nameWithOwner": "name/media-upload-app",
 						"isPrivate": false,
 						"defaultBranchRef": {
-							"name": "develop"
+							"name": "develop",
+							"branchProtectionRule": null
 						},
 						"viewerPermission": "ADMIN"
 					},
@@ -67,7 +109,32 @@
 						"nameWithOwner": "name/tc39-ci",
 						"isPrivate": false,
 						"defaultBranchRef": {
-							"name": "main"
+							"name": "main",
+							"branchProtectionRule": {
+								"requiredStatusChecks": [
+									{
+										"app": {
+											"id": "somerandomid"
+										}
+									},
+									{
+										"app": {
+											"id": "somerandomid"
+										}
+									},
+									{
+										"app": {
+											"id": "somerandomid"
+										}
+									},
+									{
+										"app": null
+									},
+									{
+										"app": null
+									}
+								]
+							}
 						},
 						"viewerPermission": "ADMIN",
 						"isSecurityPolicyEnabled": false
@@ -77,7 +144,19 @@
 						"nameWithOwner": "name/ecma262",
 						"isPrivate": false,
 						"defaultBranchRef": {
-							"name": "main"
+							"name": "main",
+							"branchProtectionRule": {
+								"requiredStatusChecks": [
+									{
+										"app": {
+											"id": "somerandomid"
+										}
+									},
+									{
+										"app": null
+									}
+								]
+							}
 						},
 						"viewerPermission": "ADMIN",
 						"isSecurityPolicyEnabled": true
