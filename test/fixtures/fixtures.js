@@ -7,9 +7,10 @@ const mockRepositoriesData = require('./mockRepositoriesData.json');
 
 const tableOutput = {
 	__proto__: Table.prototype,
-	0: ['Stats', '0% (0/6)'],
+	0: ['Stats', '100% (6/6)', '0% (0/6)'],
 	1: [
 		'name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design\nname/media-upload-app',
+		symbols.success,
 		symbols.error,
 	],
 	options: {
@@ -40,9 +41,9 @@ const tableOutput = {
 			border: ['grey'],
 			compact: false,
 		},
-		head: ['Repository', 'Access\nDefBranch'],
+		head: ['Repository', 'Access', 'DefBranch'],
 	},
-	length: 2,
+	length: 3,
 };
 
 const tableOutputActual = {

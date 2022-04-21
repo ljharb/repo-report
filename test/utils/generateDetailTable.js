@@ -10,36 +10,57 @@ const {
 	tableOutputActual,
 } = require('../fixtures/fixtures');
 
-const metrics = [
-	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
-	{ name: 'Access', extract: (item) => item.viewerPermission },
-	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
-	{ name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true },
-];
+const getMetrics = require('../../src/metrics');
+
+const metrics = getMetrics(['Repository', 'Access', 'DefBranch', 'isPrivate']);
+
+function compareTables(t, actual, expected, msg, invalid = false) {
+	const comparator = invalid ? 'notDeepEqual' : 'deepEqual';
+	t.test(msg, (st) => {
+		if (!invalid) {
+			st[comparator](
+				actual.options.head,
+				expected.options.head,
+				'table heads are deepEqual',
+			);
+			const { head: _, ...actualOpts } = actual.options;
+			const { head: __, ...expectedOpts } = expected.options;
+			st[comparator](
+				actualOpts,
+				expectedOpts,
+				'table options are deepEqual',
+			);
+		}
+		st[comparator](
+			Array.prototype.slice.call(actual),
+			Array.prototype.slice.call(expected),
+			'deepEqual when coerced to array',
+		);
+		st.end();
+	});
+}
 
 test('generateDetailTable,', (t) => {
-	t.deepEqual(
+	compareTables(
+		t,
 		generateDetailTable(metrics, repositories.nodes, { goodness: true }),
 		tableOutput,
 		'return a generated detail table',
 	);
 
-	t.deepEqual(
+	compareTables(
+		t,
 		generateDetailTable(metrics, repositories.nodes, { actual: true }),
 		tableOutputActual,
 		'return a generated detail table with --actual option',
 	);
 
-	const columns = [
-		{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
-		{ name: 'Access', extract: (item) => item.viewerPermission },
-		{ name: 'branch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
-	];
-
-	t.notDeepEqual(
-		generateDetailTable(columns, repositories.nodes),
+	compareTables(
+		t,
+		generateDetailTable(metrics, repositories.nodes),
 		tableOutput,
 		'return invalid output',
+		true,
 	);
 
 	t.end();

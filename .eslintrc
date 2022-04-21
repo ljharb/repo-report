@@ -1,5 +1,6 @@
 {
 	"extends": ["@ljharb/eslint-config/node/14"],
+
 	"rules": {
 		"array-bracket-newline": "off",
 		"func-style": "off",
@@ -10,4 +11,14 @@
 			"skipBlankLines": true,
 		}],
 	},
+	
+	"overrides": [
+		{
+			"files": "test/**/*",
+			"rules": {
+				"max-params": "off",
+				"no-unused-vars": ["error", { "ignoreRestSiblings": true }]
+			},
+		},
+	],
 }
