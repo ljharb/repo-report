@@ -5,83 +5,60 @@ const symbols = require('../../src/symbols');
 
 const mockRepositoriesData = require('./mockRepositoriesData.json');
 
-const tableOutput = {
-	__proto__: Table.prototype,
-	0: ['Stats', '100% (6/6)', '0% (0/6)'],
-	1: [
+const expectedOptions = {
+	options: {
+		chars: {
+			top: '─',
+			'top-mid': '┬',
+			'top-left': '┌',
+			'top-right': '┐',
+			bottom: '─',
+			'bottom-mid': '┴',
+			'bottom-left': '└',
+			'bottom-right': '┘',
+			left: '│',
+			'left-mid': '├',
+			mid: '─',
+			'mid-mid': '┼',
+			right: '│',
+			'right-mid': '┤',
+			middle: '│',
+		},
+		truncate: '…',
+		colWidths: [],
+		colAligns: [],
+		style: {
+			'padding-left': 1,
+			'padding-right': 1,
+			head: ['red'],
+			border: ['grey'],
+			compact: false,
+		},
+		head: ['Repository', 'Access', 'DefBranch'],
+	},
+};
+
+const tableOutput = Object.setPrototypeOf(Object.assign([
+	['Stats', '100% (6/6)', '0% (0/6)'],
+	[
 		'name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design\nname/media-upload-app',
 		symbols.success,
 		symbols.error,
 	],
-	options: {
-		chars: {
-			top: '─',
-			'top-mid': '┬',
-			'top-left': '┌',
-			'top-right': '┐',
-			bottom: '─',
-			'bottom-mid': '┴',
-			'bottom-left': '└',
-			'bottom-right': '┘',
-			left: '│',
-			'left-mid': '├',
-			mid: '─',
-			'mid-mid': '┼',
-			right: '│',
-			'right-mid': '┤',
-			middle: '│',
-		},
-		truncate: '…',
-		colWidths: [],
-		colAligns: [],
-		style: {
-			'padding-left': 1,
-			'padding-right': 1,
-			head: ['red'],
-			border: ['grey'],
-			compact: false,
-		},
-		head: ['Repository', 'Access', 'DefBranch'],
-	},
-	length: 3,
-};
+], expectedOptions), Table.prototype);
 
-const tableOutputActual = {
-	__proto__: Table.prototype,
-	0: ['name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design', 'ADMIN', 'master'],
-	1: ['name/media-upload-app', 'ADMIN', 'develop'],
-	options: {
-		chars: {
-			top: '─',
-			'top-mid': '┬',
-			'top-left': '┌',
-			'top-right': '┐',
-			bottom: '─',
-			'bottom-mid': '┴',
-			'bottom-left': '└',
-			'bottom-right': '┘',
-			left: '│',
-			'left-mid': '├',
-			mid: '─',
-			'mid-mid': '┼',
-			right: '│',
-			'right-mid': '┤',
-			middle: '│',
-		},
-		truncate: '…',
-		colWidths: [],
-		colAligns: [],
-		style: {
-			'padding-left': 1,
-			'padding-right': 1,
-			head: ['red'],
-			border: ['grey'],
-			compact: false,
-		},
-		head: ['Repository', 'Access', 'DefBranch'],
-	},
-	length: 2,
-};
+const tableOutputActual = Object.setPrototypeOf(Object.assign([
+	[
+		'name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design',
+		'ADMIN',
+		'master',
+	],
+	[
+		'name/media-upload-app',
+		'ADMIN',
+		'develop',
+	],
+], expectedOptions), Table.prototype);
 
 const DetailTableColumns = [
 	'Repository',
