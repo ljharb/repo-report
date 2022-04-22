@@ -88,13 +88,16 @@ const getDiffSymbol = (item, allMetrics, value, metric, { actual, unactionable }
 	if (configValue === undefined) {
 		return undefined;
 	}
+
+	const configIsNull = [].concat(configValue).includes(null);
+
 	let out;
 	if (metric.compare) {
 		out = metric.compare(item, configValue ?? undefined);
 	} else {
-		out = typeof value === 'boolean' && configValue === null ? value : configValue === value;
+		out = typeof value === 'boolean' && configIsNull ? value : configValue === value;
 	}
-	if (configValue === null) {
+	if (configIsNull) {
 		// eslint-disable-next-line eqeqeq
 		return actual && out == null ? symbols.ignore : symbols.success;
 	}
