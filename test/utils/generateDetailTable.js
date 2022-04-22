@@ -8,6 +8,7 @@ const {
 	mockRepositoriesData: { data: { viewer: { repositories } } },
 	tableOutput,
 	tableOutputActual,
+	tableOutputActualGoodness,
 } = require('../fixtures/fixtures');
 
 const getMetrics = require('../../src/metrics');
@@ -53,6 +54,13 @@ test('generateDetailTable,', (t) => {
 		generateDetailTable(metrics, repositories.nodes, { actual: true }),
 		tableOutputActual,
 		'return a generated detail table with --actual option',
+	);
+
+	compareTables(
+		t,
+		generateDetailTable(metrics, repositories.nodes, { actual: true, goodness: true }),
+		tableOutputActualGoodness,
+		'return a generated detail table with --actual and --goodness option',
 	);
 
 	compareTables(

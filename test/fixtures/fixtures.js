@@ -87,6 +87,33 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 	],
 ], expectedOptions), Table.prototype);
 
+const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
+	[
+		'name/project-eraser\nname/guidelines-questionnaire\nname/challenges-book\n🔒 name/microservice\nname/responsive-design',
+		`${symbols.success} ADMIN`,
+		`${symbols.error} master`,
+		`${symbols.error} false`,
+	],
+	[
+		'name/media-upload-app',
+		`${symbols.success} ADMIN`,
+		`${symbols.error} develop`,
+		`${symbols.error} false`,
+	],
+	[
+		'name/tc39-ci',
+		`${symbols.success} ADMIN`,
+		`${symbols.success} main`,
+		`${symbols.error} false`,
+	],
+	[
+		'name/ecma262',
+		`${symbols.success} ADMIN`,
+		`${symbols.success} main`,
+		`${symbols.success} true`,
+	],
+], expectedOptions), Table.prototype);
+
 const DetailTableColumns = [
 	'Repository',
 	'Access',
@@ -140,6 +167,7 @@ module.exports = {
 	mockRepositoriesData,
 	tableOutput,
 	tableOutputActual,
+	tableOutputActualGoodness,
 	DetailTableColumns,
 	sortedRepositories,
 	tableData,

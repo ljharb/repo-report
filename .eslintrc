@@ -4,6 +4,7 @@
 	"rules": {
 		"array-bracket-newline": "off",
 		"func-style": "off",
+		"id-length": "off",
 		"max-lines": "off",
 		"max-lines-per-function": ["error", {
 			"max": 100,
