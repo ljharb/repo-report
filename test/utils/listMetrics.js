@@ -4,14 +4,10 @@ const test = require('tape');
 
 const { stdout } = require('../test-utils');
 
+const getMetrics = require('../../src/metrics');
 const { listMetrics } = require('../../src/utils');
 
-const metrics = [
-	{ name: 'Repository', extract: (item) => `${item.isPrivate ? '🔒 ' : ''}${item.nameWithOwner}` },
-	{ name: 'Access', extract: (item) => item.viewerPermission },
-	{ name: 'DefBranch', extract: (item) => (item.defaultBranchRef || {}).name || '---' },
-	{ name: 'isPrivate', extract: (item) => item.isPrivate, dontPrint: true },
-];
+const metrics = getMetrics(['Repository', 'Access', 'DefBranch', 'isPrivate']);
 
 test('listMetrics', (t) => {
 	t.test('output each metric name', (st) => {
