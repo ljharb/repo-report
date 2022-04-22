@@ -5,9 +5,10 @@ const colors = require('colors/safe');
 module.exports = {
 	error: colors.red('✖'),
 	fork: '🍴',
+	ignore: '🤷',
 	info: colors.blue('ℹ'),
 	isPrivate: '🔒',
 	success: colors.green('✔'),
-	unactionable: '🤷',
+	unactionable: '🙅',
 	warning: colors.yellow('⚠️'),
 };

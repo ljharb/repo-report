@@ -23,7 +23,7 @@ module.exports = {
 		extract: (item) => item.isFork,
 	},
 	Access: {
-		compare: (item, config) => config.includes(item.viewerPermission),
+		compare: (item, config) => config?.includes(item.viewerPermission),
 		extract: (item) => item.viewerPermission,
 	},
 	IssuesEnabled: {
@@ -59,7 +59,7 @@ module.exports = {
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE'],
 	},
 	License: {
-		compare: (item, config) => config.includes(item.licenseInfo?.name || null),
+		compare: (item, config) => config?.includes(item.licenseInfo?.name || null),
 		extract: (item) => item.licenseInfo?.name || '---',
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE'],
 	},
@@ -72,7 +72,7 @@ module.exports = {
 			MERGE = mergeCommitAllowed,
 			SQUASH = squashMergeAllowed,
 			REBASE = rebaseMergeAllowed,
-		}) {
+		} = {}) {
 			return MERGE === mergeCommitAllowed
 				&& SQUASH === squashMergeAllowed
 				&& REBASE === rebaseMergeAllowed;
@@ -98,7 +98,7 @@ module.exports = {
 	},
 	Subscription: {
 		extract: (item) => item.viewerSubscription,
-		compare: (item, config) => config.includes(item.viewerSubscription),
+		compare: (item, config) => config?.includes(item.viewerSubscription),
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE', 'TRIAGE', 'READ'],
 	},
 	DefBranch: {
