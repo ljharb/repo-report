@@ -32,8 +32,7 @@
 		"dotenv": "^10.0.0",
 		"jsonschema": "^1.4.0",
 		"minimatch": "^3.1.2",
-		"mkdirp": "^1.0.4",
-		"yargs": "^17.4.0"
+		"mkdirp": "^1.0.4"
 	},
 	"devDependencies": {
 		"@ljharb/eslint-config": "^20.2.3",
@@ -46,7 +45,8 @@
 		"nyc": "^15.1.0",
 		"safe-publish-latest": "^2.0.0",
 		"tap-spec": "^5.0.0",
-		"tape": "^5.5.2"
+		"tape": "^5.5.2",
+		"yargs": "^17.4.1"
 	},
 	"engines": {
 		"node": ">=14"
