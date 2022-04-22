@@ -6,35 +6,32 @@ const symbols = require('../../src/symbols');
 const mockRepositoriesData = require('./mockRepositoriesData.json');
 
 const expectedOptions = {
-	options: {
-		chars: {
-			top: '─',
-			'top-mid': '┬',
-			'top-left': '┌',
-			'top-right': '┐',
-			bottom: '─',
-			'bottom-mid': '┴',
-			'bottom-left': '└',
-			'bottom-right': '┘',
-			left: '│',
-			'left-mid': '├',
-			mid: '─',
-			'mid-mid': '┼',
-			right: '│',
-			'right-mid': '┤',
-			middle: '│',
-		},
-		truncate: '…',
-		colWidths: [],
-		colAligns: [],
-		style: {
-			'padding-left': 1,
-			'padding-right': 1,
-			head: ['red'],
-			border: ['grey'],
-			compact: false,
-		},
-		head: ['Repository', 'Access', 'DefBranch', 'SecurityPolicyEnabled'],
+	chars: {
+		top: '─',
+		'top-mid': '┬',
+		'top-left': '┌',
+		'top-right': '┐',
+		bottom: '─',
+		'bottom-mid': '┴',
+		'bottom-left': '└',
+		'bottom-right': '┘',
+		left: '│',
+		'left-mid': '├',
+		mid: '─',
+		'mid-mid': '┼',
+		right: '│',
+		'right-mid': '┤',
+		middle: '│',
+	},
+	truncate: '…',
+	colWidths: [],
+	colAligns: [],
+	style: {
+		'padding-left': 1,
+		'padding-right': 1,
+		head: ['red'],
+		border: ['grey'],
+		compact: false,
 	},
 };
 
@@ -58,7 +55,12 @@ const tableOutput = Object.setPrototypeOf(Object.assign([
 		symbols.success,
 		symbols.success,
 	],
-], expectedOptions), Table.prototype);
+], {
+	options: {
+		...expectedOptions,
+		head: ['Repository', 'Access', 'DefBranch', 'SecurityPolicyEnabled'],
+	},
+}), Table.prototype);
 
 const tableOutputActual = Object.setPrototypeOf(Object.assign([
 	[
@@ -85,7 +87,12 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'main',
 		'true',
 	],
-], expectedOptions), Table.prototype);
+], {
+	options: {
+		...expectedOptions,
+		head: ['Repository', 'Access', 'DefBranch', 'SecurityPolicyEnabled'],
+	},
+}), Table.prototype);
 
 const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 	[
@@ -112,7 +119,12 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.success} main`,
 		`${symbols.success} true`,
 	],
-], expectedOptions), Table.prototype);
+], {
+	options: {
+		...expectedOptions,
+		head: ['Repository', 'Access', 'DefBranch', 'SecurityPolicyEnabled'],
+	},
+}), Table.prototype);
 
 const DetailTableColumns = [
 	'Repository',
