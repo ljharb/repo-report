@@ -6,6 +6,8 @@
 const symbols = require('../src/symbols');
 const getBPRules = (item) => item.defaultBranchRef?.branchProtectionRule;
 
+const empty = Object('---');
+
 module.exports = {
 	Repository: {
 		extract: ({
@@ -61,7 +63,7 @@ module.exports = {
 	},
 	License: {
 		compare: (item, config) => config?.includes(item.licenseInfo?.name || null),
-		extract: (item) => item.licenseInfo?.name || '---',
+		extract: (item) => item.licenseInfo?.name || empty,
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE'],
 	},
 	MergeStrategies: {
@@ -103,7 +105,7 @@ module.exports = {
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE', 'TRIAGE', 'READ'],
 	},
 	DefBranch: {
-		extract: (item) => item.defaultBranchRef?.name || '---',
+		extract: (item) => item.defaultBranchRef?.name || empty,
 		permissions: ['ADMIN'],
 	},
 	AllowsForcePushes: {
