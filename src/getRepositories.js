@@ -55,6 +55,7 @@ function generateQuery(endCursor, { f }) {
 						forkingAllowed
 						isArchived
 						autoMergeAllowed
+						squashPrTitleUsedAsDefault
 						isBlankIssuesEnabled
 						isFork
 						isPrivate

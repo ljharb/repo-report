@@ -16,6 +16,7 @@
       "REBASE": true
     },
     "DeleteOnMerge": false,
+    "SquashPrTitleUsedAsDefault": false,
     "HasStarred": false,
     "Subscription": ["IGNORED", "SUBSCRIBED", "UNSUBSCRIBED"],
     "DefBranch": "main",
