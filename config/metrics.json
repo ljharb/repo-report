@@ -49,6 +49,7 @@
 			},
 			"type": ["object", "null"]
 		},
+		"SquashPrTitleUsedAsDefault": { "type": ["boolean", "null"] },
 		"ProjectsEnabled": { "type": ["boolean", "null"] },
 		"ReqApprovingReviewCount": {
 			"maximum": 6,
