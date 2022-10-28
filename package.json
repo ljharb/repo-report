@@ -27,14 +27,14 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"@octokit/graphql": "^4.8.0",
+		"@octokit/graphql": "^5.0.4",
 		"cli-table": "^0.3.11",
 		"colors": "=1.4.0",
 		"dotenv": "^10.0.0",
 		"jsonschema": "^1.4.1",
-		"minimatch": "^3.1.2",
+		"minimatch": "^5.1.0",
 		"mkdirp": "^1.0.4",
-		"yargs": "^17.5.1"
+		"yargs": "^17.6.0"
 	},
 	"devDependencies": {
 		"@ljharb/eslint-config": "^21.0.0",
