@@ -30,7 +30,7 @@
 		"@octokit/graphql": "^5.0.4",
 		"cli-table": "^0.3.11",
 		"colors": "=1.4.0",
-		"dotenv": "^10.0.0",
+		"dotenv": "^16.0.3",
 		"jsonschema": "^1.4.1",
 		"minimatch": "^5.1.0",
 		"mkdirp": "^1.0.4",
