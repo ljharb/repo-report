@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.2.0](https://github.com/ljharb/repo-report/compare/v0.1.3...v0.2.0) - 2022-10-27
+
+### Merged
+
+- [New] add `SquashPrTitleUsedAsDefault` metric [`#87`](https://github.com/ljharb/repo-report/pull/87)
+
+### Fixed
+
+- [New] add `SquashPrTitleUsedAsDefault` metric [`#84`](https://github.com/ljharb/repo-report/issues/84)
+- [New] add metric: branch protections restrict the source [`#62`](https://github.com/ljharb/repo-report/issues/62)
+
+### Commits
+
+- [Refactor] `getRepositories`: fix query whitespace [`4daaa5b`](https://github.com/ljharb/repo-report/commit/4daaa5b42753c5d3378fe403254af4c96f69ec2e)
+- [meta] use `npmignore` to autogenerate an npmignore file [`042d315`](https://github.com/ljharb/repo-report/commit/042d315777881e6a936a99cac42838e86671fb0b)
+- [Tests] refactor fixtures a bit [`05e1eab`](https://github.com/ljharb/repo-report/commit/05e1eabefc6cca1a4f0d16f2aeffd60a6dfb7b7d)
+- [Refactor] metrics schema: consolidate two sources of truth into one [`c005265`](https://github.com/ljharb/repo-report/commit/c0052655d7bc450363d1be41eb1cc126749da318)
+- [Tests] make it easier for fixtures to have different column headers [`c738a2d`](https://github.com/ljharb/repo-report/commit/c738a2db5380435e52a869b53cdd7b16abf68556)
+- [Tests] use actual metric data instead of repeating it [`42717af`](https://github.com/ljharb/repo-report/commit/42717af0995a9d7ec28004a749eb244255c5ae35)
+- [Fix] Fix metric: security policy [`f3104ec`](https://github.com/ljharb/repo-report/commit/f3104ec855e46134380402e60356c5f1eb124b43)
+- [Tests] fix whitespace in metricsConfig.json [`18cc0b9`](https://github.com/ljharb/repo-report/commit/18cc0b94fa848f581f2d9e9f8c796de50d756067)
+- [Tests] add `--actual --goodness` table fixture [`eebcf2b`](https://github.com/ljharb/repo-report/commit/eebcf2bea367116e981d1dc4ad72e00c2df9e33e)
+- [meta] add `sideEffects` flag, `funding`, `FUNDING.yml` [`fada250`](https://github.com/ljharb/repo-report/commit/fada2500f6c6d696f81cd71ff2a9a17b54de2750)
+- [Refactor] `symbols.ignore` is the shrug, `symbols.unactionable` is "nope" [`f47d647`](https://github.com/ljharb/repo-report/commit/f47d64749bc90e542b1ab9b2181bf47218bd87f3)
+- [New] add `loadingIndicator` helper, and use while fetching repositories [`f074afe`](https://github.com/ljharb/repo-report/commit/f074afe10e66dbbf390875c752dd0b8965bd956e)
+- [patch] add visible default for `--config` [`e9a6067`](https://github.com/ljharb/repo-report/commit/e9a6067616b046dedee85d9ee024bfb97c33956e)
+- [actions] update rebase action [`c531889`](https://github.com/ljharb/repo-report/commit/c5318890d14dca3927dce24dd648d13e519de7eb)
+- [Deps] update `jsonschema`, `yargs` [`b30b08f`](https://github.com/ljharb/repo-report/commit/b30b08fe7dd67e53119667b89071f83ce016a402)
+- [Tests] use actual metric data instead of repeating it [`9d47376`](https://github.com/ljharb/repo-report/commit/9d4737696effbe1c1ac1dca7e948def176268e1e)
+- [Fix] `getDiffSymbol`: handle `null` or an array that has `null` [`a7f55c9`](https://github.com/ljharb/repo-report/commit/a7f55c9de7b89098ddfddf759df18a028ce32370)
+- [Deps] update `@octokit/graphql`, `minimatch`, `yargs` [`39a0d6e`](https://github.com/ljharb/repo-report/commit/39a0d6ed08892c112a72e24d735b79fb0e48febe)
+- [Refactor] metrics: use a boxed string for an empty sentinel [`c5ef4ca`](https://github.com/ljharb/repo-report/commit/c5ef4caf669874782bbdc9cc737bae984982fdf9)
+- [Deps] update `yargs` [`539dff3`](https://github.com/ljharb/repo-report/commit/539dff39099477b6cbe739cdebc417356c6d2dce)
+- [Dev Deps] update `aud`, `tape` [`c89ba63`](https://github.com/ljharb/repo-report/commit/c89ba6346d530a065b4af8453d6b8a971c3146e3)
+- [Dev Deps] update `@ljharb/eslint-config`, `tape` [`4148d89`](https://github.com/ljharb/repo-report/commit/4148d89531fac5a46eab75fa549db6fe5e30ab20)
+- [Deps] update `dotenv` [`0088c2e`](https://github.com/ljharb/repo-report/commit/0088c2eb6b335908285bdee9b773f5c21b99a637)
+- [Deps] update `yargs` [`bc899e3`](https://github.com/ljharb/repo-report/commit/bc899e372ff7f90eea79f44ba34d52f04f42bf50)
+
 ## [v0.1.3](https://github.com/ljharb/repo-report/compare/v0.1.2...v0.1.3) - 2022-02-25
 
 ### Commits
