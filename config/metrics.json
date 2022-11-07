@@ -86,6 +86,7 @@
 				}
 			]
 		},
+		"WebCommitSignoffRequired": { "type": ["boolean", "null"] },
 		"WikiEnabled": { "type": ["boolean", "null"] }
 	},
 	"type": "object"

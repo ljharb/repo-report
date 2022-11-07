@@ -4,6 +4,7 @@
 		"IssuesEnabled": true,
 		"ProjectsEnabled": true,
 		"WikiEnabled": false,
+		"WebCommitSignoffRequired": false,
 		"AllowsForking": false,
 		"Archived": false,
 		"AutoMergeAllowed": false,

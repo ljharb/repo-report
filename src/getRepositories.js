@@ -52,6 +52,7 @@ function generateQuery(endCursor, { f }) {
 						hasIssuesEnabled
 						hasProjectsEnabled
 						hasWikiEnabled
+						webCommitSignoffRequired
 						forkingAllowed
 						isArchived
 						autoMergeAllowed

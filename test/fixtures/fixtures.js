@@ -184,6 +184,7 @@ const DetailTableColumns = [
 	'IssuesEnabled',
 	'ProjectsEnabled',
 	'WikiEnabled',
+	'WebCommitSignoffRequired',
 	'Archived',
 	'BlankIssuesEnabled',
 	'SecurityPolicyEnabled',

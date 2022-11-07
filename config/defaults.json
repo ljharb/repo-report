@@ -27,7 +27,8 @@
     "ReqApprovingReviews": false,
     "ReqCodeOwnerReviews": false,
     "ReqConversationResolution": false,
-    "RequiredBranchProtectionSourcePercentage": 100
+    "RequiredBranchProtectionSourcePercentage": 100,
+    "WebCommitSignoffRequired": false
   },
   "overrides": [],
   "repositories": {
