@@ -44,6 +44,10 @@ module.exports = {
 		extract: (item) => item.hasProjectsEnabled,
 		permissions: ['ADMIN', 'MAINTAIN'],
 	},
+	DiscussionsEnabled: {
+		extract: (item) => item.hasDiscussionsEnabled,
+		permissions: ['ADMIN', 'MAINTAIN'],
+	},
 	WebCommitSignoffRequired: {
 		extract: (item) => item.webCommitSignoffRequired,
 		permissions: ['ADMIN', 'MAINTAIN'],

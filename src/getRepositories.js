@@ -51,6 +51,7 @@ function generateQuery(endCursor, { f }) {
 						deleteBranchOnMerge
 						hasIssuesEnabled
 						hasProjectsEnabled
+						hasDiscussionsEnabled
 						hasWikiEnabled
 						webCommitSignoffRequired
 						forkingAllowed

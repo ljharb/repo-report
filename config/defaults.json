@@ -3,6 +3,7 @@
     "Access": ["ADMIN", "MAINTAIN", "WRITE", "TRIAGE", "READ"],
     "IssuesEnabled": true,
     "ProjectsEnabled": true,
+    "DiscussionsEnabled": false,
     "WikiEnabled": false,
     "AllowsForking": false,
     "Archived": false,
