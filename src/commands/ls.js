@@ -10,7 +10,7 @@ module.exports = async function ls(flags) {
 	}
 
 	// Get all repositories
-	const { repositories } = await loadingIndicator(() => getRepositories(flags, filter));
+	const { repositories } = await loadingIndicator(() => getRepositories(flags, { filter }));
 
 	repositories.forEach((repository) => {
 		console.log(repository.nameWithOwner);

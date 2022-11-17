@@ -48,7 +48,6 @@ const isConfigValid = (configPaths) => {
 	return { error, valid };
 };
 
-// eslint-disable-next-line max-params
 const dumpCache = (cacheDir, date, filename, content) => {
 	const dateDir = path.join(cacheDir, date);
 	mkdirp.sync(dateDir);
@@ -82,7 +81,6 @@ const removeIgnoredRepos = (repos, glob) => repos.filter((repo) => !anyGlobMatch
 
 const focusRepos = (repos, glob) => repos.filter((repo) => everyGlobMatch(repo.nameWithOwner, glob));
 
-// eslint-disable-next-line max-params
 const getDiffSymbol = (item, allMetrics, value, metric, { actual, unactionable }) => {
 	const configValue = allMetrics[metric.name];
 	if (configValue === undefined) {
@@ -111,7 +109,7 @@ const printAPIPoints = (points) => {
   \tremaining\t-\t${points.remaining}`);
 };
 
-const getRepositories = async (generateQuery, flags = {}, filter = undefined) => {
+const getRepositories = async (generateQuery, flags = {}, { filter = undefined, perPage = 100 } = {}) => {
 	const {
 		cache,
 		cacheDir,
@@ -126,14 +124,30 @@ const getRepositories = async (generateQuery, flags = {}, filter = undefined) =>
 	let requestCount = 1;
 
 	do { // Repeated requests to get all repositories
-		const response = await graphql(
-			generateQuery(endCursor, flags),
-			{
-				headers: {
-					authorization: `token ${token}`,
+		let response;
+		try {
+			response = await graphql(
+				generateQuery(endCursor, flags, perPage),
+				{
+					headers: {
+						authorization: `token ${token}`,
+					},
 				},
-			},
-		);
+			);
+		} catch (e) {
+			if (e.status === 502 && perPage > 5) {
+				// maybe a temporary hack until Github fixes the API implementation of codeOfConduct. or, maybe this is a reasonable "retry" approach to keep?
+				return getRepositories(
+					generateQuery,
+					flags,
+					{
+						filter,
+						perPage: Math.floor(perPage / 10),
+					},
+				);
+			}
+			throw e;
+		}
 		const {
 			viewer: {
 				repositories: { nodes, pageInfo },

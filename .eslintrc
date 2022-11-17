@@ -11,6 +11,8 @@
 			"skipComments": true,
 			"skipBlankLines": true,
 		}],
+		"max-params": "off",
+		"max-statements": "off",
 	},
 	
 	"overrides": [

@@ -6,7 +6,7 @@ function hasFlag(flag, flags, defaultValue = false) {
 	return !!(flags?.length > 0 ? flags?.includes(flag) : defaultValue);
 }
 
-function generateQuery(endCursor, { f }) {
+function generateQuery(endCursor, { f }, perPage = 100) {
 	const showForks = hasFlag('forks', f);
 	const showSources = hasFlag('sources', f, true);
 	const showPrivate = hasFlag('private', f);
@@ -16,7 +16,7 @@ function generateQuery(endCursor, { f }) {
 		query {
 			viewer {
 				repositories(
-					first: 100
+					first: ${perPage}
 					affiliations: [OWNER, ORGANIZATION_MEMBER, COLLABORATOR]
 					${endCursor ? `after: "${endCursor}"` : ''}
 					${showForks === showSources ? '' : `isFork: ${!!showForks}`}
@@ -94,7 +94,7 @@ function generateQuery(endCursor, { f }) {
 
 module.exports = async function getRepositories(flags, filter) {
 	// Get all repositories
-	const { points, repositories } = await getRepos(generateQuery, flags, filter);
+	const { points, repositories } = await getRepos(generateQuery, flags, { filter });
 
 	if (!flags.sort) {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
