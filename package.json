@@ -30,11 +30,11 @@
 		"@octokit/graphql": "^5.0.4",
 		"cli-table": "^0.3.11",
 		"colors": "=1.4.0",
-		"dotenv": "^16.0.3",
+		"dotenv": "^16.3.1",
 		"jsonschema": "^1.4.1",
 		"minimatch": "^5.1.0",
 		"mkdirp": "^1.0.4",
-		"yargs": "^17.6.2"
+		"yargs": "^17.7.2"
 	},
 	"devDependencies": {
 		"@ljharb/eslint-config": "^21.1.0",
