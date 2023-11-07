@@ -1,6 +1,6 @@
 {
 	"name": "repo-report",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "CLI to list all repos a user has access to, and report on their configuration in aggregate.",
 	"bin": "./bin/run",
 	"main": false,

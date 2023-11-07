@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.2.1](https://github.com/ljharb/repo-report/compare/v0.2.0...v0.2.1) - 2023-11-06
+
+### Fixed
+
+- [New] add `CodeOfConduct` metric [`#72`](https://github.com/ljharb/repo-report/issues/72)
+- [New] add "DiscussionsEnabled" [`#78`](https://github.com/ljharb/repo-report/issues/78)
+- [New] add "WebCommitSignoffRequired" [`#89`](https://github.com/ljharb/repo-report/issues/89)
+
+### Commits
+
+- [Fix] add retry of 1/10th the page size on a timeout [`71b3d04`](https://github.com/ljharb/repo-report/commit/71b3d04e4a6d4cab83a232572190895071ffffc3)
+- [Dev Deps] update `@ljharb/eslint-config`, `aud`, `ha, `tape` [`eca7d34`](https://github.com/ljharb/repo-report/commit/eca7d34e88fb4bd84c15f852955fac312ca0c63d)
+- [Deps] update `dotenv`, `yargs` [`6b5f969`](https://github.com/ljharb/repo-report/commit/6b5f9694f790ede21284a6917eb8f92295209ec2)
+- [Deps] update `yargs` [`b6d4d72`](https://github.com/ljharb/repo-report/commit/b6d4d72fcd4a8c6e6bfc3a62ce6e299c5bc022f4)
+- [Dev Deps] remove unused dev dep [`1fc2365`](https://github.com/ljharb/repo-report/commit/1fc2365a3ef8d53f6149e85d46de6bca671df24e)
+
 ## [v0.2.0](https://github.com/ljharb/repo-report/compare/v0.1.3...v0.2.0) - 2022-10-27
 
 ### Merged
