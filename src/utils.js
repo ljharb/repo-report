@@ -7,7 +7,7 @@
 const fs = require('fs');
 const { graphql } = require('@octokit/graphql');
 const Table = require('cli-table');
-const minimatch = require('minimatch');
+const { minimatch } = require('minimatch');
 const colors = require('colors/safe');
 const path = require('path');
 const mkdirp = require('mkdirp');
