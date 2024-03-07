@@ -12,5 +12,6 @@ module.exports = async function loadingIndicator(task) {
 		clearInterval(timer);
 		process.stdout.clearLine(0);
 		process.stdout.cursorTo(0);
+		process.stdout.write('\n');
 	}
 };
