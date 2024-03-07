@@ -105,8 +105,8 @@ const getDiffSymbol = (item, allMetrics, value, metric, { actual, unactionable }
 
 const printAPIPoints = (points) => {
 	console.error(`API Points:
-  \tused\t\t-\t${points.cost}
-  \tremaining\t-\t${points.remaining}`);
+\tused\t\t-\t${points.cost}
+\tremaining\t-\t${points.remaining}`);
 };
 
 const getRepositories = async (generateQuery, flags = {}, { filter = undefined, perPage = 20 } = {}) => {
@@ -210,10 +210,7 @@ const collapseCols = (rows, metrics) => {
 	const buckets = {
 		0: metrics,
 	};
-	const bucketIDMap = {};
-	metrics.forEach((metric) => {
-		bucketIDMap[metric.name] = 0;
-	});
+	const bucketIDMap = Object.fromEntries(metrics.map((metric) => [metric.name, 0]));
 	let nextBucket = 1;
 
 	rows.forEach((row) => {
