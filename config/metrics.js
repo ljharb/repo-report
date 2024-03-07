@@ -116,8 +116,8 @@ module.exports = {
 		extract: (item) => item.deleteBranchOnMerge,
 		permissions: ['ADMIN'],
 	},
-	SquashPrTitleUsedAsDefault: {
-		extract: (item) => item.squashPrTitleUsedAsDefault,
+	SquashMergeCommitTitle: {
+		extract: (item) => item.squashMergeCommitTitle,
 		permissions: ['ADMIN', 'MAINTAIN'],
 	},
 	HasStarred: {

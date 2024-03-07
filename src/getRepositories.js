@@ -57,7 +57,7 @@ function generateQuery(endCursor, { f }, perPage = 100) {
 						forkingAllowed
 						isArchived
 						autoMergeAllowed
-						squashPrTitleUsedAsDefault
+						squashMergeCommitTitle
 						isBlankIssuesEnabled
 						isFork
 						isPrivate

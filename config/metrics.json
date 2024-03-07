@@ -59,7 +59,7 @@
 			},
 			"type": ["object", "null"]
 		},
-		"SquashPrTitleUsedAsDefault": { "type": ["boolean", "null"] },
+		"SquashMergeCommitTitle": { "type": ["string", "null"] },
 		"ProjectsEnabled": { "type": ["boolean", "null"] },
 		"DiscussionsEnabled": { "type": ["boolean", "null"] },
 		"ReqApprovingReviewCount": {

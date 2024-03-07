@@ -17,7 +17,7 @@
       "REBASE": true
     },
     "DeleteOnMerge": false,
-    "SquashPrTitleUsedAsDefault": false,
+    "SquashMergeCommitTitle": "COMMIT_OR_PR_TITLE",
     "HasStarred": false,
     "Subscription": ["IGNORED", "SUBSCRIBED", "UNSUBSCRIBED"],
     "DefBranch": "main",
