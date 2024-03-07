@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.3.0](https://github.com/ljharb/repo-report/compare/v0.2.1...v0.3.0) - 2024-03-07
+
+### Commits
+
+- [Refactor] minor tweaks [`8866521`](https://github.com/ljharb/repo-report/commit/8866521f06b544c6e25ad676b0806339f1532d33)
+- [Fix] replace deprecated `squashPrTitleUsedAsDefault` with `squashMergeCommitTitle` [`583ed69`](https://github.com/ljharb/repo-report/commit/583ed6947fe31e4330f2d18b31abf7625db1d4a0)
+- [Deps] update `@octokit/graphql`, `minimist`, `mkdirp` [`8582c50`](https://github.com/ljharb/repo-report/commit/8582c50283e8b22ae461f9d341e6259a38f22694)
+- [Deps] update `@octokit/graphql`, `dotenv`, `minimatch` [`e121298`](https://github.com/ljharb/repo-report/commit/e1212988ff989407a1e340ec0bdfe899b55ae239)
+- [Dev Deps] update `aud`, `npmignore`, `tape` [`59498f0`](https://github.com/ljharb/repo-report/commit/59498f0a485c62bcc4375c04a2b126d8d931808a)
+- [Breaking] require node 18 [`1bd67a3`](https://github.com/ljharb/repo-report/commit/1bd67a3a40f6b18c63ec69b06279cd968f6518c3)
+- [patch] drop perPage to 20 due to a Github API perf regression [`393975c`](https://github.com/ljharb/repo-report/commit/393975ca809b9019b65af9665e6d20e59085bfd9)
+- [Fix] print a newline after loading dots, before table [`2bf0c88`](https://github.com/ljharb/repo-report/commit/2bf0c88e30b9ccd2cdeebe5d19e513ac95357028)
+
 ## [v0.2.1](https://github.com/ljharb/repo-report/compare/v0.2.0...v0.2.1) - 2023-11-06
 
 ### Fixed
