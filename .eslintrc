@@ -1,5 +1,5 @@
 {
-	"extends": ["@ljharb/eslint-config/node/14"],
+	"extends": ["@ljharb/eslint-config/node/18"],
 
 	"rules": {
 		"array-bracket-newline": "off",

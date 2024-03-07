@@ -50,7 +50,7 @@
 		"tape": "^5.7.5"
 	},
 	"engines": {
-		"node": ">=14"
+		"node": ">= 18"
 	},
 	"auto-changelog": {
 		"output": "CHANGELOG.md",
