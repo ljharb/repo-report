@@ -6,7 +6,7 @@ function hasFlag(flag, flags, defaultValue = false) {
 	return !!(flags?.length > 0 ? flags?.includes(flag) : defaultValue);
 }
 
-function generateQuery(endCursor, { f }, perPage = 100) {
+function generateQuery(endCursor, { f }, perPage = 20) {
 	const showForks = hasFlag('forks', f);
 	const showSources = hasFlag('sources', f, true);
 	const showPrivate = hasFlag('private', f);

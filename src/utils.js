@@ -109,7 +109,7 @@ const printAPIPoints = (points) => {
   \tremaining\t-\t${points.remaining}`);
 };
 
-const getRepositories = async (generateQuery, flags = {}, { filter = undefined, perPage = 100 } = {}) => {
+const getRepositories = async (generateQuery, flags = {}, { filter = undefined, perPage = 20 } = {}) => {
 	const {
 		cache,
 		cacheDir,
