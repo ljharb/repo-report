@@ -27,12 +27,12 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"@octokit/graphql": "^7.1.0",
+		"@octokit/graphql": "^8.2.0",
 		"cli-table": "^0.3.11",
 		"colors": "=1.4.0",
-		"dotenv": "^16.4.5",
-		"jsonschema": "^1.4.1",
-		"minimatch": "^9.0.4",
+		"dotenv": "^16.4.7",
+		"jsonschema": "^1.5.0",
+		"minimatch": "^10.0.1",
 		"mkdirp": "^3.0.1",
 		"yargs": "^17.7.2"
 	},
