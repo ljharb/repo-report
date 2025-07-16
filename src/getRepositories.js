@@ -96,7 +96,19 @@ module.exports = async function getRepositories(flags, filter) {
 	// Get all repositories
 	const { points, repositories } = await getRepos(generateQuery, flags, { filter });
 
-	if (!flags.sort) {
+	if (flags.sortByName) {
+		repositories.sort((a, b) => a.name.localeCompare(b.name)); // A → Z
+	}else if (flags.sortByNameDesc) {
+		repositories.sort((a, b) => b.name.localeCompare(a.name)); // Z → A
+	}else if (flags.sortByModifiedDate) {
+		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+	}else if (flags.sortByModifiedDateDesc) {
+		repositories.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
+	}else if (flags.sortByCreatedDate) {
+		repositories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+	}else if (flags.sortByCreatedDateDesc) {
+		repositories.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+	}else if (!flags.sort) {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 	}
 
