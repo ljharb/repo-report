@@ -63,9 +63,9 @@ module.exports = {
 	},
 	RequiredDeploymentEnvironments: {
 		// ✓ when at least one required deployment environment exists, else ✗
-		extract: (item) => {
+		extract(item) {
 			const envs = getBPRules(item)?.RequiredDeploymentEnvironments;
-			return !!(envs && envs.length);   // boolean
+			return !!(envs && envs.length); // boolean
 		},
 		permissions: ['ADMIN'],
 	},
