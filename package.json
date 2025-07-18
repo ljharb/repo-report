@@ -41,6 +41,7 @@
 		"auto-changelog": "^2.5.0",
 		"eslint": "=8.8.0",
 		"fetch-mock": "^9.11.0",
+		"globals": "^16.3.0",
 		"in-publish": "^2.0.1",
 		"npmignore": "^0.3.1",
 		"nyc": "^15.1.0",
