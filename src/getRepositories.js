@@ -36,6 +36,8 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 								allowsForcePushes
 								allowsDeletions
 								dismissesStaleReviews
+        						requiresDeployments
+        						requiredDeploymentEnvironments
 								requiredApprovingReviewCount
 								requiresApprovingReviews
 								requiresCodeOwnerReviews
@@ -95,7 +97,24 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 module.exports = async function getRepositories(flags, filter) {
 	// Get all repositories
 	const { points, repositories } = await getRepos(generateQuery, flags, { filter });
+	// console.log("points:::::::", points)
+	// console.log("repositories:::::::::", repositories)
+for (const repo of repositories) {
+  const rule = repo.defaultBranchRef?.branchProtectionRule;
 
+  if (!rule) {
+    console.log(`${repo.nameWithOwner}: (no rule)`);
+    continue;
+  }
+
+  // Pretty-print the whole thing
+  console.log(`${repo.nameWithOwner}:`);
+  console.dir(rule, { depth: null, colors: true });
+
+  // Or grab just what you need
+  console.log('  requiresDeployments:', rule.requiresDeployments);
+  console.log('  environments:', rule.requiredDeploymentEnvironments?.join(', '));
+}
 	if (!flags.sort) {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 	}
