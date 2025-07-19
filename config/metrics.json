@@ -3,159 +3,51 @@
 	"id": "/metrics",
 	"properties": {
 		"Access": {
-			"items": {
-				"type": "string"
-			},
+			"items": { "type": "string" },
 			"maxItems": 5,
 			"minItems": 1,
-			"type": [
-				"array",
-				"null"
-			],
+			"type": ["array", "null"],
 			"uniqueItems": true
 		},
-		"AllowsDeletions": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
+		"AllowsDeletions": { "type": ["boolean", "null"] },
 		"CodeOfConduct": {
 			"oneOf": [
+				{ "type": ["boolean", "string", "null"] },
 				{
-					"type": [
-						"boolean",
-						"string",
-						"null"
-					]
-				},
-				{
-					"items": {
-						"type": [
-							"string",
-							"null"
-						]
-					},
+					"items": { "type": ["string", "null"] },
 					"type": "array",
 					"uniqueItems": true
 				}
 			]
 		},
-		"AllowsForcePushes": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"RequiredBranchProtectionSourcePercentage": {
-			"type": [
-				"number",
-				"null"
-			]
-		},
+		"AllowsForcePushes": { "type": ["boolean", "null"] },
+		"RequiredBranchProtectionSourcePercentage": { "type": ["number", "null"] },
 		"RequiredDeploymentEnvironments": {
-			"oneOf": [
-				{
-					"type": [
-						"boolean",
-						"null"
-					]
-				}, 
-				{
-					"type": "array", 
-					"items": {
-						"type": [
-							"string",
-							"null"
-						]
-					},
-					"uniqueItems": true
-				}
-			]
-		},
-		"AllowsForking": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"Archived": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"AutoMergeAllowed": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"BlankIssuesEnabled": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
+			"oneOf": [{ "type": ["boolean","null"] }, {"type": "array", 
+			"items": {	"type": ["string","null"] },"uniqueItems": true}] },
+		"AllowsForking": { "type": ["boolean", "null"] },
+		"Archived": { "type": ["boolean", "null"] },
+		"AutoMergeAllowed": { "type": ["boolean", "null"] },
+		"BlankIssuesEnabled": { "type": ["boolean", "null"] },
 		"DefBranch": {
 			"oneOf": [
+				{ "type": ["string", "null"] },
 				{
-					"type": [
-						"string",
-						"null"
-					]
-				},
-				{
-					"items": {
-						"type": [
-							"string",
-							"null"
-						]
-					},
+					"items": { "type": ["string", "null"] },
 					"type": "array",
 					"uniqueItems": true
 				}
 			]
 		},
-		"DeleteOnMerge": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"DismissesStaleReviews": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"HasStarred": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"IssuesEnabled": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
+		"DeleteOnMerge": { "type": ["boolean", "null"] },
+		"DismissesStaleReviews": { "type": ["boolean", "null"] },
+		"HasStarred": { "type": ["boolean", "null"] },
+		"IssuesEnabled": { "type": ["boolean", "null"] },
 		"License": {
 			"oneOf": [
+				{ "type": ["string", "null"] },
 				{
-					"type": [
-						"string",
-						"null"
-					]
-				},
-				{
-					"items": {
-						"type": [
-							"string",
-							"null"
-						]
-					},
+					"items": { "type": ["string", "null"] },
 					"type": "array",
 					"uniqueItems": true
 				}
@@ -164,80 +56,24 @@
 		"MergeStrategies": {
 			"additionalProperties": false,
 			"properties": {
-				"MERGE": {
-					"type": [
-						"boolean",
-						"null"
-					]
-				},
-				"REBASE": {
-					"type": [
-						"boolean",
-						"null"
-					]
-				},
-				"SQUASH": {
-					"type": [
-						"boolean",
-						"null"
-					]
-				}
+				"MERGE": { "type": ["boolean", "null"] },
+				"REBASE": { "type": ["boolean", "null"] },
+				"SQUASH": { "type": ["boolean", "null"] }
 			},
-			"type": [
-				"object",
-				"null"
-			]
+			"type": ["object", "null"]
 		},
-		"SquashMergeCommitTitle": {
-			"type": [
-				"string",
-				"null"
-			]
-		},
-		"ProjectsEnabled": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"DiscussionsEnabled": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
+		"SquashMergeCommitTitle": { "type": ["string", "null"] },
+		"ProjectsEnabled": { "type": ["boolean", "null"] },
+		"DiscussionsEnabled": { "type": ["boolean", "null"] },
 		"ReqApprovingReviewCount": {
 			"maximum": 6,
 			"minimum": 1,
-			"type": [
-				"integer",
-				"null"
-			]
+			"type": ["integer", "null"]
 		},
-		"ReqApprovingReviews": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"ReqCodeOwnerReviews": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"ReqConversationResolution": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"SecurityPolicyEnabled": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
+		"ReqApprovingReviews": { "type": ["boolean", "null"] },
+		"ReqCodeOwnerReviews": { "type": ["boolean", "null"] },
+		"ReqConversationResolution": { "type": ["boolean", "null"] },
+		"SecurityPolicyEnabled": { "type": ["boolean", "null"] },
 		"Subscription": {
 			"oneOf": [
 				{
@@ -247,10 +83,7 @@
 						"UNSUBSCRIBED",
 						null
 					],
-					"type": [
-						"string",
-						"null"
-					]
+					"type": ["string", "null"]
 				},
 				{
 					"items": {
@@ -260,28 +93,15 @@
 							"UNSUBSCRIBED",
 							null
 						],
-						"type": [
-							"string",
-							"null"
-						]
+						"type": ["string", "null"]
 					},
 					"type": "array",
 					"uniqueItems": true
 				}
 			]
 		},
-		"WebCommitSignoffRequired": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		},
-		"WikiEnabled": {
-			"type": [
-				"boolean",
-				"null"
-			]
-		}
+		"WebCommitSignoffRequired": { "type": ["boolean", "null"] },
+		"WikiEnabled": { "type": ["boolean", "null"] }
 	},
 	"type": "object"
 }
