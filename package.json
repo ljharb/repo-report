@@ -32,7 +32,7 @@
 		"colors": "=1.4.0",
 		"dotenv": "^16.4.7",
 		"jsonschema": "^1.5.0",
-		"minimatch": "^10.0.1",
+		"minimatch": "^10.0.3",
 		"mkdirp": "^3.0.1",
 		"yargs": "^17.7.2"
 	},
