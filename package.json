@@ -16,7 +16,7 @@
 		"tests-only": "nyc tape 'test/**/*.js'| tap-spec",
 		"lint": "eslint --ext=js,mjs ./bin/* .",
 		"pretest": "npm run lint",
-		"posttest": "aud --production",
+		"posttest": "npx npm@\">= 10.2\" audit --production",
 		"version": "auto-changelog && git add CHANGELOG.md",
 		"postversion": "auto-changelog && git add CHANGELOG.md && git commit --no-edit --amend && git tag -f \"v$(node -e \"console.log(require('./package.json').version)\")\""
 	},
@@ -27,12 +27,12 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"@octokit/graphql": "^7.0.2",
+		"@octokit/graphql": "^7.1.0",
 		"cli-table": "^0.3.11",
 		"colors": "=1.4.0",
 		"dotenv": "^16.4.5",
 		"jsonschema": "^1.4.1",
-		"minimatch": "^9.0.3",
+		"minimatch": "^9.0.4",
 		"mkdirp": "^3.0.1",
 		"repo-report": "^0.3.0",
 		"yargs": "^17.7.2"
@@ -50,7 +50,7 @@
 		"nyc": "^15.1.0",
 		"safe-publish-latest": "^2.0.0",
 		"tap-spec": "^5.0.0",
-		"tape": "^5.7.5"
+		"tape": "^5.9.0"
 	},
 	"engines": {
 		"node": ">= 18"
