@@ -1,0 +1,28 @@
+{
+	"extends": ["@ljharb/eslint-config/node/18"],
+
+	"rules": {
+		"array-bracket-newline": "off",
+		"func-style": "off",
+		"id-length": "off",
+		"max-lines": "off",
+		"max-lines-per-function": ["error", {
+			"max": 100,
+			"skipComments": true,
+			"skipBlankLines": true,
+		}],
+		"max-params": "off",
+		"max-statements": "off",
+		"linebreak-style": ["error", "windows"]
+	},
+	
+	"overrides": [
+		{
+			"files": "test/**/*",
+			"rules": {
+				"max-params": "off",
+				"no-unused-vars": ["error", { "ignoreRestSiblings": true }]
+			},
+		},
+	],
+}
