@@ -1,0 +1,49 @@
+#!/usr/bin/env node
+/* eslint-disable no-throw-literal */
+
+'use strict';
+
+require('dotenv').config();
+const Yargs = require('yargs');
+const colors = require('colors/safe');
+const homedir = require('os').homedir();
+const path = require('path');
+
+const symbols = require('../src/symbols');
+const { isConfigValid } = require('../src/utils');
+
+const {
+	GH_TOKEN,
+	GITHUB_TOKEN,
+	XDG_CONFIG_HOME,
+} = process.env;
+
+// Variable to prevent calling isConfigValid twice
+const defaultConfigPaths = [].concat(
+	XDG_CONFIG_HOME ? path.join(XDG_CONFIG_HOME, 'repo-report.json') : [],
+	path.join(homedir, '.repo-report.json'),
+);
+
+// eslint-disable-next-line no-template-curly-in-string
+const defaultConfig = Object('${XDG_CONFIG_HOME:-$HOME}/.repo-report.json');
+
+Yargs.usage('Usage: $0 <command> [options]')
+	.config('config')
+	.default('config', defaultConfig)
+	.check(({ config }) => {
+		const configPaths = [].concat(
+			config === defaultConfig ? [] : config,
+			defaultConfigPaths,
+		);
+		const { valid, error } = isConfigValid(configPaths);
+		if (!valid) {
+			throw `${symbols.error} ${colors.red(error)}`;
+		}
+		return true;
+	})
+	.default('token', GH_TOKEN || GITHUB_TOKEN)
+	.hide('token')
+	.check(({ token }) => !!token || colors.red(`${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN, or \`--token\` argument, not found.\n\nRefer to #Installation in README.md on how to set an env variable`))
+	.commandDir(path.join(__dirname, './commands'))
+	.help('help')
+	.parse();
