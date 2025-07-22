@@ -105,7 +105,7 @@ module.exports = async function getRepositories(flags, filter) {
 	} else if (flags.sortBy === 'updatedDate') {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); // oldest to newest
 	} else if (flags.sortBy === 'createdDate' && flags.reverse) {
-		repositories.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); // newest to oldest
+		repositories.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); //  newest to oldest
 	} else if (flags.sortBy === 'createdDate') {
 		repositories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // oldest to newest
 	}
