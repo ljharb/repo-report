@@ -96,21 +96,18 @@ module.exports = async function getRepositories(flags, filter) {
 	// Get all repositories
 	const { points, repositories } = await getRepos(generateQuery, flags, { filter });
 
-	if (flags.sortByName) {
+	if (flags.sortBy === 'name' && flags.reverse) {
+		repositories.sort((a, b) => b.name.localeCompare(a.name)); // A → Z
+	} else if (flags.sortBy === 'name') {
 		repositories.sort((a, b) => a.name.localeCompare(b.name)); // A → Z
-	}else if (flags.sortByNameDesc) {
-		repositories.sort((a, b) => b.name.localeCompare(a.name)); // Z → A
-	}else if (flags.sortByModifiedDate) {
-		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-	}else if (flags.sortByModifiedDateDesc) {
-		repositories.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
-	}else if (flags.sortByCreatedDate) {
-		repositories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-	}else if (flags.sortByCreatedDateDesc) {
-		repositories.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-	}else if (!flags.sort) {
-		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+	} else if (flags.sortBy === 'updatedDate' && flags.reverse) {
+		repositories.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt)); // newest to oldest
+	} else if (flags.sortBy === 'updatedDate') {
+		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); // oldest to newest
+	} else if (flags.sortBy === 'createdDate' && flags.reverse) {
+		repositories.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); // newest to oldest
+	} else if (flags.sortBy === 'createdDate') {
+		repositories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // oldest to newest
 	}
-
 	return { points, repositories };
 };

@@ -18,41 +18,19 @@ module.exports = function repoArgs(yargs) {
 			describe: 'Shows the list of repo names with their owner',
 			type: 'boolean',
 		})
-		.option('sort', {
+
+		.option('sortBy', {
 			alias: 's',
-			default: false,
-			describe: 'Sort repos alphabetically, instead of by "last updated"',
-			type: 'boolean',
+			choices: ['name', 'updatedDate', 'createdDate'],
+			default: 'updatedDate',
+			describe: 'Sort repositories by field',
+			type: 'string',
 		})
 
-		.option('sortByName', {
+		.option('reverse', {
+			alias: 'r',
 			default: false,
-			describe: 'Sort repos by name in ascending order (A → Z)',
+			describe: 'Sort in reverse',
 			type: 'boolean',
-		})
-		.option('sortByNameDesc', {
-			default: false,
-			describe: 'Sort repos by name in descending order (Z → A)',
-			type: 'boolean',
-		})
-		.option('sortByModifiedDate', {
-			default: false,
-			describe: 'Sort repos by modified date(updatedAt) newest first',
-			type: 'boolean',
-		})
-		.option('sortByModifiedDateDesc', {
-			default: false,
-			describe: 'Sort repos by modified date(updatedAt) oldest first',
-			type: 'boolean',
-		})
-		.option('sortByCreatedDate', {
-		default: false,
-		describe: 'Sort repos by creation date (newest first)',
-		type: 'boolean',
-		})
-		.option('sortByCreatedDateDesc', {
-		default: false,
-		describe: 'Sort repos by creation date (oldest first)',
-		type: 'boolean',
 		});
 };
