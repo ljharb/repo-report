@@ -193,4 +193,8 @@ module.exports = {
 		extract: (item) => !!getBPRules(item)?.requireLastPushApproval,		
 		permissions: ['ADMIN'],
 	},
+	AlwaysSuggestUpdatingPR_Branches: {
+		extract: (item) => !!getBPRules(item)?.requiresStrictStatusChecks,
+		permissions: ['ADMIN'],
+	},
 };
