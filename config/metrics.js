@@ -189,4 +189,10 @@ module.exports = {
 		dontPrint: true,
 		extract: (item) => item.isPrivate,
 	},
+	RequireLastPushApproval: {
+		extract: (item) => !!getBPRules(item)?.requireLastPushApproval,
+		
+		// compare: (item, config) => !!getBPRules(item)?.requiresLastPushApproval === config,
+		permissions: ['ADMIN'],
+	},
 };
