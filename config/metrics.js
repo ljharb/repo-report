@@ -189,4 +189,8 @@ module.exports = {
 		dontPrint: true,
 		extract: (item) => item.isPrivate,
 	},
+	AlwaysSuggestUpdatingPR_Branches: {
+		extract: (item) => !!getBPRules(item)?.requiresStrictStatusChecks,
+		permissions: ['ADMIN'],
+	},
 };
