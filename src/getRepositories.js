@@ -41,6 +41,7 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 								requiresCodeOwnerReviews
 								requiresConversationResolution
 								restrictsPushes
+								requireLastPushApproval
 								requiredStatusChecks {
 									app {
 										id
