@@ -6,6 +6,7 @@
 
 const fs = require('fs');
 const { graphql } = require('@octokit/graphql');
+const { request } = require('@octokit/request');
 const Table = require('cli-table');
 const { minimatch } = require('minimatch');
 const colors = require('colors/safe');
@@ -107,6 +108,21 @@ const printAPIPoints = (points) => {
 	console.error(`API Points:
 \tused\t\t-\t${points.cost}
 \tremaining\t-\t${points.remaining}`);
+};
+
+const checkPrivateVulnerabilityReporting = async (owner, repo, token) => {
+	try {
+		const response = await request('GET /repos/{owner}/{repo}/private-vulnerability-reporting', {
+			headers: {
+				authorization: `token ${token}`,
+			},
+			owner,
+			repo,
+		});
+		return response.data.enabled;
+	} catch (error) {
+		return false;
+	}
 };
 
 const getRepositories = async (generateQuery, flags = {}, { filter = undefined, perPage = 20 } = {}) => {
@@ -364,6 +380,7 @@ const generateDetailTable = (metrics, rowData, {
 };
 
 module.exports = {
+	checkPrivateVulnerabilityReporting,
 	dumpCache,
 	generateDetailTable,
 	getDiffSymbol,

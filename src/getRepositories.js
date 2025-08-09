@@ -1,6 +1,6 @@
 'use strict';
 
-const { getRepositories: getRepos } = require('./utils');
+const { getRepositories: getRepos, checkPrivateVulnerabilityReporting } = require('./utils');
 
 function hasFlag(flag, flags, defaultValue = false) {
 	return !!(flags?.length > 0 ? flags?.includes(flag) : defaultValue);
@@ -95,6 +95,14 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 module.exports = async function getRepositories(flags, filter) {
 	// Get all repositories
 	const { points, repositories } = await getRepos(generateQuery, flags, { filter });
+
+	// Enhance repositories with private vulnerability reporting data
+	if (flags.token) {
+		await Promise.all(repositories.map(async (repo) => {
+			const [owner, name] = repo.nameWithOwner.split('/');
+			repo.hasPrivateVulnerabilityReportingEnabled = await checkPrivateVulnerabilityReporting(owner, name, flags.token);
+		}));
+	}
 
 	if (!flags.sort) {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
