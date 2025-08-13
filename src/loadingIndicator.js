@@ -1,17 +1,19 @@
 'use strict';
 
 module.exports = async function loadingIndicator(task) {
-	process.stdout.write('Loading...');
+	process.stderr.write('Loading...');
 	const timer = setInterval(
-		() => { process.stdout.write('.'); },
+		() => { process.stderr.write('.'); },
 		1e3,
 	);
 	try {
 		return await task();
 	} finally {
 		clearInterval(timer);
-		process.stdout.clearLine(0);
-		process.stdout.cursorTo(0);
-		process.stdout.write('\n');
+		if (process.stderr.clearLine) {
+			process.stderr.clearLine(0);
+			process.stderr.cursorTo(0);
+		}
+		process.stderr.write('\n');
 	}
 };
