@@ -2,7 +2,9 @@
 
 const test = require('tape');
 
-const { generateDetailTable } = require('../../src/utils');
+const {
+	generateDetailTable,
+} = require('../../src/utils');
 
 const {
 	mockRepositoriesData: { data: { viewer: { repositories } } },

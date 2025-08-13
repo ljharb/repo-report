@@ -3,7 +3,6 @@
 'use strict';
 
 const {
-	printAPIPoints,
 	generateDetailTable,
 } = require('../utils');
 const { getRepositories } = require('../getRepositories');
@@ -12,7 +11,6 @@ const loadingIndicator = require('../loadingIndicator');
 const getMetrics = require('../metrics');
 const Metrics = require('../../config/metrics');
 
-// Metric names and their extraction method to be used on the query result (Order is preserved)
 const metricNames = Object.keys(Metrics);
 
 module.exports = async function detail(flags) {
@@ -40,10 +38,10 @@ module.exports = async function detail(flags) {
 		unactionable: flags.unactionable,
 	});
 
-	if (table) {
-		console.log(String(table));
-	}
-
-	printAPIPoints(points);
-	return null;
+	return {
+		metrics,
+		points,
+		repositories,
+		table,
+	};
 };
