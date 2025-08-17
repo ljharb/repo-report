@@ -10,6 +10,7 @@
     "AutoMergeAllowed": false,
     "BlankIssuesEnabled": false,
     "SecurityPolicyEnabled": true,
+    "PrivateVulnerabilityReportingEnabled": true,
     "License": ["MIT License", null],
     "MergeStrategies": {
       "MERGE": true,

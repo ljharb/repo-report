@@ -82,6 +82,11 @@ module.exports = {
 		extract: (item) => !!item.isSecurityPolicyEnabled,
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE'],
 	},
+	PrivateVulnerabilityReportingEnabled: {
+		compare: (item, config) => !!config === item.hasPrivateVulnerabilityReportingEnabled,
+		extract: (item) => !!item.hasPrivateVulnerabilityReportingEnabled,
+		permissions: ['ADMIN', 'MAINTAIN'],
+	},
 	License: {
 		compare: (item, config) => config?.includes(item.licenseInfo?.name || null),
 		extract: (item) => item.licenseInfo?.name || empty,

@@ -71,6 +71,7 @@
 		"ReqCodeOwnerReviews": { "type": ["boolean", "null"] },
 		"ReqConversationResolution": { "type": ["boolean", "null"] },
 		"SecurityPolicyEnabled": { "type": ["boolean", "null"] },
+		"PrivateVulnerabilityReportingEnabled": { "type": ["boolean", "null"] },
 		"Subscription": {
 			"oneOf": [
 				{
