@@ -2,6 +2,7 @@
   "metrics": {
     "Access": ["ADMIN", "MAINTAIN", "WRITE", "TRIAGE", "READ"],
     "IssuesEnabled": true,
+    "RequiredDeploymentEnvironments": true,
     "ProjectsEnabled": true,
     "DiscussionsEnabled": false,
     "WikiEnabled": false,
