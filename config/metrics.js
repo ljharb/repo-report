@@ -62,10 +62,9 @@ module.exports = {
 		permissions: ['ADMIN'],
 	},
 	RequiredDeploymentEnvironments: {
-		// ✓ when at least one required deployment environment exists, else ✗
 		extract(item) {
 			const envs = getBPRules(item)?.RequiredDeploymentEnvironments;
-			return !!envs && envs.length >= 0;
+			return envs.length > 0 && envs;
 		},
 		permissions: ['ADMIN'],
 	},
