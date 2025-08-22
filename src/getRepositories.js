@@ -96,9 +96,20 @@ module.exports = async function getRepositories(flags, filter) {
 	// Get all repositories
 	const { points, repositories } = await getRepos(generateQuery, flags, { filter });
 
-	if (!flags.sort) {
+	if (flags.sortBy === 'name' && flags.reverse) {
+		repositories.sort((a, b) => b.name.localeCompare(a.name)); // Z → A
+	} else if (flags.sortBy === 'name' || flags.sortBy === '') {
+		repositories.sort((a, b) => a.name.localeCompare(b.name)); // A → Z
+	} else if (flags.sortBy === 'updatedDate' && flags.reverse) {
+		repositories.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt)); // newest to oldest
+	} else if (flags.sortBy === 'updatedDate') {
+		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); // oldest to newest
+	} else if (flags.sortBy === 'createdDate' && flags.reverse) {
+		repositories.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); //  newest to oldest
+	} else if (flags.sortBy === 'createdDate') {
+		repositories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // oldest to newest
+	} else if (!flags.sort && flags.sortBy === undefined) {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 	}
-
 	return { points, repositories };
 };
