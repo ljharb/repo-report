@@ -61,6 +61,14 @@ module.exports = {
 		extract: (item) => calcRestrictedSourcePercentage(getBPRules(item)),
 		permissions: ['ADMIN'],
 	},
+	RequiredDeploymentEnvironments: {
+		extract(item) {
+			const envs = getBPRules(item)?.RequiredDeploymentEnvironments;
+			return !!envs && envs.length >= 0;
+		},
+		permissions: ['ADMIN'],
+	},
+
 	AllowsForking: {
 		extract: (item) => item.forkingAllowed,
 		permissions: ['ADMIN'],
