@@ -36,7 +36,7 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 								allowsForcePushes
 								allowsDeletions
 								dismissesStaleReviews
-        						requiredDeploymentEnvironments
+        				requiredDeploymentEnvironments
 								requiredApprovingReviewCount
 								requiresApprovingReviews
 								requiresCodeOwnerReviews
