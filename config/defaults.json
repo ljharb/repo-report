@@ -30,7 +30,8 @@
     "ReqConversationResolution": false,
     "RequiredBranchProtectionSourcePercentage": 100,
     "WebCommitSignoffRequired": false,
-    "CodeOfConduct": [null, "Contributor Covenant"]
+    "CodeOfConduct": [null, "Contributor Covenant"],
+    "RequireLastPushApproval": true
   },
   "overrides": [],
   "repositories": {

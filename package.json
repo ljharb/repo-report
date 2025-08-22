@@ -13,7 +13,7 @@
 		"prepublishOnly": "safe-publish-latest",
 		"prepublish": "not-in-publish || npm run prepublishOnly",
 		"test": "npm run tests-only",
-		"tests-only": "nyc tape 'test/**/*.js'| tap-spec",
+		"tests-only": "nyc tape \"test/**/*.js\" | tap-spec",
 		"lint": "eslint --ext=js,mjs ./bin/* .",
 		"pretest": "npm run lint",
 		"posttest": "npx npm@\">= 10.2\" audit --production",

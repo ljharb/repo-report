@@ -13,8 +13,9 @@
 		}],
 		"max-params": "off",
 		"max-statements": "off",
+		"linebreak-style": 0,
 	},
-	
+
 	"overrides": [
 		{
 			"files": "test/**/*",
