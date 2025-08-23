@@ -42,7 +42,7 @@ const tableOutput = Object.setPrototypeOf(Object.assign([
 		'33.3% (3/9)',
 		'11.1% (1/9)',
 		'55.6% (5/9)',
-		'0% (0/9)',
+		'11.1% (1/9)',
 	],
 	[
 		'name/challenges-book\nname/responsive-design',
@@ -66,7 +66,7 @@ const tableOutput = Object.setPrototypeOf(Object.assign([
 		`${symbols.success}`,
 		`${symbols.error}`,
 		`${symbols.error}`,
-		`${symbols.error}`,
+		`${symbols.success}`,
 	],
 	[
 		'name/ecma262',
@@ -135,7 +135,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'false',
 		'---',
 		'60',
-		'false',
+		'true',
 	],
 	[
 		'name/ecma262',
@@ -206,7 +206,7 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.error} false`,
 		`${symbols.ignore} ---`,
 		`${symbols.error} 60`,
-		`${symbols.error} false`,
+		`${symbols.success} true`,
 	],
 	[
 		'name/ecma262',

@@ -136,12 +136,13 @@
 									{
 										"app": null
 									}
-								]
+								],
+								"requireLastPushApproval": true
 							}
 						},
 						"viewerPermission": "ADMIN",
 						"isSecurityPolicyEnabled": false,
-						"RequireLastPushApproval": true
+						"requireLastPushApproval": true
 					},
 					{
 						"name": "ecma262",
