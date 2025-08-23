@@ -141,8 +141,7 @@
 							}
 						},
 						"viewerPermission": "ADMIN",
-						"isSecurityPolicyEnabled": false,
-						"requireLastPushApproval": true
+						"isSecurityPolicyEnabled": false
 					},
 					{
 						"name": "ecma262",
