@@ -136,7 +136,8 @@
 									{
 										"app": null
 									}
-								]
+								],
+								"requireLastPushApproval": true
 							}
 						},
 						"viewerPermission": "ADMIN",
