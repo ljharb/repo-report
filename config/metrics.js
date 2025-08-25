@@ -189,4 +189,8 @@ module.exports = {
 		dontPrint: true,
 		extract: (item) => item.isPrivate,
 	},
+	RequireBranchesBeUpToDateBeforeMerging: {
+		extract: (item) => !!getBPRules(item)?.requiresStrictStatusChecks,
+		permissions: ['ADMIN', 'MAINTAIN'],
+	},
 };
