@@ -136,7 +136,8 @@
 									{
 										"app": null
 									}
-								]
+								],
+								"requiresStrictStatusChecks": true
 							}
 						},
 						"viewerPermission": "ADMIN",
@@ -175,9 +176,13 @@
 							"name": "---"
 						},
 						"defaultBranchRef": {
-							"name": "main"
+							"name": "main",
+							"branchProtectionRule": {
+							"requiresStrictStatusChecks": true
+						}
 						},
 						"viewerPermission": "ADMIN"
+						
 					}
 				]
 			}
