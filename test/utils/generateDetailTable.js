@@ -13,7 +13,7 @@ const {
 
 const getMetrics = require('../../src/metrics');
 
-const metrics = getMetrics(['Repository', 'Access', 'DefBranch', 'isPrivate', 'SecurityPolicyEnabled', 'CodeOfConduct', 'RequiredBranchProtectionSourcePercentage', 'RequireLastPushApproval']);
+const metrics = getMetrics(['Repository', 'Access', 'DefBranch', 'isPrivate', 'SecurityPolicyEnabled', 'CodeOfConduct', 'RequiredBranchProtectionSourcePercentage', 'RequireLastPushApproval', 'RequireBranchesBeUpToDateBeforeMerging']);
 
 function compareTables(t, actual, expected, msg, invalid = false) {
 	const comparator = invalid ? 'notDeepEqual' : 'deepEqual';
@@ -32,6 +32,12 @@ function compareTables(t, actual, expected, msg, invalid = false) {
 				'table options are deepEqual',
 			);
 		}
+		const a = Array.prototype.slice.call(actual);
+		const b = Array.prototype.slice.call(expected);
+		for (let i = 0; i < a.length; i++) {
+			st[comparator](a[i], b[i], `row ${i} is ${invalid ? 'not ' : ''}deepEqual`);
+		}
+
 		st[comparator](
 			Array.prototype.slice.call(actual),
 			Array.prototype.slice.call(expected),

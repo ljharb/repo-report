@@ -42,6 +42,7 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 								requiresConversationResolution
 								restrictsPushes
 								requireLastPushApproval
+								requiresStrictStatusChecks
 								requiredStatusChecks {
 									app {
 										id

@@ -31,7 +31,8 @@
     "RequiredBranchProtectionSourcePercentage": 100,
     "WebCommitSignoffRequired": false,
     "CodeOfConduct": [null, "Contributor Covenant"],
-    "RequireLastPushApproval": true
+    "RequireLastPushApproval": true,
+    "RequireBranchesBeUpToDateBeforeMerging": true
   },
   "overrides": [],
   "repositories": {

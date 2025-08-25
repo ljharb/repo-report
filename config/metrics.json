@@ -99,7 +99,8 @@
 		},
 		"WebCommitSignoffRequired": { "type": ["boolean", "null"] },
 		"WikiEnabled": { "type": ["boolean", "null"] },
-		"RequireLastPushApproval": { "type": ["boolean", "null"] }
+		"RequireLastPushApproval": { "type": ["boolean", "null"] },
+		"RequireBranchesBeUpToDateBeforeMerging": { "type": ["boolean", "null"] }
 	},
 	"type": "object"
 }

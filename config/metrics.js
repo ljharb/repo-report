@@ -193,4 +193,8 @@ module.exports = {
 		extract: (item) => !!getBPRules(item)?.requireLastPushApproval,
 		permissions: ['ADMIN', 'MAINTAIN'],
 	},
+	RequireBranchesBeUpToDateBeforeMerging: {
+		extract: (item) => !!getBPRules(item)?.requiresStrictStatusChecks,
+		permissions: ['ADMIN', 'MAINTAIN'],
+	},
 };
