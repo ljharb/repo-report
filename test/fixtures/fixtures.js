@@ -296,6 +296,7 @@ const DetailTableColumns = [
 	'DefBranch',
 	'AllowsForcePushes',
 	'AllowsDeletions',
+	'BlocksDestructivePushes',
 	'DismissesStaleReviews',
 	'ReqApprovingReviewCount',
 	'ReqApprovingReviews',

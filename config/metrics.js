@@ -141,6 +141,13 @@ module.exports = {
 		extract: (item) => !!getBPRules(item)?.allowsDeletions,
 		permissions: ['ADMIN'],
 	},
+	BlocksDestructivePushes: {
+		extract(item) {
+			const rules = getBPRules(item);
+			return rules ? !rules.allowsForcePushes && !rules.allowsDeletions : null;
+		},
+		permissions: ['ADMIN'],
+	},
 	DismissesStaleReviews: {
 		extract: (item) => !!getBPRules(item)?.dismissesStaleReviews,
 		permissions: ['ADMIN'],

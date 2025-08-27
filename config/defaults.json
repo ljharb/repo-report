@@ -23,6 +23,7 @@
     "DefBranch": "main",
     "AllowsForcePushes": false,
     "AllowsDeletions": false,
+    "BlocksDestructivePushes": true,
     "DismissesStaleReviews": false,
     "ReqApprovingReviewCount": 1,
     "ReqApprovingReviews": false,

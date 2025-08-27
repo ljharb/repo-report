@@ -10,6 +10,7 @@
 			"uniqueItems": true
 		},
 		"AllowsDeletions": { "type": ["boolean", "null"] },
+		"BlocksDestructivePushes": { "type": ["boolean", "null"] },
 		"CodeOfConduct": {
 			"oneOf": [
 				{ "type": ["boolean", "string", "null"] },
