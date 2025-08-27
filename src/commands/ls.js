@@ -1,6 +1,6 @@
 'use strict';
 
-const getRepositories = require('../getRepositories');
+const { getRepositories } = require('../getRepositories');
 const loadingIndicator = require('../loadingIndicator');
 
 module.exports = async function ls(flags) {
