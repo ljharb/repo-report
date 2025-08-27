@@ -20,8 +20,14 @@ module.exports = function repoArgs(yargs) {
 		})
 		.option('sort', {
 			alias: 's',
+			choices: ['name', 'updatedDate', 'createdDate', ''],
+			describe: 'Sort repositories by field such as name or updatedDate or createdDate.',
+			type: 'string',
+		})
+		.option('reverse', {
+			alias: 'r',
 			default: false,
-			describe: 'Sort repos alphabetically, instead of by "last updated"',
+			describe: 'Sort in reverse',
 			type: 'boolean',
 		});
 };

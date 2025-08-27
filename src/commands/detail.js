@@ -6,7 +6,7 @@ const {
 	printAPIPoints,
 	generateDetailTable,
 } = require('../utils');
-const getRepositories = require('../getRepositories');
+const { getRepositories } = require('../getRepositories');
 const loadingIndicator = require('../loadingIndicator');
 
 const getMetrics = require('../metrics');
