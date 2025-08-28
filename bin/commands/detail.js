@@ -2,6 +2,7 @@
 
 const cacheArgs = require('../cacheArgs');
 const repoArgs = require('../repoArgs');
+const formatArgs = require('../formatArgs');
 const metricArgs = require('../metricArgs');
 
 const symbols = require('../../src/symbols');
@@ -40,7 +41,7 @@ module.exports.builder = (yargs) => {
 		.help('help')
 		.strict();
 
-	return cacheArgs(repoArgs(metricArgs(commandArgs)));
+	return cacheArgs(repoArgs(metricArgs(formatArgs(commandArgs))));
 };
 
 module.exports.handler = detail;
