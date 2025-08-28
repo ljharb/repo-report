@@ -33,7 +33,8 @@
     "WebCommitSignoffRequired": false,
     "CodeOfConduct": [null, "Contributor Covenant"],
     "RequireLastPushApproval": true,
-    "RequireBranchesBeUpToDateBeforeMerging": true
+    "RequireBranchesBeUpToDateBeforeMerging": true,
+    "SponsorshipsEnabled": true
   },
   "overrides": [],
   "repositories": {

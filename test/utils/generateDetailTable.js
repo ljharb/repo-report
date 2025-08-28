@@ -13,7 +13,7 @@ const {
 
 const getMetrics = require('../../src/metrics');
 
-const metrics = getMetrics(['Repository', 'Access', 'DefBranch', 'isPrivate', 'SecurityPolicyEnabled', 'CodeOfConduct', 'RequiredBranchProtectionSourcePercentage', 'RequireLastPushApproval', 'RequireBranchesBeUpToDateBeforeMerging']);
+const metrics = getMetrics(['Repository', 'Access', 'DefBranch', 'isPrivate', 'SecurityPolicyEnabled', 'CodeOfConduct', 'RequiredBranchProtectionSourcePercentage', 'RequireLastPushApproval', 'RequireBranchesBeUpToDateBeforeMerging', 'SponsorshipsEnabled']);
 
 function compareTables(t, actual, expected, msg, invalid = false) {
 	const comparator = invalid ? 'notDeepEqual' : 'deepEqual';

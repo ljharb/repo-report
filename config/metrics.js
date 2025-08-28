@@ -204,4 +204,8 @@ module.exports = {
 		extract: (item) => !!getBPRules(item)?.requiresStrictStatusChecks,
 		permissions: ['ADMIN', 'MAINTAIN'],
 	},
+	SponsorshipsEnabled: {
+		extract: (item) => !!item.hasSponsorshipsEnabled,
+		permissions: ['ADMIN', 'MAINTAIN'],
+	},
 };
