@@ -83,6 +83,7 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 						viewerHasStarred
 						viewerPermission
 						viewerSubscription
+						hasSponsorshipsEnabled
 					}
 				}
 			}

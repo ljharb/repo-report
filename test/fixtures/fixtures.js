@@ -44,10 +44,12 @@ const tableOutput = Object.setPrototypeOf(Object.assign([
 		'55.6% (5/9)',
 		'11.1% (1/9)',
 		'22.2% (2/9)',
+		'22.2% (2/9)',
 	],
 	[
 		'name/challenges-book\nname/responsive-design',
 		`${symbols.success}`,
+		`${symbols.error}`,
 		`${symbols.error}`,
 		`${symbols.error}`,
 		`${symbols.error}`,
@@ -62,6 +64,7 @@ const tableOutput = Object.setPrototypeOf(Object.assign([
 		`${symbols.success}`,
 		`${symbols.error}`,
 		`${symbols.error}`,
+		`${symbols.error}`,
 	],
 	[
 		'name/ecma262',
@@ -70,6 +73,17 @@ const tableOutput = Object.setPrototypeOf(Object.assign([
 		`${symbols.success}`,
 		`${symbols.error}`,
 		`${symbols.error}`,
+		`${symbols.error}`,
+		`${symbols.success}`,
+	],
+	[
+		'name/agendas',
+		`${symbols.success}`,
+		`${symbols.success}`,
+		`${symbols.error}`,
+		`${symbols.success}`,
+		`${symbols.error}`,
+		`${symbols.success}`,
 		`${symbols.error}`,
 	],
 	[
@@ -80,14 +94,6 @@ const tableOutput = Object.setPrototypeOf(Object.assign([
 		`${symbols.error}`,
 		`${symbols.success}`,
 		`${symbols.success}`,
-	],
-	[
-		'name/agendas',
-		`${symbols.success}`,
-		`${symbols.success}`,
-		`${symbols.error}`,
-		`${symbols.success}`,
-		`${symbols.error}`,
 		`${symbols.success}`,
 	],
 ], {
@@ -100,7 +106,9 @@ const tableOutput = Object.setPrototypeOf(Object.assign([
 			'SecurityPolicyEnabled',
 			'RequiredBranchProtectionSourcePercentage',
 			'RequireLastPushApproval',
-			'RequireBranchesBeUpToDateBeforeMerging'],
+			'RequireBranchesBeUpToDateBeforeMerging',
+			'SponsorshipsEnabled',
+		],
 	},
 }), Table.prototype);
 
@@ -114,6 +122,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'100',
 		'false',
 		'false',
+		'false',
 	],
 	[
 		'name/challenges-book',
@@ -122,6 +131,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'false',
 		'---',
 		'40',
+		'false',
 		'false',
 		'false',
 	],
@@ -134,6 +144,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'0',
 		'false',
 		'false',
+		'false',
 	],
 	[
 		'name/media-upload-app',
@@ -142,6 +153,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'false',
 		'---',
 		'100',
+		'false',
 		'false',
 		'false',
 	],
@@ -154,6 +166,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'60',
 		'true',
 		'true',
+		'true',
 	],
 	[
 		'name/ecma262',
@@ -164,6 +177,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'50',
 		'false',
 		'false',
+		'true',
 	],
 	[
 		'name/agendas',
@@ -174,6 +188,7 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 		'100',
 		'false',
 		'true',
+		'false',
 	],
 ], {
 	options: {
@@ -186,7 +201,9 @@ const tableOutputActual = Object.setPrototypeOf(Object.assign([
 			'CodeOfConduct',
 			'RequiredBranchProtectionSourcePercentage',
 			'RequireLastPushApproval',
-			'RequireBranchesBeUpToDateBeforeMerging'],
+			'RequireBranchesBeUpToDateBeforeMerging',
+			'SponsorshipsEnabled',
+		],
 	},
 }), Table.prototype);
 
@@ -200,6 +217,7 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.error} 40`,
 		`${symbols.error} false`,
 		`${symbols.error} false`,
+		`${symbols.error} false`,
 	],
 	[
 		'name/responsive-design',
@@ -208,6 +226,7 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.error} false`,
 		`${symbols.success} Contributor Covenant`,
 		`${symbols.error} 0`,
+		`${symbols.error} false`,
 		`${symbols.error} false`,
 		`${symbols.error} false`,
 	],
@@ -220,6 +239,7 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.success} 100`,
 		`${symbols.error} false`,
 		`${symbols.error} false`,
+		`${symbols.error} false`,
 	],
 	[
 		'name/media-upload-app',
@@ -228,6 +248,7 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.error} false`,
 		`${symbols.ignore} ---`,
 		`${symbols.success} 100`,
+		`${symbols.error} false`,
 		`${symbols.error} false`,
 		`${symbols.error} false`,
 	],
@@ -240,15 +261,6 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.error} 50`,
 		`${symbols.error} false`,
 		`${symbols.error} false`,
-	],
-	[
-		'name/tc39-ci',
-		`${symbols.success} ADMIN`,
-		`${symbols.success} main`,
-		`${symbols.error} false`,
-		`${symbols.ignore} ---`,
-		`${symbols.error} 60`,
-		`${symbols.success} true`,
 		`${symbols.success} true`,
 	],
 	[
@@ -259,6 +271,18 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 		`${symbols.ignore} ---`,
 		`${symbols.success} 100`,
 		`${symbols.error} false`,
+		`${symbols.success} true`,
+		`${symbols.error} false`,
+	],
+	[
+		'name/tc39-ci',
+		`${symbols.success} ADMIN`,
+		`${symbols.success} main`,
+		`${symbols.error} false`,
+		`${symbols.ignore} ---`,
+		`${symbols.error} 60`,
+		`${symbols.success} true`,
+		`${symbols.success} true`,
 		`${symbols.success} true`,
 	],
 ], {
@@ -273,6 +297,7 @@ const tableOutputActualGoodness = Object.setPrototypeOf(Object.assign([
 			'RequiredBranchProtectionSourcePercentage',
 			'RequireLastPushApproval',
 			'RequireBranchesBeUpToDateBeforeMerging',
+			'SponsorshipsEnabled',
 		],
 	},
 }), Table.prototype);
@@ -304,6 +329,7 @@ const DetailTableColumns = [
 	'ReqConversationResolution',
 	'RequireLastPushApproval',
 	'RequireBranchesBeUpToDateBeforeMerging',
+	'SponsorshipsEnabled',
 ];
 
 const sortedRepositories = require('./sortedRepositories.json');
