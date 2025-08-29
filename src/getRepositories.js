@@ -36,6 +36,7 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 								allowsForcePushes
 								allowsDeletions
 								dismissesStaleReviews
+        				requiredDeploymentEnvironments
 								requiredApprovingReviewCount
 								requiresApprovingReviews
 								requiresCodeOwnerReviews
@@ -101,6 +102,5 @@ module.exports = async function getRepositories(flags, filter) {
 	if (!flags.sort) {
 		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 	}
-
 	return { points, repositories };
 };

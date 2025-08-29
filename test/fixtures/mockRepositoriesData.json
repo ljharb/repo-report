@@ -55,7 +55,8 @@
 									{
 										"app": null
 									}
-								]
+								],
+								"requiredDeploymentEnvironments": ["staging", "preview", "production"]
 							}
 						},
 						"viewerPermission": "ADMIN"
@@ -73,7 +74,8 @@
 											"id": "somerandomid"
 										}
 									}
-								]
+								],
+								"requiredDeploymentEnvironments": ["production"]
 							}
 						},
 						"viewerPermission": "ADMIN"
@@ -92,7 +94,8 @@
 									{
 										"app": null
 									}
-								]
+								],
+								"requiredDeploymentEnvironments": []
 							}
 						},
 						"viewerPermission": "ADMIN"
@@ -137,6 +140,7 @@
 										"app": null
 									}
 								],
+								"requiredDeploymentEnvironments": null,
 								"requireLastPushApproval": true,
 								"requiresStrictStatusChecks": true
 							}
@@ -163,7 +167,8 @@
 									{
 										"app": null
 									}
-								]
+								],
+								"requiredDeploymentEnvironments": ["staging", "integration"]
 							}
 						},
 						"viewerPermission": "ADMIN",
