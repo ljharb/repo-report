@@ -323,7 +323,17 @@ const generateDetailTable = (metrics, rowData, {
 	const rows = rowData.map((item) => {
 		const currMetrics = getCurrMetrics(item);
 		return filteredMetrics.map((metric) => {
-			const value = metric.extract(item);
+			const rawValue = metric.extract(item);
+			
+			let value = rawValue;
+			if (metric.name === 'RequiredDeploymentEnvironments') {
+				if (rawValue && Array.isArray(rawValue) && rawValue.length > 0) {
+					value = rawValue;
+				} else {
+					value = false;
+				}
+			}
+			
 			const diffValue = goodness && getDiffSymbol(item, currMetrics, value, metric, { actual, unactionable });
 
 			return getMetricOut(value, diffValue, { actual, goodness });
