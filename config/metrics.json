@@ -23,16 +23,7 @@
 		},
 		"AllowsForcePushes": { "type": ["boolean", "null"] },
 		"RequiredBranchProtectionSourcePercentage": { "type": ["number", "null"] },
-		"RequiredDeploymentEnvironments": {
-			"oneOf": [
-				{ "type": ["boolean", "null"] },
-				{
-					"type": "array", 
-					"items": { "type": ["string", "null"] },
-					"uniqueItems": true
-				}
-			]
-		},
+		"RequiredDeploymentEnvironments": { "type": ["boolean", "null"] },
 		"AllowsForking": { "type": ["boolean", "null"] },
 		"Archived": { "type": ["boolean", "null"] },
 		"AutoMergeAllowed": { "type": ["boolean", "null"] },
