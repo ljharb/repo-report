@@ -30,6 +30,7 @@
 		"ReqApprovingReviews": false,
 		"ReqCodeOwnerReviews": false,
 		"ReqConversationResolution": false,
-		"CodeOfConduct": [null, "Contributor Covenant"]
+		"CodeOfConduct": [null, "Contributor Covenant"],
+		"SponsorshipsEnabled": true
 	}
 }

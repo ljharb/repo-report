@@ -2,30 +2,27 @@
 
 const test = require('tape');
 
-const { stdout } = require('../test-utils');
-
 const getMetrics = require('../../src/metrics');
-const { listMetrics } = require('../../src/utils');
+const {
+	listMetrics,
+} = require('../../src/utils');
 
 const metrics = getMetrics(['Repository', 'Access', 'DefBranch', 'isPrivate']);
 
 test('listMetrics', (t) => {
-	t.test('output each metric name', (st) => {
-		const output = stdout();
-		const expectedResults = ['- Repository\n', '- Access\n', '- DefBranch\n', '- isPrivate\n'];
-		listMetrics(metrics);
-		output.restore();
-		st.deepEqual(output.loggedData, expectedResults);
+	t.test('returns array of metric names', (st) => {
+		const result = listMetrics(metrics);
+		const expectedResults = ['Repository', 'Access', 'DefBranch', 'isPrivate'];
+		st.deepEqual(result, expectedResults);
 
 		st.end();
 	});
 
-	t.test('output incorrect metric values', (st) => {
-		const output = stdout();
-		const expectedResults = ['- Repository\n- Access\n- DefBranch'];
-		listMetrics(metrics);
-		output.restore();
-		st.notDeepEqual(output.loggedData, expectedResults);
+	t.test('returns correct data structure', (st) => {
+		const result = listMetrics(metrics);
+		st.ok(Array.isArray(result), 'should return an array');
+		st.equal(result.length, 4, 'should return correct number of items');
+		st.ok(result.every((name) => typeof name === 'string'), 'all items should be strings');
 
 		st.end();
 	});

@@ -146,7 +146,8 @@
 							}
 						},
 						"viewerPermission": "ADMIN",
-						"isSecurityPolicyEnabled": false
+						"isSecurityPolicyEnabled": false,
+						"hasSponsorshipsEnabled": true
 					},
 					{
 						"name": "ecma262",
@@ -172,7 +173,8 @@
 							}
 						},
 						"viewerPermission": "ADMIN",
-						"isSecurityPolicyEnabled": true
+						"isSecurityPolicyEnabled": true,
+						"hasSponsorshipsEnabled": true
 					},
 					{
 						"name": "agendas",
@@ -187,7 +189,8 @@
 							"requiresStrictStatusChecks": true
 						}
 						},
-						"viewerPermission": "ADMIN"
+						"viewerPermission": "ADMIN",
+						"hasSponsorshipsEnabled": false
 					}
 				]
 			}

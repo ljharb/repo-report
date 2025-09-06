@@ -2,10 +2,14 @@
 
 const cacheArgs = require('../cacheArgs');
 const repoArgs = require('../repoArgs');
+const formatArgs = require('../formatArgs');
 const metricArgs = require('../metricArgs');
 
 const symbols = require('../../src/symbols');
 const detail = require('../../src/commands/detail');
+const {
+	printAPIPoints,
+} = require('../../src/utils');
 
 module.exports.description = `Fetch actionable details about your public, source (non-fork, non-template) repositories. Unactionable metrics are converted to ${symbols.success} by default.`;
 
@@ -40,7 +44,32 @@ module.exports.builder = (yargs) => {
 		.help('help')
 		.strict();
 
-	return cacheArgs(repoArgs(metricArgs(commandArgs)));
+	return cacheArgs(repoArgs(metricArgs(formatArgs(commandArgs))));
 };
 
-module.exports.handler = detail;
+module.exports.handler = async (flags) => {
+	const {
+		metrics,
+		points,
+		repositories,
+		table,
+	} = await detail(flags);
+
+	if (flags.json) {
+		/* eslint function-paren-newline: 0 */
+		const report = repositories.map((repo) => Object.fromEntries(
+			Object.entries(metrics).flatMap((metric) => (
+				metric.dontPrint
+					? []
+					: [[metric.name, metric.extract(repo)]]
+			)),
+		)).concat(points);
+
+		console.log(JSON.stringify(report, null, '\t'));
+	} else {
+		if (table) {
+			console.log(String(table));
+		}
+		printAPIPoints(points);
+	}
+};

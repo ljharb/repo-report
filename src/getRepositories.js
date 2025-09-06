@@ -84,6 +84,7 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 						viewerHasStarred
 						viewerPermission
 						viewerSubscription
+						hasSponsorshipsEnabled
 					}
 				}
 			}
@@ -95,12 +96,32 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 	`;
 }
 
-module.exports = async function getRepositories(flags, filter) {
-	// Get all repositories
-	const { points, repositories } = await getRepos(generateQuery, flags, { filter });
-
-	if (!flags.sort) {
-		repositories.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+function sortRepositories(repos, flags) {
+	if (flags.sort === 'name' || flags.sort === '') {
+		repos.sort((a, b) => (flags.desc
+			? b.name.localeCompare(a.name) // Z → A
+			: a.name.localeCompare(b.name))); // A → Z
+	} else if (flags.sort === 'updated') {
+		repos.sort((a, b) => (flags.desc
+			? new Date(b.updatedAt) - new Date(a.updatedAt) // newest → oldest
+			: new Date(a.updatedAt) - new Date(b.updatedAt))); // oldest → newest
+	} else if (flags.sort === 'created') {
+		repos.sort((a, b) => (flags.desc
+			? new Date(b.createdAt) - new Date(a.createdAt) // oldest → newest
+			: new Date(a.createdAt) - new Date(b.createdAt))); // newest → oldest
+	} else {
+		throw new TypeError(`Invalid sort option: ${flags.sort}`);
 	}
-	return { points, repositories };
+	return repos;
+}
+
+async function getRepositories(flags, filter) {
+	const { points, repositories } = await getRepos(generateQuery, flags, { filter });
+	const sortedRepo = sortRepositories(repositories, flags);
+	return { points, repositories: sortedRepo };
+}
+
+module.exports = {
+	getRepositories,
+	sortRepositories
 };

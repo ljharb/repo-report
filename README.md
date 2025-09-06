@@ -75,7 +75,10 @@ OR you can add it to a .env file in the project root:
 - Shows repo names alongside their owners
 
 10. ``-s, --sort``
-- Sorts alphabetically (It's sorted by last updated by default)
+- Sorts by "last updated date" by default; can be set to `name` or `created` instead.
+
+11. ``-desc``
+- Sorts descending instead of ascending.
 
 11. ``--cache``
 - Saves API request data in ``--cacheDir``.

@@ -4,7 +4,9 @@ const test = require('tape');
 
 const { stderr } = require('../test-utils');
 
-const { printAPIPoints } = require('../../src/utils');
+const {
+	printAPIPoints,
+} = require('../../src/utils');
 
 test('printAPIPoints', (t) => {
 	t.test('returns the API points correctly', (st) => {

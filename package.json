@@ -27,14 +27,14 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"@octokit/graphql": "^7.1.1",
+		"@octokit/graphql": "^9.0.1",
 		"cli-table": "^0.3.11",
 		"colors": "=1.4.0",
-		"dotenv": "^17.2.1",
+		"dotenv": "^17.2.2",
 		"jsonschema": "^1.5.0",
 		"minimatch": "^10.0.3",
 		"mkdirp": "^3.0.1",
-		"yargs": "^17.7.2"
+		"yargs": "^18.0.0"
 	},
 	"devDependencies": {
 		"@ljharb/eslint-config": "^21.2.0",
@@ -49,7 +49,7 @@
 		"tape": "^5.9.0"
 	},
 	"engines": {
-		"node": ">= 18"
+		"node": "^20.19 || ^22.19 || >= 24.7"
 	},
 	"auto-changelog": {
 		"output": "CHANGELOG.md",
