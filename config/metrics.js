@@ -62,7 +62,7 @@ module.exports = {
 		permissions: ['ADMIN'],
 	},
 	RequiredDeploymentEnvironments: {
-		extract: (item) => !!getBPRules(item)?.requiredDeploymentEnvironments,
+		extract: (item) => !!getBPRules(item)?.requiredDeploymentEnvironments?.length > 0,
 		permissions: ['ADMIN'],
 	},
 
