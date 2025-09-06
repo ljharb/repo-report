@@ -36,6 +36,7 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 								allowsForcePushes
 								allowsDeletions
 								dismissesStaleReviews
+        				requiredDeploymentEnvironments
 								requiredApprovingReviewCount
 								requiresApprovingReviews
 								requiresCodeOwnerReviews
@@ -122,5 +123,5 @@ async function getRepositories(flags, filter) {
 
 module.exports = {
 	getRepositories,
-	sortRepositories,
+	sortRepositories
 };

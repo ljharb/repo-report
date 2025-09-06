@@ -23,6 +23,7 @@
 		},
 		"AllowsForcePushes": { "type": ["boolean", "null"] },
 		"RequiredBranchProtectionSourcePercentage": { "type": ["number", "null"] },
+		"RequiredDeploymentEnvironments": { "type": ["boolean", "null"] },
 		"AllowsForking": { "type": ["boolean", "null"] },
 		"Archived": { "type": ["boolean", "null"] },
 		"AutoMergeAllowed": { "type": ["boolean", "null"] },
