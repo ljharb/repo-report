@@ -27,7 +27,9 @@ const defaultConfigPaths = [].concat(
 // eslint-disable-next-line no-template-curly-in-string
 const defaultConfig = Object('${XDG_CONFIG_HOME:-$HOME}/.repo-report.json');
 
-yargs().usage('Usage: $0 <command> [options]')
+yargs()
+	.scriptName('repo-report')
+	.usage('Usage: $0 <command> [options]')
 	.config('config')
 	.default('config', defaultConfig)
 	.check(({ config }) => {
