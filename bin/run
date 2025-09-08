@@ -3,7 +3,6 @@
 
 'use strict';
 
-require('dotenv').config();
 const yargs = require('yargs');
 const colors = require('colors/safe');
 const homedir = require('os').homedir();
