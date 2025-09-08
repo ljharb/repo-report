@@ -48,4 +48,4 @@ yargs()
 	.check(({ token }) => !!token || colors.red(`${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN, or \`--token\` argument, not found.\n\nRefer to #Installation in README.md on how to set an env variable`))
 	.commandDir(path.join(__dirname, './commands'))
 	.help('help')
-	.parse();
+	.parse(process.argv.slice(2));
