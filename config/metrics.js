@@ -205,7 +205,7 @@ module.exports = {
 		permissions: ['ADMIN', 'MAINTAIN'],
 	},
 	SponsorshipsEnabled: {
-		extract: (item) => !!item.hasSponsorshipsEnabled,
+		extract: (item) => !!item.fundingLinks,
 		permissions: ['ADMIN', 'MAINTAIN'],
 	},
 };

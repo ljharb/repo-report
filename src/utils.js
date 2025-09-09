@@ -150,8 +150,8 @@ const getRepositories = async (generateQuery, flags = {}, { filter = undefined, 
 		}
 		const {
 			viewer: {
-				repositories: { nodes, pageInfo },
-			},
+				repositories: { nodes, pageInfo } = {},
+			} = {},
 			rateLimit,
 		} = response;
 
