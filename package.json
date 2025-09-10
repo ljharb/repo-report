@@ -61,6 +61,7 @@
 	"publishConfig": {
 		"ignore": [
 			".github/workflows",
+			"Repo-Report Table.png",
 			"test/"
 		]
 	}
