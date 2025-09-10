@@ -202,7 +202,7 @@ module.exports = {
 	},
 	RequireBranchesBeUpToDateBeforeMerging: {
 		extract: (item) => !!getBPRules(item)?.requiresStrictStatusChecks,
-		permissions: ['ADMIN', 'MAINTAIN'],
+		permissions: ['ADMIN'],
 	},
 	SponsorshipsEnabled: {
 		extract: (item) => !!item.fundingLinks,
