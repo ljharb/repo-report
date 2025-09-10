@@ -10,7 +10,6 @@ const Table = require('cli-table');
 const { minimatch } = require('minimatch');
 const colors = require('colors/safe');
 const path = require('path');
-const mkdirp = require('mkdirp');
 
 const symbols = require('./symbols');
 const defaultConfig = require('../config/defaults.json');
@@ -50,7 +49,7 @@ const isConfigValid = (configPaths) => {
 
 const dumpCache = (cacheDir, date, filename, content) => {
 	const dateDir = path.join(cacheDir, date);
-	mkdirp.sync(dateDir);
+	fs.mkdirSync(dateDir, { recursive: true });
 	fs.writeFileSync(`${dateDir}/${filename}`, content);
 };
 
