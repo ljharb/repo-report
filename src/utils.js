@@ -145,18 +145,48 @@ const getRepositories = async (generateQuery, flags = {}, { filter = undefined, 
 					},
 				);
 			}
-			throw e;
+
+			/*
+			 * Handle org access restrictions (e.g., orgs that forbid classic tokens)
+			 * GraphQL errors may still return partial data we can use
+			 */
+			if (e.errors && e.data) {
+				const orgErrors = e.errors.filter((err) => err.message
+					&& (
+						err.message.includes('OAuth App access restrictions')
+						|| err.message.includes('personal access token')
+						|| err.message.includes('Resource not accessible')
+						|| err.message.includes('SAML SSO')
+					));
+
+				if (orgErrors.length > 0) {
+					orgErrors.forEach((err) => {
+						console.error(`${symbols.warning} Skipping due to access restriction: ${err.message}`);
+					});
+
+					// Use partial data if available
+					response = e.data;
+				} else {
+					throw e;
+				}
+			} else {
+				throw e;
+			}
 		}
 		const {
 			viewer: {
-				repositories: { nodes, pageInfo } = {},
+				repositories: { nodes = [], pageInfo = {} } = {},
 			} = {},
-			rateLimit,
-		} = response;
+			rateLimit = {},
+		} = response || {};
 
 		({ endCursor, hasNextPage } = pageInfo);
-		points.cost += rateLimit.cost;
-		points.remaining = rateLimit.remaining;
+		if (rateLimit.cost) {
+			points.cost += rateLimit.cost;
+		}
+		if (typeof rateLimit.remaining !== 'undefined') {
+			points.remaining = rateLimit.remaining;
+		}
 		repositories = repositories.concat(nodes);
 		if (cache) {
 			dumpCache(
