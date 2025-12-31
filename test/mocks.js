@@ -2,7 +2,7 @@
 
 // octokit/fixture, proxy
 const assert = require('assert');
-const fetchMock = require('fetch-mock/es5/server');
+const fetchMock = require('fetch-mock');
 const { graphql } = require('@octokit/graphql');
 
 const mockGetRepositories = (response) => graphql(`{ viewer {
