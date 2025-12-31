@@ -47,7 +47,7 @@
 		"tape": "^5.9.0"
 	},
 	"engines": {
-		"node": "^20.19 || ^22.19 || >= 24.7"
+		"node": "^22.21 || ^24.12 || >= 25.2.1"
 	},
 	"auto-changelog": {
 		"output": "CHANGELOG.md",
