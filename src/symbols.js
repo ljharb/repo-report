@@ -1,14 +1,14 @@
 'use strict';
 
-const colors = require('colors/safe');
+const { styleText } = require('util');
 
 module.exports = {
-	error: colors.red('✖'),
+	error: styleText('red', '✖'),
 	fork: '🍴',
 	ignore: '🤷',
-	info: colors.blue('ℹ'),
+	info: styleText('blue', 'ℹ'),
 	isPrivate: '🔒',
-	success: colors.green('✔'),
+	success: styleText('green', '✔'),
 	unactionable: '🙅',
-	warning: colors.yellow('⚠️'),
+	warning: styleText('yellow', '⚠️'),
 };

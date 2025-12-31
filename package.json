@@ -29,7 +29,6 @@
 	"dependencies": {
 		"@octokit/graphql": "^9.0.3",
 		"cli-table": "^0.3.11",
-		"colors": "=1.4.0",
 		"jsonschema": "^1.5.0",
 		"minimatch": "^10.1.1",
 		"yargs": "^18.0.0"

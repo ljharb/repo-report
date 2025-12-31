@@ -4,7 +4,7 @@
 'use strict';
 
 const yargs = require('yargs');
-const colors = require('colors/safe');
+const { styleText } = require('util');
 const homedir = require('os').homedir();
 const path = require('path');
 
@@ -38,13 +38,13 @@ yargs()
 		);
 		const { valid, error } = isConfigValid(configPaths);
 		if (!valid) {
-			throw `${symbols.error} ${colors.red(error)}`;
+			throw `${symbols.error} ${styleText('red', error)}`;
 		}
 		return true;
 	})
 	.default('token', GH_TOKEN || GITHUB_TOKEN)
 	.hide('token')
-	.check(({ token }) => !!token || colors.red(`${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN, or \`--token\` argument, not found.\n\nRefer to #Installation in README.md on how to set an env variable`))
+	.check(({ token }) => !!token || styleText('red', `${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN, or \`--token\` argument, not found.\n\nRefer to #Installation in README.md on how to set an env variable`))
 	.commandDir(path.join(__dirname, './commands'))
 	.help('help')
 	.parse(process.argv.slice(2));

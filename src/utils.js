@@ -8,7 +8,7 @@ const fs = require('fs');
 const { graphql } = require('@octokit/graphql');
 const Table = require('cli-table');
 const { minimatch } = require('minimatch');
-const colors = require('colors/safe');
+const { styleText } = require('util');
 const path = require('path');
 
 const symbols = require('./symbols');
@@ -40,7 +40,7 @@ const isConfigValid = (configPaths) => {
 			repositories: { ...config.repositories, ...userConfig.repositories },
 		};
 	} else {
-		console.error(colors.red(`${symbols.error} no config file found, using defaults...`));
+		console.error(styleText('red', `${symbols.error} no config file found, using defaults...`));
 	}
 
 	const { valid, error } = validateConfig(config);
