@@ -1,0 +1,36 @@
+Usage: repo-report <command> [options]
+
+Commands:
+  repo-report          Fetch actionable details about your public, source
+                       (non-fork, non-template) repositories. Unactionable
+                       metrics are converted to a checkmark by default. [default]
+  repo-report ls       Lists all repositories.
+                       - Includes sources, forks, templates, private, and public
+                       repos by default.
+  repo-report metrics  Show available metrics
+
+Options:
+      --version       Show version number
+      --config        Path to JSON config file
+                        [default: "${XDG_CONFIG_HOME:-$HOME}/.repo-report.json"]
+      --unactionable  Shows values of metrics you lack permissions to change,
+                      with an unactionable indicator next to it
+                                                              [default: false]
+      --actual        Show metrics' true values               [default: false]
+      --goodness      Prefix actual values with goodness values
+                                                              [default: true]
+  -m, --metrics       Show available metrics                  [default: false]
+      --help          Show help
+      --json          Output report in json format            [default: false]
+      --all           Show all metrics                        [default: false]
+  -p, --pick          Pick metrics (see `repo-report metrics` for choices)
+  -f, --focus         Focus repo types
+                        [choices: "sources", "forks", "templates", "private", "public"]
+      --names         Shows the list of repo names with their owner
+                                                              [default: false]
+  -s, --sort          Sort repositories by field such as name, updated date, or
+                      created date.
+                        [choices: "name", "updated", "created"] [default: "updated"]
+      --desc          Sort descending, instead of ascending   [default: false]
+      --cache         Dump API requests and cleaned up data in `--cacheDir` path
+                                                              [default: false]

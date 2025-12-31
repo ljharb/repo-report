@@ -2,7 +2,7 @@
 	"name": "repo-report",
 	"version": "0.3.0",
 	"description": "CLI to list all repos a user has access to, and report on their configuration in aggregate.",
-	"bin": "./bin/run",
+	"bin": "./bin/run.mjs",
 	"main": false,
 	"sideEffects": false,
 	"exports": {
@@ -31,7 +31,7 @@
 		"cli-table": "^0.3.11",
 		"jsonschema": "^1.5.0",
 		"minimatch": "^10.1.1",
-		"yargs": "^18.0.0"
+		"pargs": "^1.2.1"
 	},
 	"devDependencies": {
 		"@ljharb/eslint-config": "^22.1.3",
