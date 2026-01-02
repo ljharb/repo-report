@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.4.0](https://github.com/ljharb/repo-report/compare/v0.3.0...v0.4.0) - 2026-01-02
+
+### Fixed
+
+- [New] add metric: `SponsorshipsEnabled` [`#79`](https://github.com/ljharb/repo-report/issues/79)
+- [Breaking] change `--sort` from boolean to enum; add `--desc` [`#23`](https://github.com/ljharb/repo-report/issues/23)
+- [New] Add metric: BlocksDestructivePushes [`#112`](https://github.com/ljharb/repo-report/issues/112)
+- [New] add metric: "require approval from someone other than the last pusher" [`#88`](https://github.com/ljharb/repo-report/issues/88)
+
+### Commits
+
+- [Deps] migrate from `yargs` to `pargs` [`c982799`](https://github.com/ljharb/repo-report/commit/c9827990415a44671bcac0f898ad7cba0a7752c3)
+- [New] add `--json` flag [`6176c0a`](https://github.com/ljharb/repo-report/commit/6176c0a66ada38e04eec80a2b712536ec4528d1c)
+- [New] add metric: RequireBranchesBeUpToDateBeforeMerging [`ae5e395`](https://github.com/ljharb/repo-report/commit/ae5e3958fdbe9260cbb585f30b73d4bb2d184782)
+- [readme] Made the information for repo-report more beginner friendly to help newer users [`8d358c3`](https://github.com/ljharb/repo-report/commit/8d358c356c76e1881b2c1b35f7d5ca11de9ce5ad)
+- [eslint] convert to flat config [`85d3873`](https://github.com/ljharb/repo-report/commit/85d3873d82bd25598cc02f5299aeeabf56e6707d)
+- [Fix] do not fail when an org prohibits PATs [`d5c920f`](https://github.com/ljharb/repo-report/commit/d5c920f37ce7eadd16324f3b6a355308dba5aff3)
+- [Tests] fix sorting tests [`be8d9c3`](https://github.com/ljharb/repo-report/commit/be8d9c3adf92e3c400d31576102ea33d82e91bed)
+- [Deps] migrate from `colors` to `util.styleText` [`a63053e`](https://github.com/ljharb/repo-report/commit/a63053ef70e7089b36f04bfb8b4fcc13bc72a699)
+- [Fix] use `fundingLinks` instead of `hasSponsorshipsEnabled` [`b433cc3`](https://github.com/ljharb/repo-report/commit/b433cc3be28fa3d5e9fc4209f1dd3c994e86b20e)
+- [Breaking] drop support for node &lt; 20 [`902e16e`](https://github.com/ljharb/repo-report/commit/902e16e635df27e6366dca93bd111f1f43b3a1ed)
+- [Breaking] require node 22 [`485491f`](https://github.com/ljharb/repo-report/commit/485491f7847b297ecde9da3d5ca9a0bbc7585b8d)
+- [Deps] update `yargs`, `@octokit/graphql` [`befdf30`](https://github.com/ljharb/repo-report/commit/befdf307fcc66be55354f354fd01b27e9dadeeea)
+- [Deps] update `@octokit/graphql`, `dotenv`, `jsonschema`, `minimatch` [`a74bb92`](https://github.com/ljharb/repo-report/commit/a74bb927f95061d5ba4135315b782a773a6f8b58)
+- [Dev Deps] update `fetch-mock`, `nyc` [`ecb82c5`](https://github.com/ljharb/repo-report/commit/ecb82c5c4907500e97f6fcba1b394a197994cbf8)
+- [Deps] update `@octokit/graphql`, `minimatch` [`c1ecdb9`](https://github.com/ljharb/repo-report/commit/c1ecdb9170753f39f1ae0e61362a75c6ced2f84f)
+- [Refactor] `mkdirp` is built-in to node 10+ [`2264420`](https://github.com/ljharb/repo-report/commit/2264420741cb352f6036b3567df2a6efff388a86)
+- [fix] use `scriptName` [`23d2502`](https://github.com/ljharb/repo-report/commit/23d2502141d1575f7da64016fd1ec8d2be7325a3)
+- [Fix] fix an issue i introduded in sorting, during a rebase [`bb091ac`](https://github.com/ljharb/repo-report/commit/bb091ac9f074abc86cf3aa87cc2b759e9078a0a7)
+- [Dev Deps] update `auto-changelog`, `tape` [`34ed5f2`](https://github.com/ljharb/repo-report/commit/34ed5f2c41a58443fea0ba0cc59c49c543260b13)
+- [Deps] update `@octokit/graphql`, `minimatch` [`b12a348`](https://github.com/ljharb/repo-report/commit/b12a3485cab2172324bd0e3538662bc6b9ce3cbe)
+- [Tests] replace `aud` with `npm audit` [`1187b2a`](https://github.com/ljharb/repo-report/commit/1187b2aae97d9f3ccff9abc24904dc040b79d3cd)
+- [Fix] `RequireBranchesBeUpToDateBeforeMerging`: requires admin access, not maintain [`599c4fd`](https://github.com/ljharb/repo-report/commit/599c4fda03059ee67ed7cf243303577885ef2098)
+- [Breaking] remove `dotenv` [`be78800`](https://github.com/ljharb/repo-report/commit/be78800baf37b195781d6e8194a3f99f9966f432)
+- [Fix] fix yargs 18 usage from befdf30 [`12fb0e4`](https://github.com/ljharb/repo-report/commit/12fb0e4f0c90e5d8da9ffe4752d86e452c81c26f)
+- [Deps] update `dotenv` [`d012cd9`](https://github.com/ljharb/repo-report/commit/d012cd9bbae7a7b2dcfb645d280dd41f7b5cff55)
+- [Deps] update `dotenv` [`c70e2c0`](https://github.com/ljharb/repo-report/commit/c70e2c0d34d42ba3c9327cca8bd6666503918eaf)
+- [Deps] partial revert of a74bb92 [`6714192`](https://github.com/ljharb/repo-report/commit/6714192090334c65e73d8e9af2a530a0f8840800)
+- [Deps] update `minimatch` [`04aac01`](https://github.com/ljharb/repo-report/commit/04aac01b3bd6fc7dd72b28129e19a039b33bdb2e)
+- [Dev Deps] update `@ljharb/eslint-config` [`8e6b205`](https://github.com/ljharb/repo-report/commit/8e6b2052bd5aadb7dc48a7a3d871100da8d02bc9)
+- [Dev Deps] update `@ljharb/eslint-config` [`5c58b1c`](https://github.com/ljharb/repo-report/commit/5c58b1c909de9b3a7a17ced75b25e8867fd1af75)
+- [meta] no need to publish the image [`5294bed`](https://github.com/ljharb/repo-report/commit/5294bed4a0fffc74546dfc3cc6ecc9c945b758e0)
+
 ## [v0.3.0](https://github.com/ljharb/repo-report/compare/v0.2.1...v0.3.0) - 2024-03-07
 
 ### Commits
