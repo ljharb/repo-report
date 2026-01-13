@@ -110,5 +110,5 @@ The following shows an example output of repo-report --all --actual for my repos
 [downloads-url]: https://npm-stat.com/charts.html?package=repo-report
 [codecov-image]: https://codecov.io/gh/ljharb/repo-report/branch/main/graphs/badge.svg
 [codecov-url]: https://app.codecov.io/gh/ljharb/repo-report/
-[actions-image]: https://img.shields.io/endpoint?url=https://github-actions-badge-u3jn4tfpocch.runkit.sh/ljharb/repo-report
+[actions-image]: https://img.shields.io/github/check-runs/ljharb/repo-report/main
 [actions-url]: https://github.com/ljharb/repo-report/actions
