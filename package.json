@@ -31,7 +31,7 @@
 		"cli-table": "^0.3.11",
 		"jsonschema": "^1.5.0",
 		"minimatch": "^10.1.1",
-		"pargs": "^1.2.1"
+		"pargs": "^1.4.0"
 	},
 	"devDependencies": {
 		"@ljharb/eslint-config": "^22.1.3",
