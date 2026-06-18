@@ -9,7 +9,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
 const symbols = require('../src/symbols');
-const { isConfigValid } = require('../src/utils');
+const { generateJSONReport, isConfigValid } = require('../src/utils');
 const Metrics = require('../config/metrics');
 
 const {
@@ -157,14 +157,7 @@ if (commandName === 'ls') {
 	} = await ls(flags);
 
 	if (flags.json) {
-		/* eslint function-paren-newline: 0 */
-		const report = repositories.map((repo) => Object.fromEntries(
-			Object.entries(Metrics).flatMap(([metricName, metric]) => (
-				metric.dontPrint
-					? []
-					: [[metricName, metric.extract(repo)]]
-			)),
-		)).concat(points);
+		const report = generateJSONReport(repositories, Object.entries(Metrics), points);
 
 		console.log(JSON.stringify(report, null, '\t'));
 	} else {
@@ -197,13 +190,7 @@ if (commandName === 'ls') {
 	} = await detail(flags);
 
 	if (flags.json) {
-		const report = repositories.map((repo) => Object.fromEntries(
-			Object.entries(detailMetrics).flatMap((metric) => (
-				metric.dontPrint
-					? []
-					: [[metric.name, metric.extract(repo)]]
-			)),
-		)).concat(points);
+		const report = generateJSONReport(repositories, detailMetrics.map((metric) => [metric.name, metric]), points);
 
 		console.log(JSON.stringify(report, null, '\t'));
 	} else {

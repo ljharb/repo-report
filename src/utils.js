@@ -392,9 +392,22 @@ const generateDetailTable = (metrics, rowData, {
 	return table;
 };
 
+const generateJSONReport = (repositories, metricEntries, points) => {
+	const rows = repositories.map((repo) => {
+		const entries = metricEntries.flatMap(([name, metric]) => (
+			metric.dontPrint
+				? []
+				: [[name, metric.extract(repo)]]
+		));
+		return Object.fromEntries(entries);
+	});
+	return [...rows, points];
+};
+
 module.exports = {
 	dumpCache,
 	generateDetailTable,
+	generateJSONReport,
 	getDiffSymbol,
 	getRepositories,
 	isConfigValid,
