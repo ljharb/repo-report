@@ -30,8 +30,8 @@
 		"@octokit/graphql": "^9.0.3",
 		"cli-table": "^0.3.11",
 		"jsonschema": "^1.5.0",
-		"minimatch": "^10.1.1",
-		"pargs": "^1.4.0"
+		"minimatch": "^10.2.5",
+		"pargs": "^1.4.2"
 	},
 	"devDependencies": {
 		"@ljharb/eslint-config": "^22.2.3",
