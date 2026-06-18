@@ -161,7 +161,7 @@ module.exports = {
 		permissions: ['ADMIN'],
 	},
 	ReqCodeOwnerReviews: {
-		extract: (item) => !!getBPRules(item)?.requiresCodeOwnerReview,
+		extract: (item) => !!getBPRules(item)?.requiresCodeOwnerReviews,
 		permissions: ['ADMIN'],
 	},
 	ReqConversationResolution: {

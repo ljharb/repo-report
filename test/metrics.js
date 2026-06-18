@@ -44,5 +44,15 @@ test('checkMetrics', (t) => {
 		t.end();
 	});
 
+	t.test('ReqCodeOwnerReviews extracts the requiresCodeOwnerReviews rule', (t) => {
+		const required = { defaultBranchRef: { branchProtectionRule: { requiresCodeOwnerReviews: true } } };
+		const notRequired = { defaultBranchRef: { branchProtectionRule: { requiresCodeOwnerReviews: false } } };
+
+		t.equal(Metrics.ReqCodeOwnerReviews.extract(required), true, 'true when the rule requires code owner reviews');
+		t.equal(Metrics.ReqCodeOwnerReviews.extract(notRequired), false, 'false when the rule does not');
+
+		t.end();
+	});
+
 	t.end();
 });
