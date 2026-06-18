@@ -13,7 +13,7 @@ test('checkMetrics', (t) => {
 		Object.keys(Metrics)
 			.filter((metric) => 'compare' in Metrics[metric])
 			.forEach((metric) => {
-				t.ok(typeof Metrics[metric].compare, 'function', `when ${metric} compare is present, it is a function`);
+				t.equal(typeof Metrics[metric].compare, 'function', `when ${metric} compare is present, it is a function`);
 			});
 
 		t.end();
