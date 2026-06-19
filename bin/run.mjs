@@ -86,12 +86,11 @@ const result = await pargs(import.meta.filename, {
 });
 
 const { command } = result;
-const commandName = command.name;
-const { values, errors } = command;
+const { name: commandName, errors } = command;
 
 // Validate config
 const configPaths = [].concat(
-	values.config ? values.config : [],
+	command.values.config || [],
 	defaultConfigPaths,
 );
 const { valid, error } = isConfigValid(configPaths);
@@ -100,13 +99,13 @@ if (!valid) {
 }
 
 // Validate token
-if (!values.token) {
+if (!command.values.token) {
 	errors.push(styleText('red', `${symbols.error} env variable GH_TOKEN or GITHUB_TOKEN, or \`--token\` argument, not found.\n\nRefer to #Installation in README.md on how to set an env variable`));
 }
 
 // Validate focus choices
-if (values.focus) {
-	for (const f of values.focus) {
+if ('focus' in command.values && command.values.focus) {
+	for (const f of command.values.focus) {
 		if (!focusChoices.includes(f)) {
 			errors.push(`Invalid focus value: "${f}". Choices: ${focusChoices.join(', ')}`);
 		}
@@ -115,8 +114,8 @@ if (values.focus) {
 
 // Validate pick choices
 const metricChoices = Object.keys(Metrics);
-if (values.pick) {
-	for (const p of values.pick) {
+if ('pick' in command.values && command.values.pick) {
+	for (const p of command.values.pick) {
 		if (!metricChoices.includes(p)) {
 			errors.push(`Invalid pick value: "${p}". Run \`repo-report metrics\` for valid choices.`);
 		}
@@ -124,39 +123,29 @@ if (values.pick) {
 }
 
 // Validate --all and --pick mutual exclusivity
-if (values.all && values.pick?.length > 0) {
+if ('all' in command.values && command.values.all && (command.values.pick?.length ?? 0) > 0) {
 	errors.push('`--all` and `--pick` are mutually exclusive');
 }
 
 // Validate --goodness and --actual (at least one must be set for the detail command)
-if (commandName === 'detail' && !values.goodness && !values.actual) {
+if ('goodness' in command.values && !command.values.goodness && !command.values.actual) {
 	errors.push('At least one of `--goodness` and `--actual` must be set.');
 }
 
 await result.help();
 
-// Build flags object matching previous structure
-const lsFocus = commandName === 'ls' ? values.focus || focusChoices : values.focus;
-const flags = {
-	...values,
-	f: lsFocus,
-	focus: lsFocus,
-	s: values.sort,
-	p: values.pick,
-	m: values.metrics,
-	...commandName === 'ls' && { actual: true },
-};
-
 // Handle commands
-if (commandName === 'ls') {
+if (command.name === 'ls') {
+	const { values } = command;
+	const focus = values.focus || focusChoices;
 	const ls = require('../src/commands/ls');
 
 	const {
 		points,
 		repositories,
-	} = await ls(flags);
+	} = await ls({ ...values, f: focus, focus, actual: true });
 
-	if (flags.json) {
+	if (values.json) {
 		const report = generateJSONReport(repositories, Object.entries(Metrics), points);
 
 		console.log(JSON.stringify(report, null, '\t'));
@@ -165,20 +154,20 @@ if (commandName === 'ls') {
 			console.log(repository.nameWithOwner);
 		});
 	}
-} else if (commandName === 'metrics') {
+} else if (command.name === 'metrics') {
 	const getMetrics = require('../src/metrics');
 	const { listMetrics } = require('../src/utils');
 
 	const metricData = getMetrics(metricChoices);
 	const metricNames = listMetrics(metricData);
 
-	if (flags.json) {
+	if (command.values.json) {
 		console.log(JSON.stringify(metricNames, null, '\t'));
 	} else {
 		metricNames.forEach((n) => console.log(`- ${n}`));
 	}
-} else {
-	// Default command: detail
+} else if (command.name === 'detail') {
+	const { values } = command;
 	const detail = require('../src/commands/detail');
 	const { printAPIPoints } = require('../src/utils');
 
@@ -187,9 +176,9 @@ if (commandName === 'ls') {
 		points,
 		repositories,
 		table,
-	} = await detail(flags);
+	} = await detail({ ...values, f: values.focus, focus: values.focus });
 
-	if (flags.json) {
+	if (values.json) {
 		const report = generateJSONReport(repositories, detailMetrics.map((metric) => [metric.name, metric]), points);
 
 		console.log(JSON.stringify(report, null, '\t'));
@@ -199,4 +188,6 @@ if (commandName === 'ls') {
 		}
 		printAPIPoints(points);
 	}
+} else {
+	throw new TypeError(`Unknown command: ${commandName}`);
 }

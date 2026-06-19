@@ -4,12 +4,14 @@
 /* eslint-disable sort-keys */
 
 const symbols = require('../src/symbols');
+
 const getBPRules = (item) => item.defaultBranchRef?.branchProtectionRule;
-const calcRestrictedSourcePercentage = (item = {}) => {
-	if (item?.requiredStatusChecks?.length > 0) {
-		const { requiredStatusChecks } = item;
-		const withSource = requiredStatusChecks.filter((check) => check.app !== null);
-		return (withSource.length / requiredStatusChecks.length) * 100;
+
+const calcRestrictedSourcePercentage = (item) => {
+	const checks = item?.requiredStatusChecks;
+	if (checks && checks.length > 0) {
+		const withSource = checks.filter((check) => check.app !== null);
+		return (withSource.length / checks.length) * 100;
 	}
 	return 100;
 };
@@ -22,11 +24,11 @@ module.exports = {
 			isPrivate,
 			isFork,
 			nameWithOwner,
-		}) => [].concat(
-			isPrivate ? symbols.isPrivate : [],
-			isFork ? symbols.fork : [],
+		}) => [
+			isPrivate && symbols.isPrivate,
+			isFork && symbols.fork,
 			nameWithOwner,
-		).join(' '),
+		].filter((x) => x).join(' '),
 	},
 	isFork: {
 		dontPrint: true,
@@ -57,7 +59,7 @@ module.exports = {
 		permissions: ['ADMIN', 'MAINTAIN'],
 	},
 	RequiredBranchProtectionSourcePercentage: {
-		compare: (item, config) => calcRestrictedSourcePercentage(getBPRules(item)) >= config,
+		compare: (item, config) => config !== undefined && calcRestrictedSourcePercentage(getBPRules(item)) >= config,
 		extract: (item) => calcRestrictedSourcePercentage(getBPRules(item)),
 		permissions: ['ADMIN'],
 	},
@@ -88,7 +90,7 @@ module.exports = {
 		permissions: ['ADMIN', 'MAINTAIN', 'WRITE'],
 	},
 	MergeStrategies: {
-		compare({
+		compare: ({
 			mergeCommitAllowed,
 			squashMergeAllowed,
 			rebaseMergeAllowed,
@@ -96,20 +98,18 @@ module.exports = {
 			MERGE = mergeCommitAllowed,
 			SQUASH = squashMergeAllowed,
 			REBASE = rebaseMergeAllowed,
-		} = {}) {
-			return MERGE === mergeCommitAllowed
-				&& SQUASH === squashMergeAllowed
-				&& REBASE === rebaseMergeAllowed;
-		},
+		} = {}) => MERGE === mergeCommitAllowed
+			&& SQUASH === squashMergeAllowed
+			&& REBASE === rebaseMergeAllowed,
 		extract: ({
 			mergeCommitAllowed,
 			squashMergeAllowed,
 			rebaseMergeAllowed,
-		}) => [].concat(
-			mergeCommitAllowed ? 'MERGE' : [],
-			squashMergeAllowed ? 'SQUASH' : [],
-			rebaseMergeAllowed ? 'REBASE' : [],
-		).join(','),
+		}) => [
+			mergeCommitAllowed && 'MERGE',
+			squashMergeAllowed && 'SQUASH',
+			rebaseMergeAllowed && 'REBASE',
+		].filter((x) => x).join(','),
 		permissions: ['ADMIN', 'MAINTAIN'],
 	},
 	DeleteOnMerge: {
@@ -176,14 +176,14 @@ module.exports = {
 				return config ? value != null : value == null; // eslint-disable-line eqeqeq
 			}
 
-			const cocs = [].concat(config);
-			const ignore = cocs.some((x) => x === null);
+			const cocs = [].concat(config || []);
+			const ignore = cocs.indexOf(null) >= 0;
 
 			if (value == null) { // eslint-disable-line eqeqeq
 				return ignore ? null : false;
 			}
 
-			if (cocs.some((configItem) => value === configItem)) {
+			if (cocs.indexOf(value) >= 0) {
 				return true;
 			}
 
@@ -194,7 +194,7 @@ module.exports = {
 	},
 	isPrivate: {
 		dontPrint: true,
-		extract: (item) => item.isPrivate,
+		extract: (item) => !!item.isPrivate,
 	},
 	RequireLastPushApproval: {
 		extract: (item) => !!getBPRules(item)?.requireLastPushApproval,

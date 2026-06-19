@@ -108,6 +108,29 @@ const printAPIPoints = (points) => {
 \tremaining\t-\t${points.remaining}`);
 };
 
+/*
+ * Orgs that forbid classic tokens (OAuth App access restrictions / SAML SSO) make GraphQL
+ * return errors alongside partial data; salvage that partial data rather than failing outright.
+ */
+const recoverPartialData = (e) => {
+	if (e.errors && e.data) {
+		const orgErrors = e.errors.filter((graphqlError) => graphqlError.message
+			&& (
+				graphqlError.message.includes('OAuth App access restrictions')
+				|| graphqlError.message.includes('personal access token')
+				|| graphqlError.message.includes('Resource not accessible')
+				|| graphqlError.message.includes('SAML SSO')
+			));
+		if (orgErrors.length > 0) {
+			orgErrors.forEach((graphqlError) => {
+				console.error(`${symbols.warning} Skipping due to access restriction: ${graphqlError.message}`);
+			});
+			return e.data;
+		}
+	}
+	throw e;
+};
+
 const getRepositories = async (generateQuery, flags = {}, { filter = undefined, perPage = 20 } = {}) => {
 	const {
 		cache,
@@ -146,32 +169,7 @@ const getRepositories = async (generateQuery, flags = {}, { filter = undefined, 
 				);
 			}
 
-			/*
-			 * Handle org access restrictions (e.g., orgs that forbid classic tokens)
-			 * GraphQL errors may still return partial data we can use
-			 */
-			if (e.errors && e.data) {
-				const orgErrors = e.errors.filter((err) => err.message
-					&& (
-						err.message.includes('OAuth App access restrictions')
-						|| err.message.includes('personal access token')
-						|| err.message.includes('Resource not accessible')
-						|| err.message.includes('SAML SSO')
-					));
-
-				if (orgErrors.length > 0) {
-					orgErrors.forEach((err) => {
-						console.error(`${symbols.warning} Skipping due to access restriction: ${err.message}`);
-					});
-
-					// Use partial data if available
-					response = e.data;
-				} else {
-					throw e;
-				}
-			} else {
-				throw e;
-			}
+			response = recoverPartialData(e);
 		}
 		const {
 			viewer: {
