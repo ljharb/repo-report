@@ -17,4 +17,6 @@ const configSchema = {
 
 schemaValidator.addSchema(metricSchema, '/metrics');
 
-module.exports = (config) => schemaValidator.validate(config, configSchema).errors;
+module.exports = function validate(config) {
+	return schemaValidator.validate(config, configSchema).errors;
+};

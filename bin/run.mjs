@@ -105,21 +105,21 @@ if (!command.values.token) {
 
 // Validate focus choices
 if ('focus' in command.values && command.values.focus) {
-	for (const f of command.values.focus) {
+	command.values.focus.forEach((f) => {
 		if (!focusChoices.includes(f)) {
 			errors.push(`Invalid focus value: "${f}". Choices: ${focusChoices.join(', ')}`);
 		}
-	}
+	});
 }
 
 // Validate pick choices
 const metricChoices = Object.keys(Metrics);
 if ('pick' in command.values && command.values.pick) {
-	for (const p of command.values.pick) {
+	command.values.pick.forEach((p) => {
 		if (!metricChoices.includes(p)) {
 			errors.push(`Invalid pick value: "${p}". Run \`repo-report metrics\` for valid choices.`);
 		}
-	}
+	});
 }
 
 // Validate --all and --pick mutual exclusivity

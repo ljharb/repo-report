@@ -18,6 +18,7 @@ export default [
 				skipBlankLines: true,
 				skipComments: true,
 			}],
+			'max-nested-callbacks': 'off',
 			'max-params': 'off',
 			'max-statements': 'off',
 		},

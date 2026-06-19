@@ -19,7 +19,7 @@ let config = {
 	...defaultConfig,
 };
 
-const isConfigValid = (configPaths) => {
+function isConfigValid(configPaths) {
 	let userConfig;
 	for (const currPath of configPaths) {
 		try {
@@ -45,42 +45,60 @@ const isConfigValid = (configPaths) => {
 
 	const { valid, error } = validateConfig(config);
 	return { error, valid };
-};
+}
 
-const dumpCache = (cacheDir, date, filename, content) => {
+function dumpCache(cacheDir, date, filename, content) {
 	const dateDir = path.join(cacheDir, date);
 	fs.mkdirSync(dateDir, { recursive: true });
 	fs.writeFileSync(`${dateDir}/${filename}`, content);
-};
+}
 
-const listMetrics = (metrics) => metrics.map((metric) => metric.name);
+function listMetrics(metrics) {
+	return metrics.map((metric) => metric.name);
+}
 
-const sanitizeGlob = (glob) => [].concat(glob).map((el) => (el === '*' ? '**' : el));
+function sanitizeGlob(glob) {
+	return [].concat(glob).map((el) => (el === '*' ? '**' : el));
+}
 
-const everyGlobMatch = (test, glob) => [].concat(glob).every((pattern) => minimatch(test, pattern));
+function everyGlobMatch(test, glob) {
+	return [].concat(glob).every((pattern) => minimatch(test, pattern));
+}
 
-const anyGlobMatch = (test, glob) => [].concat(glob).some((pattern) => minimatch(test, pattern));
+function anyGlobMatch(test, glob) {
+	return [].concat(glob).some((pattern) => minimatch(test, pattern));
+}
 
-const getCurrMetrics = (item) => {
+function getCurrMetrics(item) {
 	const repoName = item.nameWithOwner;
 	const { overrides, metrics } = config;
-	let currMetrics = metrics;
-	overrides.forEach((rule) => {
+
+	return overrides.reduce((acc, rule) => {
 		if (anyGlobMatch(repoName, sanitizeGlob(rule.repos))) {
-			currMetrics = {
-				...currMetrics,
+			return {
+				...acc,
 				...rule.metrics,
 			};
 		}
-	});
-	return currMetrics;
-};
+		return acc;
+	}, metrics);
+}
 
-const removeIgnoredRepos = (repos, glob) => repos.filter((repo) => !anyGlobMatch(repo.nameWithOwner, glob));
+function removeIgnoredRepos(repos, glob) {
+	return repos.filter((repo) => !anyGlobMatch(repo.nameWithOwner, glob));
+}
 
-const focusRepos = (repos, glob) => repos.filter((repo) => everyGlobMatch(repo.nameWithOwner, glob));
+function focusRepos(repos, glob) {
+	return repos.filter((repo) => everyGlobMatch(repo.nameWithOwner, glob));
+}
 
-const getDiffSymbol = (item, allMetrics, value, metric, { actual, unactionable }) => {
+function getDiffSymbol(
+	item,
+	allMetrics,
+	value,
+	metric,
+	{ actual, unactionable },
+) {
 	const configValue = allMetrics[metric.name];
 	if (configValue === undefined) {
 		return undefined;
@@ -100,19 +118,19 @@ const getDiffSymbol = (item, allMetrics, value, metric, { actual, unactionable }
 	}
 	const hasEditPermission = !metric.permissions || metric.permissions.includes(item.viewerPermission);
 	return `${out || !hasEditPermission ? symbols.success : symbols.error}${hasEditPermission || out || !unactionable ? '' : ` ${symbols.unactionable}`}`;
-};
+}
 
-const printAPIPoints = (points) => {
+function printAPIPoints(points) {
 	console.error(`API Points:
 \tused\t\t-\t${points.cost}
 \tremaining\t-\t${points.remaining}`);
-};
+}
 
 /*
  * Orgs that forbid classic tokens (OAuth App access restrictions / SAML SSO) make GraphQL
  * return errors alongside partial data; salvage that partial data rather than failing outright.
  */
-const recoverPartialData = (e) => {
+function recoverPartialData(e) {
 	if (e.errors && e.data) {
 		const orgErrors = e.errors.filter((graphqlError) => graphqlError.message
 			&& (
@@ -129,9 +147,13 @@ const recoverPartialData = (e) => {
 		}
 	}
 	throw e;
-};
+}
 
-const getRepositories = async (generateQuery, flags = {}, { filter = undefined, perPage = 20 } = {}) => {
+async function getRepositories(
+	generateQuery,
+	flags = {},
+	{ filter = undefined, perPage = 20 } = {},
+) {
 	const {
 		cache,
 		cacheDir,
@@ -219,9 +241,9 @@ const getRepositories = async (generateQuery, flags = {}, { filter = undefined, 
 	}
 
 	return { points, repositories };
-};
+}
 
-const getMetricOut = (value, diffValue, { actual, goodness }) => {
+function getMetricOut(value, diffValue, { actual, goodness }) {
 	if (actual && goodness && diffValue) {
 		return `${diffValue} ${value}`;
 	}
@@ -229,19 +251,18 @@ const getMetricOut = (value, diffValue, { actual, goodness }) => {
 		return `${value}`;
 	}
 	return `${diffValue || value}`;
-};
+}
 
-const collapseCols = (rows, metrics) => {
-	// eslint-disable-next-line no-param-reassign
-	metrics = metrics.map((metric, idx) => ({ ...metric, idx }));
+function collapseCols(rows, metrics) {
+	const indexedMetrics = metrics.map((metric, idx) => ({ ...metric, idx }));
 	const buckets = {
-		0: metrics,
+		0: indexedMetrics,
 	};
-	const bucketIDMap = Object.fromEntries(metrics.map((metric) => [metric.name, 0]));
+	const bucketIDMap = Object.fromEntries(indexedMetrics.map((metric) => [metric.name, 0]));
 	let nextBucket = 1;
 
 	rows.forEach((row) => {
-		for (const ID of Object.keys(buckets)) {
+		Object.keys(buckets).forEach((ID) => {
 			const newBucket = [];
 			for (let i = 0; i < buckets[ID].length; i++) {
 				const metric = buckets[ID][i];
@@ -251,7 +272,7 @@ const collapseCols = (rows, metrics) => {
 			}
 			delete buckets[ID];
 			const valueBucketIDMap = {};
-			for (const [metric, key] of newBucket) {
+			newBucket.forEach(([metric, key]) => {
 				if (valueBucketIDMap[key]) {
 					buckets[valueBucketIDMap[key]].push(metric);
 					bucketIDMap[metric.name] = valueBucketIDMap[key];
@@ -261,14 +282,14 @@ const collapseCols = (rows, metrics) => {
 					bucketIDMap[metric.name] = nextBucket;
 					nextBucket += 1;
 				}
-			}
-		}
+			});
+		});
 	});
 
 	const head = [];
 	const dontPrintIDs = {};
-	for (let i = 0; i < metrics.length; i++) {
-		const bucket = bucketIDMap[metrics[i].name];
+	for (let i = 0; i < indexedMetrics.length; i++) {
+		const bucket = bucketIDMap[indexedMetrics[i].name];
 		if (buckets[bucket]) {
 			head.push(buckets[bucket].map((metric) => metric.name).join('\n'));
 			delete buckets[bucket];
@@ -278,9 +299,9 @@ const collapseCols = (rows, metrics) => {
 	}
 	const tableRows = rows.map((row) => row.filter((_, idx) => !dontPrintIDs[idx]));
 	return { head, tableRows };
-};
+}
 
-const collapseRows = (rows, key) => {
+function collapseRows(rows, key) {
 	const buckets = {};
 	for (let i = 0; i < rows.length; i++) {
 		const row = [];
@@ -297,46 +318,46 @@ const collapseRows = (rows, key) => {
 		}
 	}
 
-	const out = [];
-	for (const rowIDs of Object.values(buckets)) {
+	return Object.values(buckets).map((rowIDs) => {
 		if (rowIDs.length < 2) {
-			out.push(rows[rowIDs[0]]);
-		} else {
-			const curr = rows[rowIDs[0]];
-			for (let i = 1; i < rowIDs.length; i++) {
-				const newRow = rows[rowIDs[i]];
-				curr[key] = `${curr[key]}\n${newRow[key]}`;
-			}
-			out.push(curr);
+			return rows[rowIDs[0]];
 		}
-	}
-	return out;
-};
 
-const sortRowsByErrors = (a, b) => {
+		const curr = rows[rowIDs[0]];
+		for (let i = 1; i < rowIDs.length; i++) {
+			const newRow = rows[rowIDs[i]];
+			curr[key] = `${curr[key]}\n${newRow[key]}`;
+		}
+		return curr;
+	});
+}
+
+function sortRowsByErrors(a, b) {
 	const aErrCount = a.join('').split(symbols.error).length;
 	const bErrCount = b.join('').split(symbols.error).length;
 	return bErrCount - aErrCount;
-};
+}
 
-const lineCountReducer = (count, row) => count + row[0].split('\n').length;
+function lineCountReducer(count, row) {
+	return count + row[0].split('\n').length;
+}
 
-const generateStatsRow = (rows) => {
+function generateStatsRow(rows) {
 	const totalRows = rows.reduce(lineCountReducer, 0);
 
 	return rows[0].map((col, i) => {
 		const goodRows = totalRows - rows.filter((row) => row[i] === symbols.error).reduce(lineCountReducer, 0);
 		return i === 0 ? 'Stats' : `${Math.round(1e3 * goodRows / totalRows) / 1e1}% (${goodRows}/${totalRows})`;
 	});
-};
+}
 
-const generateDetailTable = (metrics, rowData, {
+function generateDetailTable(metrics, rowData, {
 	unactionable,
 	sort,
 	actual,
 	all,
 	goodness,
-} = {}) => {
+} = {}) {
 	if (!rowData.length) {
 		console.log(`\n${symbols.info} Nothing to show!\n`);
 		return null;
@@ -388,9 +409,9 @@ const generateDetailTable = (metrics, rowData, {
 
 	}
 	return table;
-};
+}
 
-const generateJSONReport = (repositories, metricEntries, points) => {
+function generateJSONReport(repositories, metricEntries, points) {
 	const rows = repositories.map((repo) => {
 		const entries = metricEntries.flatMap(([name, metric]) => (
 			metric.dontPrint
@@ -399,8 +420,8 @@ const generateJSONReport = (repositories, metricEntries, points) => {
 		));
 		return Object.fromEntries(entries);
 	});
-	return [...rows, points];
-};
+	return rows.concat(points);
+}
 
 module.exports = {
 	dumpCache,

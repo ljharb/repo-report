@@ -73,7 +73,7 @@ schemaValidator.addSchema(metricSchema, '/metrics');
 schemaValidator.addSchema(repoSchema, '/repo');
 schemaValidator.addSchema(overridesSchema, '/overrides');
 
-module.exports = (config) => {
+module.exports = function validate(config) {
 	const { errors } = schemaValidator.validate(config, configSchema);
 	if (errors && errors.length) {
 		const errorList = errors.map((error) => {

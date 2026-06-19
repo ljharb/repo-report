@@ -2,13 +2,19 @@
 
 const { spawnSync } = require('child_process');
 
-const runCli = (command) => spawnSync('node', ['../repo-report/bin/run', ...command], { encoding: 'utf-8' });
+function runCli(command) {
+	return spawnSync(
+		'node',
+		['../repo-report/bin/run', ...command],
+		{ encoding: 'utf-8' },
+	);
+}
 
-const cliWrapper = () => ({
-	run: runCli,
-});
+function cliWrapper() {
+	return { run: runCli };
+}
 
-const stdout = () => {
+function stdout() {
 	const previousWrite = process.stdout.write;
 	const loggedData = [];
 
@@ -22,10 +28,9 @@ const stdout = () => {
 			process.stdout.write = previousWrite;
 		},
 	};
+}
 
-};
-
-const stderr = () => {
+function stderr() {
 	const previousWrite = process.stderr.write;
 	const loggedData = [];
 
@@ -39,8 +44,7 @@ const stderr = () => {
 			process.stderr.write = previousWrite;
 		},
 	};
-
-};
+}
 
 module.exports = {
 	cliWrapper,

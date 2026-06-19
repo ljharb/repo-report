@@ -5,16 +5,18 @@
 
 const symbols = require('../src/symbols');
 
-const getBPRules = (item) => item.defaultBranchRef?.branchProtectionRule;
+function getBPRules(item) {
+	return item.defaultBranchRef?.branchProtectionRule;
+}
 
-const calcRestrictedSourcePercentage = (item) => {
+function calcRestrictedSourcePercentage(item) {
 	const checks = item?.requiredStatusChecks;
 	if (checks && checks.length > 0) {
 		const withSource = checks.filter((check) => check.app !== null);
 		return (withSource.length / checks.length) * 100;
 	}
 	return 100;
-};
+}
 
 const empty = Object('---');
 
