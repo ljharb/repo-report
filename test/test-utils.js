@@ -1,6 +1,7 @@
 'use strict';
 
 const { spawnSync } = require('child_process');
+const mockProperty = require('mock-property');
 
 function runCli(command) {
 	return spawnSync(
@@ -15,34 +16,28 @@ function cliWrapper() {
 }
 
 function stdout() {
-	const previousWrite = process.stdout.write;
 	const loggedData = [];
-
-	process.stdout.write = function (string) {
-		loggedData.push(string);
-	};
 
 	return {
 		loggedData,
-		restore() {
-			process.stdout.write = previousWrite;
-		},
+		restore: mockProperty(process.stdout, 'write', {
+			value: function write(string) {
+				loggedData[loggedData.length] = string;
+			},
+		}),
 	};
 }
 
 function stderr() {
-	const previousWrite = process.stderr.write;
 	const loggedData = [];
-
-	process.stderr.write = function (string) {
-		loggedData.push(string);
-	};
 
 	return {
 		loggedData,
-		restore() {
-			process.stderr.write = previousWrite;
-		},
+		restore: mockProperty(process.stderr, 'write', {
+			value: function write(string) {
+				loggedData[loggedData.length] = string;
+			},
+		}),
 	};
 }
 

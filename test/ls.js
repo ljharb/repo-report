@@ -1,10 +1,12 @@
 'use strict';
 
-const { mockRepositoriesData } = require('./fixtures/fixtures');
-const { stdout } = require('./test-utils');
 const test = require('tape');
 const Module = require('module');
 const path = require('path');
+const mockProperty = require('mock-property');
+
+const { mockRepositoriesData } = require('./fixtures/fixtures');
+const { stdout } = require('./test-utils');
 const getRepos = require('../src/getRepositories');
 
 // Enhanced mock data with required fields for metrics
@@ -39,26 +41,29 @@ const enhancedRepos = mockRepositoriesData.data.viewer.repositories.nodes.map((r
 
 test('ls command returns correct data structure', (t) => {
 	const output = stdout();
-	const originalRequire = Module.prototype.require;
+	const { require: originalRequire } = Module.prototype;
 
-	// Set up mocks
-	Module.prototype.require = function (id, ...args) {
-		if (id === '../getRepositories') {
-			return {
-				...getRepos,
-				async getRepositories() {
-					return {
-						repositories: enhancedRepos,
-						points: { cost: 1, remaining: 4999 },
-					};
-				},
-			};
-		}
-		if (id === '../loadingIndicator') {
-			return (task) => task();
-		}
-		return originalRequire.apply(this, [id, ...args]);
-	};
+	const restoreRequire = mockProperty(Module.prototype, 'require', {
+		value: function require(id, ...args) {
+			if (id === '../getRepositories') {
+				return {
+					...getRepos,
+					async getRepositories() {
+						return {
+							repositories: enhancedRepos,
+							points: { cost: 1, remaining: 4999 },
+						};
+					},
+				};
+			}
+			if (id === '../loadingIndicator') {
+				return (task) => task();
+			}
+			return originalRequire.apply(this, [id, ...args]);
+		},
+	});
+	t.teardown(restoreRequire);
+	t.teardown(() => output.restore());
 
 	// Clear cache and load the module after mocks are set up
 	const lsPath = path.resolve(__dirname, '../src/commands/ls');
@@ -82,17 +87,11 @@ test('ls command returns correct data structure', (t) => {
 			t.ok(typeof result.points.cost === 'number', 'points should have cost');
 			t.ok(typeof result.points.remaining === 'number', 'points should have remaining');
 
-			Module.prototype.require = originalRequire;
-			output.restore();
 			t.end();
 		} catch (error) {
-			Module.prototype.require = originalRequire;
-			output.restore();
 			t.error(error);
 		}
 	}).catch((error) => {
-		Module.prototype.require = originalRequire;
-		output.restore();
 		t.error(error);
 	});
 });
