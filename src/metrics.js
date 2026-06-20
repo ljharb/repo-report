@@ -1,7 +1,10 @@
 'use strict';
 
+/** @import { NamedMetric } from './types' */
+
 const Metrics = require('../config/metrics');
 
+/** @type {(name: string) => NamedMetric} */
 function mapper(name) {
 	const {
 		compare,
@@ -18,6 +21,7 @@ function mapper(name) {
 	};
 }
 
+/** @type {(metrics: string[]) => NamedMetric[]} */
 module.exports = function getMetrics(metrics) {
 	return metrics.map(mapper);
 };

@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * @template T
+ * @param {() => T | Promise<T>} task
+ * @returns {Promise<T>}
+ */
 module.exports = async function loadingIndicator(task) {
 	process.stdout.write('Loading...');
 	const timer = setInterval(

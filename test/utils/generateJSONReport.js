@@ -1,16 +1,23 @@
 'use strict';
 
+/** @import { NamedMetric, Repository } from '../../src/types' */
+
 const test = require('tape');
 
 const { generateJSONReport } = require('../../src/utils');
 
+/** @type {(repo: Partial<Repository>) => Repository} */
+const asRepo = (repo) => /** @type {Repository} */ (/** @type {unknown} */ (repo));
+
 test('generateJSONReport', (t) => {
+	/** @type {NamedMetric} */
 	const Name = { name: 'Name', extract: (repo) => repo.nameWithOwner };
+	/** @type {NamedMetric} */
 	const isFork = { name: 'isFork', dontPrint: true, extract: (repo) => repo.isFork };
 
 	const repositories = [
-		{ nameWithOwner: 'ljharb/a', isFork: false },
-		{ nameWithOwner: 'ljharb/b', isFork: true },
+		asRepo({ nameWithOwner: 'ljharb/a', isFork: false }),
+		asRepo({ nameWithOwner: 'ljharb/b', isFork: true }),
 	];
 	const points = { cost: 1, remaining: 4999 };
 

@@ -22,7 +22,7 @@ const {
 const home = homedir();
 
 // Variable to prevent calling isConfigValid twice
-const defaultConfigPaths = [].concat(
+const defaultConfigPaths = /** @type {string[]} */ ([]).concat(
 	XDG_CONFIG_HOME ? join(XDG_CONFIG_HOME, 'repo-report.json') : [],
 	join(home, '.repo-report.json'),
 );
@@ -40,34 +40,34 @@ const tokenDefaultDescription = tokenDefault
 	? `${tokenDefault.slice(0, 7)}…${tokenDefault.slice(-4)}`
 	: '$GH_TOKEN / $GITHUB_TOKEN';
 
-const commonOptions = {
+const commonOptions = /** @type {const} */ ({
 	config: { type: 'string', description: 'Path to JSON config file', defaultDescription: '${XDG_CONFIG_HOME:-$HOME}/.repo-report.json' }, // eslint-disable-line no-template-curly-in-string
 	token: { type: 'string', default: tokenDefault, defaultDescription: tokenDefaultDescription, description: 'GitHub token (defaults to $GH_TOKEN or $GITHUB_TOKEN)' },
 	json: { type: 'boolean', default: false, short: 'j', description: 'Output report in json format' },
-};
+});
 
-const repoOptions = {
+const repoOptions = /** @type {const} */ ({
 	focus: { type: 'string', multiple: true, short: 'f', placeholder: 'type', description: `Focus repo types (${focusChoices.join(', ')})` },
 	names: { type: 'boolean', default: false, description: 'Show the list of repo names with their owner' },
 	sort: { type: 'enum', choices: sortChoices, default: 'updated', short: 's', description: 'Sort repositories by name, updated, or created date' },
 	desc: { type: 'boolean', default: false, description: 'Sort descending, instead of ascending' },
 	cache: { type: 'boolean', default: false, description: 'Dump API requests and cleaned-up data in the --cacheDir path' },
 	cacheDir: { type: 'string', default: cachePath, defaultDescription: '$XDG_CACHE_DIR/.repo-report, or $HOME/.repo-report/cache', description: 'Cache directory' },
-};
+});
 
-const metricOptions = {
+const metricOptions = /** @type {const} */ ({
 	all: { type: 'boolean', default: false, description: 'Show all metrics' },
 	pick: { type: 'string', multiple: true, short: 'p', placeholder: 'metric', description: 'Pick metrics (see `repo-report metrics` for choices)' },
-};
+});
 
-const detailOptions = {
+const detailOptions = /** @type {const} */ ({
 	unactionable: { type: 'boolean', default: false, description: 'Show values of metrics you lack permissions to change, with an unactionable indicator' },
 	actual: { type: 'boolean', default: false, description: "Show metrics' true values" },
 	goodness: { type: 'boolean', default: true, description: 'Prefix actual values with goodness values' },
 	metrics: { type: 'boolean', default: false, short: 'm', description: 'Show available metrics' },
-};
+});
 
-const result = await pargs(import.meta.filename, {
+const result = await pargs(import.meta.filename, /** @type {const} */ ({
 	defaultCommand: 'detail',
 	subcommands: {
 		detail: {
@@ -83,13 +83,14 @@ const result = await pargs(import.meta.filename, {
 			options: { ...commonOptions, ...metricOptions },
 		},
 	},
-});
+}));
 
 const { command } = result;
+
 const { name: commandName, errors } = command;
 
 // Validate config
-const configPaths = [].concat(
+const configPaths = /** @type {string[]} */ ([]).concat(
 	command.values.config || [],
 	defaultConfigPaths,
 );
@@ -179,7 +180,11 @@ if (command.name === 'ls') {
 	} = await detail({ ...values, f: values.focus, focus: values.focus });
 
 	if (values.json) {
-		const report = generateJSONReport(repositories, detailMetrics.map((metric) => [metric.name, metric]), points);
+		const report = generateJSONReport(
+			repositories,
+			detailMetrics.map((metric) => [metric.name, metric]),
+			points,
+		);
 
 		console.log(JSON.stringify(report, null, '\t'));
 	} else {

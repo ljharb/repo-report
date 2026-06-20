@@ -44,7 +44,7 @@ test('ls command returns correct data structure', (t) => {
 	const { require: originalRequire } = Module.prototype;
 
 	const restoreRequire = mockProperty(Module.prototype, 'require', {
-		value: function require(id, ...args) {
+		value: /** @type {NodeJS.Require} */ (/** @this {unknown} */ function require(id, ...args) {
 			if (id === '../getRepositories') {
 				return {
 					...getRepos,
@@ -57,10 +57,12 @@ test('ls command returns correct data structure', (t) => {
 				};
 			}
 			if (id === '../loadingIndicator') {
-				return (task) => task();
+				/** @param {() => unknown} task */
+				const loader = (task) => task();
+				return loader;
 			}
 			return originalRequire.apply(this, [id, ...args]);
-		},
+		}),
 	});
 	t.teardown(restoreRequire);
 	t.teardown(() => output.restore());
@@ -68,7 +70,7 @@ test('ls command returns correct data structure', (t) => {
 	// Clear cache and load the module after mocks are set up
 	const lsPath = path.resolve(__dirname, '../src/commands/ls');
 	delete require.cache[lsPath];
-	const ls = originalRequire(lsPath);
+	const ls = /** @type {typeof import('../src/commands/ls')} */ (originalRequire(lsPath));
 
 	ls({}).then((result) => {
 		try {

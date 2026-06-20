@@ -17,17 +17,25 @@ const getMetrics = require('../../src/metrics');
 
 const metrics = getMetrics(['Repository', 'Access', 'DefBranch', 'isPrivate', 'SecurityPolicyEnabled', 'CodeOfConduct', 'RequiredBranchProtectionSourcePercentage', 'RequireLastPushApproval', 'RequireBranchesBeUpToDateBeforeMerging', 'SponsorshipsEnabled']);
 
+const { nodes: rawNodes } = repositories;
+const nodes = /** @type {import('../../src/types').Repository[]} */ (/** @type {unknown} */ (rawNodes));
+
+/** @typedef {{ options: { head: string[] } & Record<string, unknown> }} TableWithOptions */
+
+/** @type {(t: import('tape').Test, actual: import('cli-table') | null, expected: import('cli-table') | null, msg: string, invalid?: boolean) => void} */
 function compareTables(t, actual, expected, msg, invalid = false) {
 	const comparator = invalid ? 'notDeepEqual' : 'deepEqual';
 	t.test(msg, (st) => {
 		if (!invalid) {
+			const actualOptions = /** @type {TableWithOptions} */ (/** @type {unknown} */ (actual)).options;
+			const expectedOptions = /** @type {TableWithOptions} */ (/** @type {unknown} */ (expected)).options;
 			st[comparator](
-				actual.options.head,
-				expected.options.head,
+				actualOptions.head,
+				expectedOptions.head,
 				'table heads are deepEqual',
 			);
-			const { head: _, ...actualOpts } = actual.options;
-			const { head: __, ...expectedOpts } = expected.options;
+			const { head: _, ...actualOpts } = actualOptions;
+			const { head: __, ...expectedOpts } = expectedOptions;
 			st[comparator](
 				actualOpts,
 				expectedOpts,
@@ -52,28 +60,28 @@ function compareTables(t, actual, expected, msg, invalid = false) {
 test('generateDetailTable,', (t) => {
 	compareTables(
 		t,
-		generateDetailTable(metrics, repositories.nodes, { goodness: true }),
+		generateDetailTable(metrics, nodes, { goodness: true }),
 		tableOutput,
 		'return a generated detail table',
 	);
 
 	compareTables(
 		t,
-		generateDetailTable(metrics, repositories.nodes, { actual: true }),
+		generateDetailTable(metrics, nodes, { actual: true }),
 		tableOutputActual,
 		'return a generated detail table with --actual option',
 	);
 
 	compareTables(
 		t,
-		generateDetailTable(metrics, repositories.nodes, { actual: true, goodness: true }),
+		generateDetailTable(metrics, nodes, { actual: true, goodness: true }),
 		tableOutputActualGoodness,
 		'return a generated detail table with --actual and --goodness option',
 	);
 
 	compareTables(
 		t,
-		generateDetailTable(metrics, repositories.nodes),
+		generateDetailTable(metrics, nodes),
 		tableOutput,
 		'return invalid output',
 		true,

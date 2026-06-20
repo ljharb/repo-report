@@ -1,11 +1,15 @@
 'use strict';
 
+/** @import { Flags, Points, Repository } from './types' */
+
 const { getRepositories: getRepos } = require('./utils');
 
+/** @type {(flag: string, flags: string[] | undefined, defaultValue?: boolean) => boolean} */
 function hasFlag(flag, flags, defaultValue = false) {
-	return !!(flags?.length > 0 ? flags?.includes(flag) : defaultValue);
+	return !!((flags?.length ?? 0) > 0 ? flags?.includes(flag) : defaultValue);
 }
 
+/** @type {(endCursor: string | undefined, flags: Flags, perPage?: number) => string} */
 function generateQuery(endCursor, { f }, perPage = 20) {
 	const showForks = hasFlag('forks', f);
 	const showSources = hasFlag('sources', f, true);
@@ -98,6 +102,7 @@ function generateQuery(endCursor, { f }, perPage = 20) {
 	`;
 }
 
+/** @type {(repos: Repository[], flags: Flags) => Repository[]} */
 function sortRepositories(repos, flags) {
 	if (flags.sort === 'name' || flags.sort === '') {
 		repos.sort((a, b) => (flags.desc
@@ -105,18 +110,19 @@ function sortRepositories(repos, flags) {
 			: a.name.localeCompare(b.name))); // A → Z
 	} else if (flags.sort === 'updated') {
 		repos.sort((a, b) => (flags.desc
-			? new Date(b.updatedAt) - new Date(a.updatedAt) // newest → oldest
-			: new Date(a.updatedAt) - new Date(b.updatedAt))); // oldest → newest
+			? Number(new Date(b.updatedAt)) - Number(new Date(a.updatedAt)) // newest → oldest
+			: Number(new Date(a.updatedAt)) - Number(new Date(b.updatedAt)))); // oldest → newest
 	} else if (flags.sort === 'created') {
 		repos.sort((a, b) => (flags.desc
-			? new Date(b.createdAt) - new Date(a.createdAt) // oldest → newest
-			: new Date(a.createdAt) - new Date(b.createdAt))); // newest → oldest
+			? Number(new Date(b.createdAt)) - Number(new Date(a.createdAt)) // oldest → newest
+			: Number(new Date(a.createdAt)) - Number(new Date(b.createdAt)))); // newest → oldest
 	} else {
 		throw new TypeError(`Invalid sort option: ${flags.sort}`);
 	}
 	return repos;
 }
 
+/** @type {(flags: Flags, filter?: (repo: Repository) => boolean) => Promise<{ points: Points, repositories: Repository[] }>} */
 async function getRepositories(flags, filter) {
 	const { points, repositories } = await getRepos(generateQuery, flags, { filter });
 	const sortedRepo = sortRepositories(repositories, flags);

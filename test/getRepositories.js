@@ -31,6 +31,7 @@ test('getRepositories (GraphQL integration)', (t) => {
 	});
 
 	const originalRequire = Module.prototype.require;
+	/** @param {string} id */
 	Module.prototype.require = function (id) {
 		if (id === '@octokit/graphql') {
 			return { graphql: mockedGraphql };

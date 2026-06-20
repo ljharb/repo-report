@@ -3,13 +3,17 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable sort-keys */
 
+/** @import { Repository, BranchProtectionRule, Metrics } from '../src/types' */
+
 const symbols = require('../src/symbols');
 
+/** @param {Repository} item */
 function getBPRules(item) {
 	return item.defaultBranchRef?.branchProtectionRule;
 }
 
-function calcRestrictedSourcePercentage(item) {
+/** @param {Pick<BranchProtectionRule, 'requiredStatusChecks'> | null} [item] */
+function calcRestrictedSourcePercentage(item = void undefined) {
 	const checks = item?.requiredStatusChecks;
 	if (checks && checks.length > 0) {
 		const withSource = checks.filter((check) => check.app !== null);
@@ -20,6 +24,7 @@ function calcRestrictedSourcePercentage(item) {
 
 const empty = Object('---');
 
+/** @type {Metrics} */
 module.exports = {
 	Repository: {
 		extract: ({
@@ -178,7 +183,7 @@ module.exports = {
 				return config ? value != null : value == null; // eslint-disable-line eqeqeq
 			}
 
-			const cocs = [].concat(config || []);
+			const cocs = /** @type {(string | null | true)[]} */ ([]).concat(config || []);
 			const ignore = cocs.indexOf(null) >= 0;
 
 			if (value == null) { // eslint-disable-line eqeqeq

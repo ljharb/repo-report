@@ -2,6 +2,8 @@
 
 'use strict';
 
+/** @import { Repository } from '../src/types' */
+
 const Metrics = require('../config/metrics');
 const validateConfig = require('./validate');
 const config = require('./fixtures/metricConfig.json');
@@ -45,8 +47,12 @@ test('checkMetrics', (t) => {
 	});
 
 	t.test('ReqCodeOwnerReviews extracts the requiresCodeOwnerReviews rule', (t) => {
-		const required = { defaultBranchRef: { branchProtectionRule: { requiresCodeOwnerReviews: true } } };
-		const notRequired = { defaultBranchRef: { branchProtectionRule: { requiresCodeOwnerReviews: false } } };
+		/** @type {(value: boolean) => Repository} */
+		const repoWithCodeOwnerRule = (value) => /** @type {Repository} */ (/** @type {unknown} */ ({
+			defaultBranchRef: { branchProtectionRule: { requiresCodeOwnerReviews: value } },
+		}));
+		const required = repoWithCodeOwnerRule(true);
+		const notRequired = repoWithCodeOwnerRule(false);
 
 		t.equal(Metrics.ReqCodeOwnerReviews.extract(required), true, 'true when the rule requires code owner reviews');
 		t.equal(Metrics.ReqCodeOwnerReviews.extract(notRequired), false, 'false when the rule does not');

@@ -2,6 +2,7 @@
 
 const { graphql } = require('@octokit/graphql');
 
+/** @type {(data: unknown) => typeof graphql} */
 module.exports = (data) => graphql.defaults({
 	request: {
 		fetch: () => Promise.resolve(new Response(JSON.stringify({ data }), {

@@ -2,6 +2,8 @@
 
 'use strict';
 
+/** @import { Flags, Repository } from '../types' */
+
 const {
 	generateDetailTable,
 } = require('../utils');
@@ -13,8 +15,10 @@ const Metrics = require('../../config/metrics');
 
 const metricNames = Object.keys(Metrics);
 
+/** @type {(flags: Flags) => Promise<{ metrics: ReturnType<typeof getMetrics>, points: Awaited<ReturnType<typeof getRepositories>>['points'], repositories: Repository[], table: ReturnType<typeof generateDetailTable> }>} */
 module.exports = async function detail(flags) {
 	// Additional Filter on repos
+	/** @type {((repo: Repository) => boolean) | undefined} */
 	let filter;
 	if (flags.focus?.length === 1 && flags.focus[0] === 'templates') {
 		filter = (repo) => repo.isTemplate;
@@ -23,11 +27,12 @@ module.exports = async function detail(flags) {
 	// Get all repositories
 	const { points, repositories } = await loadingIndicator(() => getRepositories(flags, filter));
 
-	const metrics = getMetrics(flags.pick?.length > 0 ? [...new Set([
+	const { pick } = flags;
+	const metrics = getMetrics((pick?.length ?? 0) > 0 ? [...new Set([
 		'Repository',
 		'isFork',
 		'isPrivate',
-		...metricNames.filter((name) => flags.pick.includes(name)),
+		...metricNames.filter((name) => pick?.includes(name)),
 	])] : metricNames);
 	// Generate output table
 	const table = generateDetailTable(metrics, repositories, {

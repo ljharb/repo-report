@@ -15,6 +15,7 @@
 		"test": "npm run tests-only",
 		"tests-only": "nyc tape \"test/**/*.js\" | tap-spec",
 		"lint": "eslint .",
+		"postlint": "tsc && attw -P",
 		"pretest": "npm run lint",
 		"posttest": "npx npm@\">= 10.2\" audit --production",
 		"version": "auto-changelog && git add CHANGELOG.md",
@@ -34,7 +35,12 @@
 		"pargs": "^1.4.2"
 	},
 	"devDependencies": {
+		"@arethetypeswrong/cli": "^0.18.3",
 		"@ljharb/eslint-config": "^22.2.3",
+		"@ljharb/tsconfig": "^0.3.2",
+		"@types/cli-table": "^0.3.4",
+		"@types/node": "^22.19.17",
+		"@types/tape": "^5.8.1",
 		"auto-changelog": "^2.6.0",
 		"eslint": "^10.5.0",
 		"fetch-mock": "^12.6.0",
@@ -44,7 +50,8 @@
 		"nyc": "^17.1.0",
 		"safe-publish-latest": "^2.0.0",
 		"tap-spec": "^5.0.0",
-		"tape": "^5.10.2"
+		"tape": "^5.10.2",
+		"typescript": "next"
 	},
 	"engines": {
 		"node": "^22.21 || ^24.12 || >= 25.2.1"

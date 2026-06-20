@@ -21,6 +21,7 @@ export default [
 			'max-nested-callbacks': 'off',
 			'max-params': 'off',
 			'max-statements': 'off',
+			'no-extra-parens': 'off',
 		},
 	},
 	{

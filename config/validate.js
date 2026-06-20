@@ -2,6 +2,8 @@
 
 'use strict';
 
+/** @import { Config, ValidationResult } from '../src/types' */
+
 const { Validator } = require('jsonschema');
 
 const schemaValidator = new Validator();
@@ -73,6 +75,7 @@ schemaValidator.addSchema(metricSchema, '/metrics');
 schemaValidator.addSchema(repoSchema, '/repo');
 schemaValidator.addSchema(overridesSchema, '/overrides');
 
+/** @type {(config: Config) => ValidationResult} */
 module.exports = function validate(config) {
 	const { errors } = schemaValidator.validate(config, configSchema);
 	if (errors && errors.length) {

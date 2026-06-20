@@ -2,8 +2,13 @@
 
 'use strict';
 
+/** @import { Repository } from '../src/types' */
+
 const test = require('tape');
 const Metrics = require('../config/metrics');
+
+/** @type {(repo: unknown) => Repository} */
+const asRepo = (repo) => /** @type {Repository} */ (repo);
 
 // Execute the tests
 test('BlocksDestructivePushes metric - Configuration', (t) => {
@@ -25,7 +30,7 @@ test('BlocksDestructivePushes metric - Null cases', (t) => {
 			defaultBranchRef: null,
 		};
 
-		const result = metric.extract(mockRepo);
+		const result = metric.extract(asRepo(mockRepo));
 		t.equal(result, null, 'should return null for no defaultBranchRef');
 
 		const mockRepoNoBPR = {
@@ -35,7 +40,7 @@ test('BlocksDestructivePushes metric - Null cases', (t) => {
 			},
 		};
 
-		const result2 = metric.extract(mockRepoNoBPR);
+		const result2 = metric.extract(asRepo(mockRepoNoBPR));
 		t.equal(result2, null, 'should return null when branchProtectionRule is null');
 
 		t.end();
@@ -44,7 +49,7 @@ test('BlocksDestructivePushes metric - Null cases', (t) => {
 	t.test('should handle missing defaultBranchRef', (t) => {
 		const mockRepoMissingRef = {};
 
-		const result = metric.extract(mockRepoMissingRef);
+		const result = metric.extract(asRepo(mockRepoMissingRef));
 		t.equal(result, null, 'should return null when defaultBranchRef is missing entirely');
 		t.end();
 	});
@@ -65,7 +70,7 @@ test('BlocksDestructivePushes metric - Blocking cases', (t) => {
 			},
 		};
 
-		const result = metric.extract(mockRepo);
+		const result = metric.extract(asRepo(mockRepo));
 		t.equal(result, true, 'should return true when both force pushes and deletions are disabled');
 		t.end();
 	});
@@ -81,7 +86,7 @@ test('BlocksDestructivePushes metric - Blocking cases', (t) => {
 			},
 		};
 
-		const result = metric.extract(mockRepo);
+		const result = metric.extract(asRepo(mockRepo));
 		t.equal(result, true, 'should return true when allowsForcePushes and allowsDeletions are undefined (treated as false)');
 		t.end();
 	});
@@ -102,7 +107,7 @@ test('BlocksDestructivePushes metric - Allowing cases', (t) => {
 			},
 		};
 
-		const result = metric.extract(mockRepo);
+		const result = metric.extract(asRepo(mockRepo));
 		t.equal(result, false, 'should return false when force pushes are allowed');
 		t.end();
 	});
@@ -118,7 +123,7 @@ test('BlocksDestructivePushes metric - Allowing cases', (t) => {
 			},
 		};
 
-		const result = metric.extract(mockRepo);
+		const result = metric.extract(asRepo(mockRepo));
 		t.equal(result, false, 'should return false when deletions are allowed');
 		t.end();
 	});
@@ -134,7 +139,7 @@ test('BlocksDestructivePushes metric - Allowing cases', (t) => {
 			},
 		};
 
-		const result = metric.extract(mockRepo);
+		const result = metric.extract(asRepo(mockRepo));
 		t.equal(result, false, 'should return false when both force pushes and deletions are allowed');
 		t.end();
 	});
