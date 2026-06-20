@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.4.1](https://github.com/ljharb/repo-report/compare/v0.4.0...v0.4.1) - 2026-06-20
+
+### Commits
+
+- [New] add types [`2883f55`](https://github.com/ljharb/repo-report/commit/2883f55cd5a78764810f2f29e6906e8025234461)
+- [Refactor] avoid for/of; avoid arrows for non-callbacks [`89222ec`](https://github.com/ljharb/repo-report/commit/89222ec30d98867d4bf4ae9948ea3c1f567861f8)
+- [Tests] fix `mocks.js` into a working GraphQL-mock helper, and use it [`349fb7a`](https://github.com/ljharb/repo-report/commit/349fb7aa7f7b6fbba76ade162e8128e8c21f0db3)
+- [Refactor] don't destructure `command` tagged union; extract recoverPartialData [`487f224`](https://github.com/ljharb/repo-report/commit/487f224f141bfcb0ac8025cf36f6771519dc013a)
+- [Deps] update `pargs` [`b2ab73d`](https://github.com/ljharb/repo-report/commit/b2ab73dd8513a561b288ce491e81ef3794dc981d)
+- [Tests] use `mock-property` [`41816a6`](https://github.com/ljharb/repo-report/commit/41816a6d9a42f5248e398448c88afe997b2fe034)
+- [Fix] detail `--json`: `detailMetrics` is an array, not an object [`4a558da`](https://github.com/ljharb/repo-report/commit/4a558dac441a87130785abffa4beb737dfa1c238)
+- [Fix] `ReqCodeOwnerReviews`: read the correct `requiresCodeOwnerReviews` field [`46713ad`](https://github.com/ljharb/repo-report/commit/46713ade27366c570a87ef197e1f984e7e47a481)
+- [Dev Deps] update `@ljharb/eslint-config`, `auto-changelog`, `eslint`, `tape` [`ed7648c`](https://github.com/ljharb/repo-report/commit/ed7648c7ac6dd57094df17a02da310e59411c35c)
+- [Dev Deps] update `mock-property`, `nyc` [`61bc4b6`](https://github.com/ljharb/repo-report/commit/61bc4b6f0654bb5d5c18f9f751dc149fd92d4ce4)
+- [Deps] update `minimatch`, `pargs` [`460b841`](https://github.com/ljharb/repo-report/commit/460b84153134c29322d06b76f8bced0f19087262)
+- [Tests] assert `compare` is a function, instead of an always-truthy check [`f8906c7`](https://github.com/ljharb/repo-report/commit/f8906c772eb869cae569e9ddec8604ed4dad0704)
+- [readme] replace runkit CI badge with shields.io check-runs badge [`236cdd4`](https://github.com/ljharb/repo-report/commit/236cdd4ad91c2ae4d691e2346909a41d1dad83f0)
+
 ## [v0.4.0](https://github.com/ljharb/repo-report/compare/v0.3.0...v0.4.0) - 2026-01-02
 
 ### Fixed
